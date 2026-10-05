@@ -1,0 +1,19 @@
+# PACE container/tool caches (regenerable, machine-specific)
+.cache/
+# Upstream clones: NOT vendored (nested .git); provenance recorded by
+# commit hash in variant headers / method_notes.md instead.
+modded-nanogpt-public/
+Modded-NanoGPT-Private/
+Newton-Muon-ref/
+# Training data (downloaded shards + per-run symlinks)
+*.bin
+data
+runs/*/data
+# Checkpoints (large, regenerable from sbatch jobs)
+checkpoints/
+*.pt
+# Python
+__pycache__/
+*.pyc
+# Tidied clutter, not part of the project
+.old/

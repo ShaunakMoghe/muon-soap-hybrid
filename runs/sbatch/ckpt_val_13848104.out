@@ -1,0 +1,31 @@
+---------------------------------------
+Begin Slurm Prolog: Oct-04-2026 11:51:13
+Job ID:    13848104
+User ID:   smoghe6
+Account:   paceship-moereasoning
+Job name:  ckpt_val
+Partition: gpu-rtxpro-blackwell
+QOS:       inferno
+---------------------------------------
+=== V1 reference (uninterrupted) ===
+ref step-125 val=4.61667
+=== V1 checkpointed run (ckpts at 50, 100) ===
+=== V1 resume from ckpt@100 ===
+V1 RESUME FAILED
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 2312868)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+---------------------------------------
+Begin Slurm Epilog: Oct-04-2026 12:01:42
+Job ID:        13848104
+User ID:       smoghe6
+Account:       paceship-moereasoning
+Job name:      ckpt_val
+Resources:     cpu=8,gres/gpu:rtx_pro_6000_blackwell=1,mem=96G,node=1
+Rsrc Used:     cput=01:24:00,vmem=0,walltime=00:10:30,mem=6682628K,energy_used=0
+Partition:     gpu-rtxpro-blackwell
+QOS:           inferno
+Nodes:         atl1-1-03-020-2-0
+---------------------------------------

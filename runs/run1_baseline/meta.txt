@@ -1,0 +1,4 @@
+START_UTC:2026-09-27T04:00:55Z
+name, memory.total [MiB], driver_version
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 595.71.05
+log_uuid:c901c5fc-65f6-4f6d-959a-076ae5903d52

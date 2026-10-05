@@ -1,0 +1,4 @@
+device: cuda torch: 2.9.0a0+145a3a7bda.nv25.10
+fullrank-3072-fp64 20x identical hash= 5bf20aa61bc81175 4cd63461a1bdd404
+rank12-3072-fp64 20x identical hash= 017764ff49a8cc98 d41407856506dfcd
+EIGH_DET_OK

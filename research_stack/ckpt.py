@@ -65,16 +65,23 @@ def save_ckpt(step, train_time, model, optimizers):
     return final
 
 
-def load_ckpt(path, model, optimizers):
+def load_ckpt(path, model, optimizers, map_location="cuda"):
     """Install checkpoint; returns (step, train_time)."""
     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
-    ck = torch.load(path, map_location="cuda", weights_only=True)
+    ck = torch.load(path, map_location=map_location, weights_only=True)
     model.load_state_dict(ck["model"])
     assert len(ck["optims"]) == len(optimizers)
     for o, s in zip(optimizers, ck["optims"]):
         o.load_state_dict(s)
-    torch.set_rng_state(ck["rng"])
-    torch.cuda.set_rng_state_all(ck["cuda_rng"])
+    # map_location="cuda" drags the CPU RNG ByteTensor to GPU, but
+    # set_rng_state requires CPU (.cpu() is a no-op when already CPU).
+    torch.set_rng_state(ck["rng"].cpu())
+    if torch.cuda.is_available():
+        states = ck["cuda_rng"]
+        if isinstance(states, torch.Tensor):
+            states = [states]
+        if len(states):
+            torch.cuda.set_rng_state_all([s.cuda() for s in states])
     return ck["step"], ck.get("train_time", 0.0)
 
 

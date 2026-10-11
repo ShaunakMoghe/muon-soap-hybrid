@@ -1,0 +1,70 @@
+---------------------------------------
+Begin Slurm Prolog: Oct-05-2026 00:27:07
+Job ID:    13866468
+User ID:   smoghe6
+Account:   paceship-moereasoning
+Job name:  ckpt_val
+Partition: gpu-rtxpro-blackwell
+QOS:       inferno
+---------------------------------------
+=== V1 reference (uninterrupted) ===
+ref step-125 val=4.61641
+=== V1 checkpointed run (ckpts at 50, 100) ===
+=== V1 resume from ckpt@100 ===
+V1 RESUME FAILED
+logs/9432409f-81ee-47bf-a12d-94af032c6ca7.txt
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/tmp/resume_test.py", line 338, in <module>
+[rank0]:     start_step, training_time = load_ckpt(resume_path, model, optimizers)
+[rank0]:                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 76, in load_ckpt
+[rank0]:     torch.set_rng_state(ck["rng"])
+[rank0]:   File "/usr/local/lib/python3.12/dist-packages/torch/random.py", line 19, in set_rng_state
+[rank0]:     default_generator.set_state(new_state)
+[rank0]: TypeError: RNG state must be a torch.ByteTensor
+[rank0]:[W1005 00:37:28.390851581 ProcessGroupNCCL.cpp:1536] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+E1005 00:37:30.524000 2712867 torch/distributed/elastic/multiprocessing/api.py:882] failed (exitcode: 1) local_rank: 0 (pid: 2712988) of binary: /usr/bin/python
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 936, in main
+    run(args)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 927, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 156, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 293, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/tmp/resume_test.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-10-05_00:37:30
+  host      : atl1-1-02-014-23-0.pace.gatech.edu
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 2712988)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+---------------------------------------
+Begin Slurm Epilog: Oct-05-2026 00:37:31
+Job ID:        13866468
+User ID:       smoghe6
+Account:       paceship-moereasoning
+Job name:      ckpt_val
+Resources:     cpu=8,gres/gpu:rtx_pro_6000_blackwell=1,mem=96G,node=1
+Rsrc Used:     cput=01:23:52,vmem=0,walltime=00:10:29,mem=6502888K,energy_used=0
+Partition:     gpu-rtxpro-blackwell
+QOS:           inferno
+Nodes:         atl1-1-02-014-23-0
+---------------------------------------

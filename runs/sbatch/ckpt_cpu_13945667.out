@@ -1,0 +1,24 @@
+---------------------------------------
+Begin Slurm Prolog: Oct-10-2026 20:05:43
+Job ID:    13945667
+User ID:   smoghe6
+Account:   paceship-moereasoning
+Job name:  ckpt_cpu
+Partition: cpu-small
+QOS:       inferno
+---------------------------------------
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+saved: /tmp/checkpoints/ckpt_00100.pt
+CKPT_ROUNDTRIP_CPU_OK
+---------------------------------------
+Begin Slurm Epilog: Oct-10-2026 20:05:56
+Job ID:        13945667
+User ID:       smoghe6
+Account:       paceship-moereasoning
+Job name:      ckpt_cpu
+Resources:     cpu=4,mem=16G,node=1
+Rsrc Used:     cput=00:00:56,vmem=0,walltime=00:00:14,mem=1274076K,energy_used=0
+Partition:     cpu-small
+QOS:           inferno
+Nodes:         atl1-1-02-006-14-1
+---------------------------------------

@@ -214,3 +214,8 @@ research_stack/test_eigh_determinism.py (PASS 2026-10-04, job 13848105:
 rank-deficient 3072 grams). Chaos tie-break stays a
 hypothesis: decisive battery = tolerance-quantized sort +
 deterministic-algorithms rerun + autotune-setting check.
+Ckpt resume bug found + fixed 2026-10-10: map_location="cuda" moved the
+CPU RNG ByteTensor to GPU (TypeError in set_rng_state); fix restores
+with .cpu() + guards CUDA RNG (commit 265f37f). CPU round-trip PASS in
+14s (job 13945667, also proving container-without---nv on cpu-small);
+GPU re-validation queued as 13945668.

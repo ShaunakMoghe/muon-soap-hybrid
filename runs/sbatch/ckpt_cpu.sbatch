@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH -J ckpt_cpu
-#SBATCH -A paceship-moereasoning
 #SBATCH -p cpu-small
 #SBATCH -c 4
 #SBATCH --mem=16G

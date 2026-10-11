@@ -1,0 +1,17 @@
+muon-soap-hybrid — upstream attributions (all upstreams MIT except where noted)
+
+- Training harness + Muon/AdamW baselines: derived from
+  KellerJordan/modded-nanogpt (MIT, Copyright (c) 2024 Keller Jordan).
+- SinkSOAP optimizer code (May-2025 recipe): derived from
+  lliu606/Modded-NanoGPT-Private (MIT, Copyright (c) 2024 Keller Jordan;
+  repo is public despite the name).
+- COSMOS optimizer code: derived from lliu606/Modded-NanoGPT-Private
+  (same MIT license as above).
+- Newton-Muon port (research_stack/newton_muon.py): follows
+  zhehangdu/Newton-Muon (MIT, Copyright (c) 2026 Zhehang Du) and
+  Du & Su, arXiv:2604.01472.
+- nikhilvyas/modded-nanogpt-SOAP (SOAP-ref/): READ-ONLY reference for
+  cross-checking SOAP hyperparameters. No LICENSE file ships with that
+  repo, so no code is copied from it.
+
+Per-file MIT notices are kept in headers of derived files.

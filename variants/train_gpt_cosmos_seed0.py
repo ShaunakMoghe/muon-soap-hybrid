@@ -222,6 +222,8 @@ class Muon(torch.optim.Optimizer):
 
 # torchrun sets these env variables
 ########################################
+# MIT-licensed portions (c) 2024 Keller Jordan, via lliu606/Modded-NanoGPT-Private:
+# COSMOS optimizer block. See NOTICE.
 # COSMOS optimizer (spliced 2026-10-04 from Liming's fork (public repo
 # github.com/lliu606/Modded-NanoGPT-Private — "Private" is just a name):
 # Modded-NanoGPT-Private/records/track_3_optimization/train_gpt_simple.py

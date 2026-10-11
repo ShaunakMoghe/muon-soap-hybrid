@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH -J ckpt_val
-#SBATCH -A paceship-moereasoning
 #SBATCH -p gpu-rtxpro-blackwell
 #SBATCH --gres=gpu:rtx_pro_6000_blackwell:1
 #SBATCH -c 8

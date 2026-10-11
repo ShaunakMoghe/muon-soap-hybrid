@@ -1,3 +1,4 @@
+# Portions follow zhehangdu/Newton-Muon (MIT, (c) 2026 Zhehang Du). See NOTICE.
 """Newton-Muon optimizer (Du & Su, arXiv:2604.01472) for the Track-3 harness.
 
 Update: W <- W - eta * msgn(G @ (ZZ^T + gamma*I)^{-1}): right-precondition the

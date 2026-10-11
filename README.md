@@ -27,3 +27,14 @@ step efficiency at Muon's compute and communication cost.
 Georgia Tech PACE Phoenix, `gpu-rtxpro-blackwell`, standard shape 1 GPU +
 8 CPUs + 96GB via `sbatch` (see `runs/sbatch/`). Work from the login node;
 GPU work only through queued jobs.
+
+## Status
+
+Measured: Muon / SinkSOAP / SOAP-QR / seeded-control crossings + per-step
+costs (runs 1–5); profiler closure 1.88s vs 1.92s; eigh determinism
+(20x + 3x identical on CUDA).
+In progress: Run 8 (amortized SinkSOAP) smoke → full; COSMOS benchmark;
+Newton-Muon smoke (full only if smoke passes); ckpt re-validation.
+Unverified: amortized-cost estimate (~1.9s/step); SOAP-QR chaos mechanism
+(hypothesis only); Newton-Muon paper claims incl. novelty framing;
+distributed (multi-GPU) behavior — all single-GPU + analytical so far.

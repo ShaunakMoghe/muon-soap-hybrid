@@ -19,15 +19,15 @@ run_one() { # $1 = rundir
   ln -sfn $PROJ/modded-nanogpt-public/data data
   APPTAINERENV_TORCH_LOGS=recompiles $PROJ/run_container.sh torchrun --standalone --nproc_per_node=1 /tmp/nm_smoke.py 1 > sm.log 2>&1
 }
-run_one nm_sm1 || { echo "SMOKE RUN1 FAILED"; tail -5 /tmp/nm_sm1/sm.log; exit 1; }
+run_one nm_sm1 || { echo "SMOKE RUN1 FAILED"; tail -50 /tmp/nm_sm1/sm.log; exit 1; }
 V0=$(sed -n 's/^step:0\/[0-9]* val_loss:\([0-9.]*\).*/\1/p' /tmp/nm_sm1/sm.log)
 V12=$(grep "val_loss" /tmp/nm_sm1/sm.log | tail -1 | sed -n 's/.*val_loss:\([0-9.]*\).*/\1/p')
 python3 -c "import sys; sys.exit(0 if float(sys.argv[2]) < float(sys.argv[1]) else 1)" "$V0" "$V12" \
   || { echo "SMOKE: LOSS DID NOT DECREASE $V0 -> $V12"; exit 1; }
 echo "run1 OK: $V0 -> $V12"
-run_one nm_sm2 || { echo "SMOKE RUN2 FAILED"; tail -5 /tmp/nm_sm2/sm.log; exit 1; }
-N=$(grep -ci "recompil" /tmp/nm_sm2/sm2.log 2>/dev/null || true)
-[ "$N" = "0" ] || { echo "SMOKE: $N RECOMPILE LINES IN RUN2"; grep -i "recompil" /tmp/nm_sm2/sm2.log | head -5; exit 1; }
+run_one nm_sm2 || { echo "SMOKE RUN2 FAILED"; tail -50 /tmp/nm_sm2/sm.log; exit 1; }
+N=$(grep -ci "recompil" /tmp/nm_sm2/sm.log 2>/dev/null || true)
+[ "$N" = "0" ] || { echo "SMOKE: $N RECOMPILE LINES IN RUN2"; grep -i "recompil" /tmp/nm_sm2/sm.log | head -5; exit 1; }
 echo "run2 OK: zero recompile lines"
 python3 - <<'EOF'
 import re, sys

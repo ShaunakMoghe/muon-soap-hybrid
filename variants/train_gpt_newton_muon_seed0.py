@@ -1,3 +1,4 @@
+# Newton-Muon wiring follows zhehangdu/Newton-Muon (MIT, (c) 2026 Zhehang Du). See NOTICE.
 """
 train_gpt_simple.py
 

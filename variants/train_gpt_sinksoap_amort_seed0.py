@@ -1,3 +1,5 @@
+# MIT-licensed portions (c) 2024 Keller Jordan, via lliu606/Modded-NanoGPT-Private:
+# SinkSOAP optimizer block (May-2025 recipe). See NOTICE.
 """
 train_gpt_simple.py
 

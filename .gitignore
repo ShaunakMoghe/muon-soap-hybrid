@@ -17,3 +17,7 @@ __pycache__/
 *.pyc
 # Tidied clutter, not part of the project
 .old/
+# Batch logs: SLURM prolog prints user/account/host — keep on disk, out of repo
+runs/sbatch/*.out
+# Read-only upstream reference (no LICENSE ships with it; never copy from it)
+SOAP-ref/

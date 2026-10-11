@@ -11,4 +11,4 @@
 # Account passed via CLI (sbatch --account=...) — never committed.
 PROJ=/storage/project/ps-moereasoning-0/smoghe6
 cd $PROJ || exit 1
-bash research_stack/test_nm_smoke.sh
+APPTAINERENV_PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True bash research_stack/test_nm_smoke.sh

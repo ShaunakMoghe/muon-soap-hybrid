@@ -4,6 +4,11 @@
 - Predict: completes; step-12 val in [6.2, 6.5] (unamortized seed0 was
   6.33337@12; amortization shifts the early curve slightly);
   checkpoints/ckpt_00010.pt written (save path exercised, CKPT_EVERY=10).
+- OUTCOME (job 13945795): TECHNICAL PASS (completed + ckpt written) but
+  step-12 val 7.82851 vs predicted [6.2, 6.5] — PREDICTION WRONG.
+  Mechanism (hypothesized): cold-start staleness — step-1 bases built
+  from near-zero grams are reused for steps 2-10. Full run tests
+  whether it recovers; crossing band widened to [3100, 3250].
 
 ## Run 8 full: amortized SinkSOAP 3250 steps (precond_freq=10, T=1) — PENDING smoke
 - Predict: 1.85–1.95 s/step (eigh cost ÷10: 1.83 + ~0.1 overhead);
@@ -13,6 +18,8 @@
 
 ## COSMOS smoke: 12-step — QUEUED
 - Predict: completes; step-12 val in [6.0, 6.6]; ckpt written.
+- OUTCOME (job 13945796): PASS. Step-12 val 6.33464 — prediction HIT
+  (notably == unamortized SinkSOAP's 6.33337@12). 31.3GB max.
 
 ## COSMOS full (after smoke) — config LOGGED here per loadout
 - Variant: variants/train_gpt_cosmos_seed0.py = Sep harness, seed0,
@@ -27,6 +34,11 @@
 - Predict: passes (script asserts zero recompile lines + stable step times).
 - Full benchmark ONLY if smoke passes. Paper claims (incl. any novelty
   framing) treated as UNVERIFIED until Liming weighs in.
+- OUTCOME (job 13945798): FAIL — CUDA OOM in first forward (83/95GB,
+  before any hook accumulation runs). Diagnosis: 24 compiler-disabled
+  hooks fragment dynamo graphs; per-fragment cudagraph pools +
+  fragmentation. FIX (one shot per stop rule): triton.cudagraphs=False
+  + expandable_segments. Resubmitted; if OOM persists, lane STOPS.
 
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT

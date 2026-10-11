@@ -256,7 +256,10 @@ mbs = 64
 val_inputs, val_targets = next(distributed_data_generator("data/fineweb10B/fineweb_val_*.bin", val_tokens))
 
 model = GPT(vocab_size=50304, num_layers=12, model_dim=768).cuda()
-model.compile(dynamic=False)
+# cudagraphs OFF: 24 compiler-disabled hooks fragment the graph; per-fragment
+# cudagraph pools + fragmentation OOM first forward at 83/95GB (job 13945798).
+# Keeps inductor compile (s/step stays comparable); last-bit numerics only.
+model.compile(dynamic=False, options={"triton.cudagraphs": False})
 
 
 resume_path = parse_resume_argv(sys.argv)

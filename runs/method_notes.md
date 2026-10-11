@@ -199,3 +199,21 @@ run4A guess (lr=0.002, no warmup, 3250 steps) is within 11% on lr — same
 order, slightly hotter. No-warmup + shorter horizon remain HYPOTHESES
 (not conclusions) for part of the +0.066 shortfall. No code copied: that
 repo ships no LICENSE file, so it stays a read-only reference (gitignored).
+
+## Newton-Muon first-forward OOM (2026-10-10, job 13945798)
+NM smoke died at 1:07 in the first forward: 83.5/95GB used, 70.6GB
+PyTorch-allocated — BEFORE any hook accumulation runs (refresh cadence
+skips steps 1-9), so the hog is compile structure, not hook tensors.
+Leading theory: 24 @torch.compiler.disable forward hooks fragment the
+dynamo graph into ~25 cudagraph-eligible pieces; static per-fragment
+pools + allocator fragmentation (11.5GB reserved-unallocated) blow the
+96GB budget. One-shot fix: triton.cudagraphs=False in the NM variant +
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments in nm_smoke.sbatch (both
+zero-experiment-change: last-bit numerics at most). If OOM persists,
+deeper surgery is needed (selective-eager linears or attach/detach
+scheduling) — flag for user, do not iterate blindly.
+ckpt 13945668 (record-only): SECOND resume failure mode — fixed CPU RNG
+line now passes, but set_rng_state_all chokes on the CUDA RNG states
+(TypeError, same "must be a torch.ByteTensor"). Structure of
+ck["cuda_rng"] after weights_only+map_location needs a debug print;
+lane closed per loadout (fix resume only if a run is cut off).

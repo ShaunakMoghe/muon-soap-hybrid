@@ -1,0 +1,3 @@
+run6 COSMOS (lr=0.04 wd=0.025 ranks=256)
+variant: variants/train_gpt_cosmos_seed0.py @ 2c1aee2
+seed0, 3250 steps, CKPT_EVERY=250

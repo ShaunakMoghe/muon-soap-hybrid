@@ -15,6 +15,10 @@
   crossing in [3100, 3200] (staleness may cost 0–100 steps vs unamortized
   3100); final ~3.27.
 - Decides: does the ~3% step saving survive at ~Muon per-step cost?
+- OUTCOME (job 13949314): COST HIT (1.952s/step), QUALITY MISS — NO
+  crossing, final 3.29182 (+0.012). Verdict: savings do NOT survive at
+  (freq=10, T=1); amortized SinkSOAP is worse than Muon on both axes
+  this draw. Caveat: T=1 and freq=10 changed together — unattributed.
 
 ## COSMOS smoke: 12-step — QUEUED
 - Predict: completes; step-12 val in [6.0, 6.6]; ckpt written.
@@ -29,6 +33,9 @@
 - Predict: crosses 3.28 (method is tuned for this track); s/step
   unknown — per-step QR on rank-256 subspaces, guess 2.0–2.5s.
   Wide uncertainty, stated plainly.
+- OUTCOME (job 13949315): CROSS HIT (3150), COST HIT (1.986s/step),
+  final 3.27399. COSMOS beats seeded Muon by 75 steps at ~same step
+  cost — best seed0 and best wall-clock result so far.
 
 ## Newton-Muon smoke (test_nm_smoke.sh: zero-recompile warm-cache rerun) — QUEUED
 - Predict: passes (script asserts zero recompile lines + stable step times).
@@ -39,6 +46,10 @@
   hooks fragment dynamo graphs; per-fragment cudagraph pools +
   fragmentation. FIX (one shot per stop rule): triton.cudagraphs=False
   + expandable_segments. Resubmitted; if OOM persists, lane STOPS.
+- OUTCOME (job 13949316): SAME OOM (84.3GB; allocated GREW 70.6->82.9GB,
+  fragmentation fixed but real bloat grew — cudagraphs-off removed memory
+  planning). Lane STOPPED per stop rule. NM needs deeper surgery
+  (selective-eager linears or attach/detach scheduling) — user decision.
 
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT

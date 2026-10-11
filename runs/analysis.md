@@ -243,3 +243,22 @@ GPU re-validation queued as 13945668.
   quote confirmed verbatim; distributed-NM direction not validated
   with Liming — no further variants built on it until he weighs in.
 - [analytical] FSDP-vs-TP distributed-cost split (no multi-GPU runs).
+
+## 11. Run 8 + run 6 results (2026-10-11)
+Run 8 (amortized SinkSOAP, freq=10/T=1): 1.952s/step (cost prediction
+HIT), NO crossing, final 3.29182. The crux answer is NEGATIVE at these
+settings: unamortized crossed 3100 @3.75s with final 3.268; amortized
+runs at Muon cost but keeps none of the step savings — worse than Muon
+(3225 cross, 3.27844) on both axes this draw. Open: T-vs-frequency
+attribution (both changed); gentler amortization (freq=3/5, T=10) is the
+obvious follow-up, NOT yet run.
+Run 6 (COSMOS, lr=0.04/wd=0.025/ranks=256): crossed at observed 3150,
+final 3.27399, 1.986s/step — beats seeded Muon by 75 steps at equal
+step cost; best seed0 and best wall-clock method to date. Trailing the
+unamortized SinkSOAP step count (3100) but at half the per-step cost.
+Head-to-head finals: SinkSOAP 3.26769 > COSMOS 3.27399 > Muon 3.27714 >
+seeded Muon 3.27844 > amort-SinkSOAP 3.29182 > SOAP-QR 3.34559.
+Newton-Muon lane STOPPED: second identical OOM (cudagraphs-off made
+allocated memory WORSE, 82.9GB — my pool-bloat theory was wrong about
+the dominant term; fragmentation was fixed but real dynamo-fragment
+allocation dominates). Options need user input; no further NM jobs.

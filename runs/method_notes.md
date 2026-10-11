@@ -191,3 +191,11 @@ your own `sh -lc` wrapper (its cmdline contains the pattern literally)
 — the kill suicided the shell after sending signals. Use self-excluding
 patterns (`pgrep -f "train_gpt_soa[p]"`) and resolve PIDs before
 killing; verify with nvidia-smi + leg logs after.
+
+## Plain-SOAP lr cross-check vs nikhilvyas/modded-nanogpt-SOAP (2026-10-10, read-only)
+Reference run.sh: lr=0.0018, warmup 250 iters, wd=0, betas (0.95,0.95),
+precond_freq=10, 7000 iters, same 524288-token global batch as ours. Our
+run4A guess (lr=0.002, no warmup, 3250 steps) is within 11% on lr — same
+order, slightly hotter. No-warmup + shorter horizon remain HYPOTHESES
+(not conclusions) for part of the +0.066 shortfall. No code copied: that
+repo ships no LICENSE file, so it stays a read-only reference (gitignored).

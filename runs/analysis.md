@@ -219,3 +219,27 @@ CPU RNG ByteTensor to GPU (TypeError in set_rng_state); fix restores
 with .cpu() + guards CUDA RNG (commit 265f37f). CPU round-trip PASS in
 14s (job 13945667, also proving container-without---nv on cpu-small);
 GPU re-validation queued as 13945668.
+
+## 10. Claim register (loadout rule: measured / hypothesized / untested)
+- [measured] Profiler: SinkSOAP step overhead 1.92s, ~97% eigh, Sinkhorn
+  ~0.5ms; cost-model closure 1.88s vs 1.92s.
+- [measured, LOW-CONFIDENCE] SinkSOAP crossed ~100 steps before Muon
+  (3100 vs 3200) — gap is near the ±70-step noise floor; single
+  unseeded draws. Per rule: treat as suggestive, not conclusive.
+- [measured] SOAP-QR seed0 draw: no crossing, final 3.34559 (single draw).
+- [measured] Same-seed SOAP-QR @875 differs by 0.037 (run3 vs run4A).
+- [measured] torch.linalg.eigh bit-identical 20x in-process + 3x
+  cross-process on CUDA (job 13848105).
+- [hypothesized] Chaos mechanism: low-rank Grams -> near-tied
+  eigenvalues -> argsort/QR divergence. NOT proven; decisive battery
+  pending (tolerance-quantized sort + deterministic rerun + autotune check).
+- [hypothesized] Noise-robustness axis (NS contraction vs eigengap
+  amplification), supported by fp64 traces, needs tensor-level bisection.
+- [hypothesized] run4A shortfall partly from no-warmup + 3250-step
+  horizon (SOAP-ref uses warmup 250 + 7000 steps at lr 0.0018).
+- [untested] Amortized SinkSOAP: ~1.9s/step + kept step savings (Run 8).
+- [untested] COSMOS and Newton-Muon full-benchmark behavior on our harness.
+- [paper-text-verified; novelty-UNVERIFIED] Newton-Muon §6 single-GPU
+  quote confirmed verbatim; distributed-NM direction not validated
+  with Liming — no further variants built on it until he weighs in.
+- [analytical] FSDP-vs-TP distributed-cost split (no multi-GPU runs).

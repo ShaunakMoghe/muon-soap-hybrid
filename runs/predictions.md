@@ -35,7 +35,8 @@
   Wide uncertainty, stated plainly.
 - OUTCOME (job 13949315): CROSS HIT (3150), COST HIT (1.986s/step),
   final 3.27399. COSMOS beats seeded Muon by 75 steps at ~same step
-  cost — best seed0 and best wall-clock result so far.
+  cost — best seed0 final and best SOAP-family wall-clock (6258s to
+  cross, ~4-7% slower than Muon 5860/5987s to target).
 
 ## Newton-Muon smoke (test_nm_smoke.sh: zero-recompile warm-cache rerun) — QUEUED
 - Predict: passes (script asserts zero recompile lines + stable step times).

@@ -254,7 +254,9 @@ attribution (both changed); gentler amortization (freq=3/5, T=10) is the
 obvious follow-up, NOT yet run.
 Run 6 (COSMOS, lr=0.04/wd=0.025/ranks=256): crossed at observed 3150,
 final 3.27399, 1.986s/step — beats seeded Muon by 75 steps at equal
-step cost; best seed0 and best wall-clock method to date. Trailing the
+step cost; best seed0 final and best SOAP-family wall-clock to date
+(6258s to cross vs Muon 5860/5987s, i.e. ~4-7% slower — the earlier
+"best wall-clock" wording was wrong, corrected 2026-10-13). Trailing the
 unamortized SinkSOAP step count (3100) but at half the per-step cost.
 Head-to-head finals: SinkSOAP 3.26769 > COSMOS 3.27399 > Muon 3.27714 >
 seeded Muon 3.27844 > amort-SinkSOAP 3.29182 > SOAP-QR 3.34559.
@@ -262,3 +264,17 @@ Newton-Muon lane STOPPED: second identical OOM (cudagraphs-off made
 allocated memory WORSE, 82.9GB — my pool-bloat theory was wrong about
 the dominant term; fragmentation was fixed but real dynamo-fragment
 allocation dominates). Options need user input; no further NM jobs.
+Plain SOAP remains UNRESOLVED: run4 drew no-cross (+0.066) on one
+chaotic draw, run3 was killed early at 968, and same-seed draws vary by
+0.037 — no crossing claim is supported in either direction.
+
+## 12. Open questions for Liming (consolidated 2026-10-13)
+1. Distributed regime: by "distributed-friendly" do you mean FSDP-style
+   (our finding: compute/load-balance problem) or tensor-parallel
+   (communication wall for SOAP Grams)?
+2. SOAP recipe: is lr=0.002 with no warmup a fair test, or should we
+   match the SOAP-ref recipe (lr=0.0018 + 250 warmup, 7000 steps)?
+3. Newton-Muon priority: OOMs at 83/95GB under hooks+compile on our
+   rig — is this direction viable/important enough for deeper surgery?
+4. COSMOS confirmation: we benchmarked lr=0.04/wd=0.025/ranks=256 from
+   your track-3 wiring — is that what you ran?

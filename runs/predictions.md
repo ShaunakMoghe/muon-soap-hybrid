@@ -52,6 +52,24 @@
   planning). Lane STOPPED per stop rule. NM needs deeper surgery
   (selective-eager linears or attach/detach scheduling) — user decision.
 
+## COSMOS replicates seed1/seed2 (runs 9, 10) — PENDING
+- Predict: both cross; crossing steps within ±100 of 3150 (noise estimate
+  for the 50-75-step edge over Muon). If spread >> 75 steps, the edge is
+  inconclusive per the noise rule. (run7 slot reserved for NM if revived.)
+
+## Plain SOAP reference recipe (run 11: lr=0.0018 + 250 warmup, seed0) — PENDING
+- Predict: crosses OR lands materially closer than run4A's +0.066 if the
+  hot-lr/no-warmup hypothesis is right; no-cross again weakens it.
+  Pairs with run4A (same seed, recipe change only).
+
+## Amortized T=10 (run 12: freq=10, T=10) — PENDING
+- Predict: separates the confound — if T=1 caused run8's failure, this
+  recovers toward 3100-cross; if staleness, still no-cross. Cost ~2.0s/step.
+
+## Amortized warm-start (run 13: eigh every step to 200, then every 10, T=1) — PENDING
+- Predict: if cold-start staleness caused run8's failure, this recovers
+  most of the gap (cross 3100-3200); cost ~2.1s/step (200 full steps).
+
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT
   gated on it; resume gets fixed only if a run is actually cut off.

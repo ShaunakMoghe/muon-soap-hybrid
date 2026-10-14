@@ -52,6 +52,15 @@
   planning). Lane STOPPED per stop rule. NM needs deeper surgery
   (selective-eager linears or attach/detach scheduling) — user decision.
 
+## Smoke bands batch 2 (jobs 14050014-18)
+- c9/c10 (COSMOS s1/s2): step-12 val in [6.0, 6.6] (seed0 was 6.33464).
+- soap11 (ref recipe): completes + ckpt; val band WIDE [6.0, 8.5]
+  (warmup shifts early curve unpredictably; seed0 unamortized ref unknown).
+- t10 (freq=10/T=10): completes + ckpt; val in [6.2, 8.0] (between
+  unamortized 6.33 and run8-T1 7.83 if T drives the shift).
+- ws (warm-start): completes + ckpt; val in [6.2, 6.6] (eigh-every-step
+  early should track unamortized 6.33).
+
 ## COSMOS replicates seed1/seed2 (runs 9, 10) — PENDING
 - Predict: both cross; crossing steps within ±100 of 3150 (noise estimate
   for the 50-75-step edge over Muon). If spread >> 75 steps, the edge is

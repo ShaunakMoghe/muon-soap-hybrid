@@ -54,12 +54,23 @@
 
 ## Smoke bands batch 2 (jobs 14050014-18)
 - c9/c10 (COSMOS s1/s2): step-12 val in [6.0, 6.6] (seed0 was 6.33464).
+  OUTCOME: c9 6.32481, c10 6.32774 — both HIT. Fulls submitted
+  (14095529/14095530).
 - soap11 (ref recipe): completes + ckpt; val band WIDE [6.0, 8.5]
   (warmup shifts early curve unpredictably; seed0 unamortized ref unknown).
+  OUTCOME (job 14050016): FAIL "NO CKPT" — soap_ref lacked ckpt hooks
+  (12 steps completed, val 9.70472, consistent with warmup eta<=0.05 —
+  band miscalibrated, not a model failure). Fix: ckpt ported (same
+  5-insertion port); resubmitted as 14095534 (one-shot allowance).
 - t10 (freq=10/T=10): completes + ckpt; val in [6.2, 8.0] (between
   unamortized 6.33 and run8-T1 7.83 if T drives the shift).
+  OUTCOME (job 14050017): 7.88492 — HIT (barely), and ~= run8-T1's 7.83:
+  early read is T does NOT drive the shift (staleness does). Full
+  submitted (14095532); full run decides.
 - ws (warm-start): completes + ckpt; val in [6.2, 6.6] (eigh-every-step
   early should track unamortized 6.33).
+  OUTCOME (job 14050018): 6.35683 — HIT; warm-start tracks unamortized
+  early as predicted. Full submitted (14095533).
 
 ## COSMOS replicates seed1/seed2 (runs 9, 10) — PENDING
 - Predict: both cross; crossing steps within ±100 of 3150 (noise estimate

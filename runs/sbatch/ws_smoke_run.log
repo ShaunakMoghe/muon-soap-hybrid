@@ -1,0 +1,17 @@
+logs/fa75ff29-980b-49dc-8569-ea3c00dbb9d6.txt
+step:0/12 val_loss:10.82583 train_time:0.000s step_avg:nanms
+step:1/12 train_time:6.166s step_avg:6166.17ms
+step:2/12 train_time:9.573s step_avg:4786.46ms
+step:3/12 train_time:13.065s step_avg:4354.91ms
+step:4/12 train_time:16.520s step_avg:4130.08ms
+step:5/12 train_time:19.976s step_avg:3995.20ms
+step:6/12 train_time:23.433s step_avg:3905.57ms
+step:7/12 train_time:26.898s step_avg:3842.55ms
+step:8/12 train_time:30.361s step_avg:3795.10ms
+step:9/12 train_time:33.831s step_avg:3759.04ms
+checkpoint: /tmp/wssmoke/checkpoints/ckpt_00010.pt
+step:10/12 train_time:41.075s step_avg:4107.54ms
+step:11/12 train_time:44.552s step_avg:4050.16ms
+step:12/12 train_time:48.026s step_avg:4002.13ms
+step:12/12 val_loss:6.35683 train_time:48.026s step_avg:4002.15ms
+max_memory_allocated: 33.458 GB

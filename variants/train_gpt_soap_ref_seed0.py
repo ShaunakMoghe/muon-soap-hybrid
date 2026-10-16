@@ -19,6 +19,9 @@ from torch import Tensor, nn
 from torch.optim import AdamW
 import torch.nn.functional as F
 import torch.distributed as dist
+from research_stack.ckpt import (CKPT_EVERY_DEFAULT, arm_preemption_handlers,
+                                    load_ckpt, parse_resume_argv, save_ckpt,
+                                    term_requested)
 
 
 ########################################
@@ -671,6 +674,8 @@ model = GPT(vocab_size=50304, num_layers=12, model_dim=768).cuda()
 model.compile(dynamic=False)
 
 
+resume_path = parse_resume_argv(sys.argv)
+CKPT_EVERY = int(os.getenv("CKPT_EVERY", str(CKPT_EVERY_DEFAULT)))
 num_trials = int(sys.argv[-1]) if len(sys.argv) > 1 else 1
 
 for _ in range(num_trials):
@@ -720,9 +725,13 @@ for _ in range(num_trials):
     optimizers = [optimizer1, optimizer2]
     assert set(p for opt in optimizers for group in opt.param_groups
                for p in group["params"]) == set(model.parameters())
+    init_lrs = []  # re-applied after ckpt load (torch may drop custom group keys)
     for opt in optimizers:
+        opt_lrs = []
         for group in opt.param_groups:
             group["initial_lr"] = group["lr"]
+            opt_lrs.append(group["lr"])
+        init_lrs.append(opt_lrs)
 
     # learning rate schedule: linear warmup (250) + stable + cooldown decay
     # (reference recipe shape; warmup reimplemented here, not copied).
@@ -748,11 +757,20 @@ for _ in range(num_trials):
     for p in model.parameters():
         dist.broadcast(p.detach(), 0)
     # start the clock
-    training_time = 0
-    last_val_step = 0
+    arm_preemption_handlers()
+    start_step, training_time = 0, 0.0
+    if resume_path is not None:
+        start_step, training_time = load_ckpt(resume_path, model, optimizers)
+        for _ in range(start_step):
+            next(train_loader)
+        print0(f"resumed at step {start_step} from {resume_path}", console=True)
+        for opt, opt_lrs in zip(optimizers, init_lrs):
+            for group, lr in zip(opt.param_groups, opt_lrs):
+                group["initial_lr"] = lr
+    last_val_step = start_step
     dist.barrier()
     t0 = time.perf_counter()
-    for step in range(train_steps + 1):
+    for step in range(start_step, train_steps + 1):
 
         # --------------- VALIDATION SECTION -----------------
         val_step_freq = 125 if step / train_steps < 0.9 else 25
@@ -795,6 +813,16 @@ for _ in range(num_trials):
         for opt in optimizers:
             opt.step()
         model.zero_grad(set_to_none=True)
+        if (step + 1) % CKPT_EVERY == 0 and step + 1 < train_steps:
+            ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+                                  model, optimizers)
+            print0(f"checkpoint: {ckpt_path}", console=True, log=False)
+        if term_requested():
+            ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+                                  model, optimizers)
+            print0(f"preempted at step {step + 1}, checkpoint saved: {ckpt_path}", console=True)
+            dist.destroy_process_group()
+            sys.exit(143)
         approx_training_time = training_time + (time.perf_counter() - t0)
         print0(f"step:{step+1}/{train_steps} train_time:{approx_training_time:.3f}s"
                + f" step_avg:{1000*approx_training_time/(step + 1):.2f}ms", console=True, log=False)

@@ -144,13 +144,19 @@ strong-scaling probes would convert regime-1 scaling into numbers.
   reference-recipe SOAP; Newton-Muon full benchmark; anything multi-GPU.
 - [analytical] FSDP-vs-TP distributed-cost split.
 
-## 9. Open questions (collaborator)
+## 9. Collaborator questions (two answered 2026-10-16)
 
-1. Distributed regime: does "distributed-friendly" mean FSDP-style
-   (a compute/load-balance problem) or tensor-parallel (a
-   communication wall for SOAP Grams)?
-2. SOAP recipe: is lr=0.002 with no warmup a fair test, or should the
-   reference recipe (lr=0.0018 + 250 warmup, 7000 steps) be matched?
-3. Newton-Muon priority: worth deeper surgery for the 96GB OOM, or cut?
-4. COSMOS confirmation: benchmarked lr=0.04/wd=0.025/ranks=256 from the
-   track-3 wiring — is that the tested configuration?
+1. [answered] Distributed regime: both FSDP and TP matter, framed as
+   step-count reduction under limited overhead — at scale, gradient
+   compute+comm dominate, so fewer steps to target wins if the
+   optimizer adds little overhead and its state shards (or is cheap to
+   replicate). Full rotation matrices (SOAP/SinkSOAP) are the expensive
+   case; low-rank (COSMOS) the promising one.
+2. [open] SOAP recipe: is lr=0.002 with no warmup a fair test, or
+   should the reference recipe (lr=0.0018 + 250 warmup, 7000 steps)
+   be matched?
+3. [open] Newton-Muon priority: worth deeper surgery for the 96GB OOM?
+4. [answered] COSMOS config: lr=0.04/wd=0.025/ranks=256 confirmed as
+   his initial speedrun config, but untuned — room for improvement.
+   Directed next step: rank–convergence–runtime tradeoff at lower
+   ranks, then larger scale.

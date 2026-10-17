@@ -21,5 +21,3 @@ __pycache__/
 runs/sbatch/*.out
 # Read-only upstream reference (no LICENSE ships with it; never copy from it)
 SOAP-ref/
-# Working scratch (predictions ledger): ours, not for reviewers
-runs/predictions.md

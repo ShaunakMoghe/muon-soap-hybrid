@@ -224,16 +224,16 @@ class Muon(torch.optim.Optimizer):
 ########################################
 # MIT-licensed portions (c) 2024 Keller Jordan, via lliu606/Modded-NanoGPT-Private:
 # COSMOS optimizer block. See NOTICE.
-# COSMOS optimizer (spliced 2026-10-04 from Liming's fork (public repo
+# COSMOS optimizer (spliced 2026-10-04 from upstream public fork
 # github.com/lliu606/Modded-NanoGPT-Private — "Private" is just a name):
 # Modded-NanoGPT-Private/records/track_3_optimization/train_gpt_simple.py
 # compressed_sinkhorn_coeffs + cosmos_normuon_update VERBATIM;
 # COSMOS class verbatim EXCEPT dist calls guarded for uninitialized-dist
 # robustness (no-op under torchrun). Harness = OUR seeded Sep baseline
-# (3250 steps, seed0, Sep optimizer1 lr 0.7/0.004/0.015) — NOT Liming's
+# (3250 steps, seed0, Sep optimizer1 lr 0.7/0.004/0.015) — NOT upstream's
 # May harness (3225 steps, unseeded, optimizer1 0.3/1/320/0.01): isolates
 # the 2D-optimizer effect vs run5, same protocol as run2's SinkSOAP splice.
-# Wiring: lr=0.04, wd=0.025, rank_o=rank_u=256 (Liming's track-3 values).
+# Wiring: lr=0.04, wd=0.025, rank_o=rank_u=256 (upstream track-3 values).
 ########################################
 
 

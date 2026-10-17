@@ -1,0 +1,3 @@
+run11 plain-SOAP ref recipe @ 5b2299f
+variant: variants/train_gpt_soap_ref.py
+seed0, 3250 steps, CKPT_EVERY=250, lr 0.0018 + 250-step warmup

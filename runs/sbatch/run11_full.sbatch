@@ -10,5 +10,5 @@
 # Run 11 full: plain-SOAP ref recipe (lr 0.0018 + warmup), 3250 steps, saving ON (CKPT_EVERY=250).
 PROJ=/storage/project/ps-moereasoning-0/smoghe6
 cd $PROJ/runs/run11_soap_ref || exit 1
-APPTAINERENV_CKPT_EVERY=250 $PROJ/run_container.sh torchrun --standalone --nproc_per_node=1 $PROJ/variants/train_gpt_soap_ref.py 1 > stdout.log 2>&1 || { echo RUN11_FAIL; tail -50 stdout.log; exit 1; }
+APPTAINERENV_CKPT_EVERY=250 $PROJ/run_container.sh torchrun --standalone --nproc_per_node=1 $PROJ/variants/train_gpt_soap_ref_seed0.py 1 > stdout.log 2>&1 || { echo RUN11_FAIL; tail -50 stdout.log; exit 1; }
 echo RUN11_FULL_DONE

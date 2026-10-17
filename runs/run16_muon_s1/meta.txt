@@ -1,0 +1,3 @@
+run16 Muon seed1 @ HEAD
+variant: variants/train_gpt_baseline_seed1.py
+seed1, 3250 steps, CKPT_EVERY=250

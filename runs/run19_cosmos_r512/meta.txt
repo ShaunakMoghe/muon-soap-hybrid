@@ -1,0 +1,3 @@
+run19 COSMOS r512 @ HEAD
+variant: variants/train_gpt_cosmos_r512_seed0.py
+seed0, 3250 steps, CKPT_EVERY=250

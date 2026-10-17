@@ -103,6 +103,38 @@
   not staleness per se; warm-started freq-10 matches unamortized
   (3100/3.26769) at ~56% per-step cost.
 
+## Batch-3: COSMOS rank sweep (runs 14/15/18/19) + Muon seeds (runs 16/17) — PENDING
+
+Setup (all CPU-verified before submit): rank variants differ from run6's
+script ONLY in rank_o=rank_u=r (varied TOGETHER; r in {32,64,128,512},
+seed0, same lr/wd/harness; 6-line diff each, py_compile clean). Muon s1/s2
+differ from run5's script only in the 2 seed lines. Val reported at fixed
+steps 2500/3000/3250 plus crossing. Grounding: run5 Muon-s0
+(2500: 3.38123, 3000: 3.30489, 3250: 3.27844, cross 3225, 1.857s/step,
+31.075GB); run6 COSMOS-s0 (2500: 3.36948, 3000: 3.29779, 3250: 3.27399,
+cross 3150, 1.986s/step, 31.280GB).
+
+Scaling model (hypothesized): COSMOS overhead over Muon (~0.13-0.18s/step
+at r=256) is dominated by subspace matmuls ~linear in r; overhead(r) ≈
+0.01 + 0.15*(r/256) s/step. Memory = 31.075GB + state delta from
+state_accounting.md (C256-calibrated: predicted 31.269 vs measured 31.280).
+
+- run14 (r64): s/step 1.89-1.93; cross 3175-3225; final 3.274-3.279;
+  max mem ~31.12GB (±0.1); fixed vals between run5 and run6 rows above.
+- run15 (r128): s/step 1.93-1.98; cross 3150-3200; final 3.273-3.277;
+  max mem ~31.16GB (±0.1).
+- run18 (r32): s/step 1.87-1.91; cross 3200-3250 WITH no-cross tail risk
+  (rank may be too crude; worst case lands near Muon, NOT worse than run5
+  by more than +0.005 — a worse landing would implicate rank pathology,
+  not just weak curvature); final 3.276-3.283; max mem ~31.10GB (±0.1).
+- run19 (r512): s/step 2.10-2.20; cross 3125-3175 (at least as good as
+  r256; diminishing returns expected); final 3.272-3.275; max mem
+  ~31.53GB (±0.15).
+- run16/17 (Muon s1/s2): s/step 1.84-1.88; cross within ±75 steps of 3225
+  (3150-3250 window); final 3.27844±0.004; max mem ~31.08GB (±0.1).
+  These set the Muon spread; the COSMOS-vs-Muon edge stays UNESTABLISHED
+  until both spreads are in.
+
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT
   gated on it; resume gets fixed only if a run is actually cut off.

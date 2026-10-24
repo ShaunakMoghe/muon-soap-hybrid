@@ -88,6 +88,11 @@
 - Predict: crosses OR lands materially closer than run4A's +0.066 if the
   hot-lr/no-warmup hypothesis is right; no-cross again weakens it.
   Pairs with run4A (same seed, recipe change only).
+  OUTCOME (job 14130113): NO cross, min 3.30265 (+0.023), 1.879s/step,
+  max mem 41.4GB — materially closer than +0.066 but still no-cross:
+  hypothesis WEAKENED (recipe matters, but is not the fix). Plain SOAP
+  stays unresolved. (14129567 failed first on a wrong script path in
+  the sbatch — infra error, resubmitted.)
 
 ## Amortized T=10 (run 12: freq=10, T=10) — PENDING
 - Predict: separates the confound — if T=1 caused run8's failure, this
@@ -121,19 +126,37 @@ state_accounting.md (C256-calibrated: predicted 31.269 vs measured 31.280).
 
 - run14 (r64): s/step 1.89-1.93; cross 3175-3225; final 3.274-3.279;
   max mem ~31.12GB (±0.1); fixed vals between run5 and run6 rows above.
+  OUTCOME (14130114/14130122): cross 3200 (6184s), final 3.27649,
+  1.933s/step, 31.120GB — HIT on all four (s/step at band edge).
 - run15 (r128): s/step 1.93-1.98; cross 3150-3200; final 3.273-3.277;
   max mem ~31.16GB (±0.1).
+  OUTCOME (14130115/14130123): cross 3200 (6077s), final 3.27640,
+  1.899s/step, 31.167GB — s/step MISS (faster than band); rest HIT.
 - run18 (r32): s/step 1.87-1.91; cross 3200-3250 WITH no-cross tail risk
   (rank may be too crude; worst case lands near Muon, NOT worse than run5
   by more than +0.005 — a worse landing would implicate rank pathology,
   not just weak curvature); final 3.276-3.283; max mem ~31.10GB (±0.1).
+  OUTCOME (14130118/14130126): cross 3175 (6008s), final 3.27517,
+  1.892s/step, 31.097GB — cross + final MISS on the good side (better
+  than band); tail risk did NOT materialize. r32 ≈ r256 quality.
 - run19 (r512): s/step 2.10-2.20; cross 3125-3175 (at least as good as
   r256; diminishing returns expected); final 3.272-3.275; max mem
   ~31.53GB (±0.15).
+  OUTCOME (14130119/14130127): cross 3125 (6724s), final 3.27021,
+  2.151s/step, 31.582GB — final MISS on the good side (best COSMOS
+  final); rest HIT. Diminishing returns confirmed (25 steps for
+  2x rank + 8% slower steps).
 - run16/17 (Muon s1/s2): s/step 1.84-1.88; cross within ±75 steps of 3225
   (3150-3250 window); final 3.27844±0.004; max mem ~31.08GB (±0.1).
   These set the Muon spread; the COSMOS-vs-Muon edge stays UNESTABLISHED
   until both spreads are in.
+  OUTCOME (14130116/14130124, 14130117/14130125): s1 cross 3250 final
+  3.27959 (1.823s/step); s2 cross 3225 final 3.27922 (1.816s/step) —
+  cross/final/mem HIT; s/step MISS (both ~2% faster than band AND than
+  run5's 1.857: node/machine variance, same code). Muon 3-seed spread:
+  crosses 3225/3250/3225, finals within 0.0012. COSMOS-256: 3150/3150/
+  3175. Worst COSMOS (3175) still beats best Muon (3225) by 50 steps
+  with no overlap → edge ESTABLISHED (measured, 3v3).
 
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT

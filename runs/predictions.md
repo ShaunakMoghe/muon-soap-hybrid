@@ -158,6 +158,25 @@ state_accounting.md (C256-calibrated: predicted 31.269 vs measured 31.280).
   3175. Worst COSMOS (3175) still beats best Muon (3225) by 50 steps
   with no overlap → edge ESTABLISHED (measured, 3v3).
 
+## 8-GPU probes (run20 Muon-s0, run21 COSMOS-r32-s0; 500 steps) — PENDING
+
+Purpose: (a) measure per-step cost at 8 GPUs under the current
+param-gather scheme (the scale claim's cheapest test); (b) verify the
+code's "equivalently with 1/2/4/8 GPUs" claim by matching 1-GPU curves.
+Same scripts as run5/run18 except train_steps 500 (executed file + its
+source snapshot archived in run dir / logs/*.txt).
+
+- Predict: step_avg within 1.6-2.0 s/step for both (compute shards 8
+  ways; comm adds ~340MB param-gather + ~1.1GB grad-reduce per step);
+  C-r32 within +5% of Muon-8GPU (subspace work is local; no extra
+  collective vs Muon — from code, both all-gather params only).
+- Predict: val at 125/250/375/500 within 1% of run5 (4.59338/4.09780/
+  3.92328/3.82585) and run18 (4.66057/4.10066/3.91876/3.81929)
+  respectively. A larger gap implicates all-reduce associativity drift
+  or a sharding bug, and would gate any 8-GPU crossing comparison.
+- NOT measured here: steps-to-cross at 8 GPUs (needs full 3250-step
+  runs; this probe decides whether those are worth the queue + spend).
+
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT
   gated on it; resume gets fixed only if a run is actually cut off.

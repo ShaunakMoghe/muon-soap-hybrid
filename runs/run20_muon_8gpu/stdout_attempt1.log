@@ -1,0 +1,361 @@
+W1024 10:23:56.718000 3124309 torch/distributed/run.py:803] 
+W1024 10:23:56.718000 3124309 torch/distributed/run.py:803] *****************************************
+W1024 10:23:56.718000 3124309 torch/distributed/run.py:803] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W1024 10:23:56.718000 3124309 torch/distributed/run.py:803] *****************************************
+logs/95a5dbbb-507c-40f7-b2fb-52231157995b.txt
+step:0/500 val_loss:10.82584 train_time:0.000s step_avg:nanms
+step:1/500 train_time:73.867s step_avg:73866.82ms
+step:2/500 train_time:84.230s step_avg:42115.09ms
+step:3/500 train_time:84.619s step_avg:28206.30ms
+step:4/500 train_time:85.009s step_avg:21252.33ms
+step:5/500 train_time:85.399s step_avg:17079.84ms
+step:6/500 train_time:85.789s step_avg:14298.21ms
+step:7/500 train_time:86.179s step_avg:12311.30ms
+step:8/500 train_time:86.569s step_avg:10821.14ms
+step:9/500 train_time:86.960s step_avg:9662.19ms
+step:10/500 train_time:87.348s step_avg:8734.83ms
+step:11/500 train_time:87.738s step_avg:7976.16ms
+step:12/500 train_time:88.127s step_avg:7343.95ms
+step:13/500 train_time:88.516s step_avg:6808.96ms
+step:14/500 train_time:88.905s step_avg:6350.38ms
+step:15/500 train_time:89.293s step_avg:5952.90ms
+step:16/500 train_time:89.681s step_avg:5605.07ms
+step:17/500 train_time:90.070s step_avg:5298.24ms
+step:18/500 train_time:90.459s step_avg:5025.51ms
+step:19/500 train_time:90.847s step_avg:4781.44ms
+step:20/500 train_time:91.235s step_avg:4561.74ms
+step:21/500 train_time:91.622s step_avg:4362.96ms
+step:22/500 train_time:92.010s step_avg:4182.29ms
+step:23/500 train_time:92.400s step_avg:4017.39ms
+step:24/500 train_time:92.789s step_avg:3866.23ms
+step:25/500 train_time:93.177s step_avg:3727.08ms
+step:26/500 train_time:93.566s step_avg:3598.68ms
+step:27/500 train_time:93.954s step_avg:3479.79ms
+step:28/500 train_time:94.343s step_avg:3369.38ms
+step:29/500 train_time:94.731s step_avg:3266.59ms
+step:30/500 train_time:95.120s step_avg:3170.68ms
+step:31/500 train_time:95.508s step_avg:3080.91ms
+step:32/500 train_time:95.897s step_avg:2996.77ms
+step:33/500 train_time:96.285s step_avg:2917.74ms
+step:34/500 train_time:96.675s step_avg:2843.38ms
+step:35/500 train_time:97.065s step_avg:2773.29ms
+step:36/500 train_time:97.453s step_avg:2707.03ms
+step:37/500 train_time:97.843s step_avg:2644.41ms
+step:38/500 train_time:98.232s step_avg:2585.05ms
+step:39/500 train_time:98.620s step_avg:2528.72ms
+step:40/500 train_time:99.010s step_avg:2475.24ms
+step:41/500 train_time:99.399s step_avg:2424.37ms
+step:42/500 train_time:99.788s step_avg:2375.91ms
+step:43/500 train_time:100.178s step_avg:2329.72ms
+step:44/500 train_time:100.567s step_avg:2285.60ms
+step:45/500 train_time:100.956s step_avg:2243.47ms
+step:46/500 train_time:101.345s step_avg:2203.15ms
+step:47/500 train_time:101.733s step_avg:2164.53ms
+step:48/500 train_time:102.122s step_avg:2127.54ms
+step:49/500 train_time:102.511s step_avg:2092.06ms
+step:50/500 train_time:102.901s step_avg:2058.02ms
+step:51/500 train_time:103.289s step_avg:2025.28ms
+step:52/500 train_time:103.679s step_avg:1993.82ms
+step:53/500 train_time:104.068s step_avg:1963.54ms
+step:54/500 train_time:104.457s step_avg:1934.38ms
+step:55/500 train_time:104.846s step_avg:1906.30ms
+step:56/500 train_time:105.235s step_avg:1879.20ms
+step:57/500 train_time:105.625s step_avg:1853.07ms
+step:58/500 train_time:106.014s step_avg:1827.82ms
+step:59/500 train_time:106.403s step_avg:1803.44ms
+step:60/500 train_time:106.792s step_avg:1779.87ms
+step:61/500 train_time:107.180s step_avg:1757.05ms
+step:62/500 train_time:107.570s step_avg:1734.99ms
+step:63/500 train_time:107.959s step_avg:1713.64ms
+step:64/500 train_time:108.348s step_avg:1692.93ms
+step:65/500 train_time:108.737s step_avg:1672.88ms
+step:66/500 train_time:109.127s step_avg:1653.45ms
+step:67/500 train_time:109.516s step_avg:1634.56ms
+step:68/500 train_time:109.905s step_avg:1616.25ms
+step:69/500 train_time:110.295s step_avg:1598.47ms
+step:70/500 train_time:110.683s step_avg:1581.19ms
+step:71/500 train_time:111.072s step_avg:1564.39ms
+step:72/500 train_time:111.461s step_avg:1548.07ms
+step:73/500 train_time:111.850s step_avg:1532.20ms
+step:74/500 train_time:112.241s step_avg:1516.77ms
+step:75/500 train_time:112.631s step_avg:1501.74ms
+step:76/500 train_time:113.020s step_avg:1487.10ms
+step:77/500 train_time:113.410s step_avg:1472.86ms
+step:78/500 train_time:113.800s step_avg:1458.97ms
+step:79/500 train_time:114.188s step_avg:1445.42ms
+step:80/500 train_time:114.577s step_avg:1432.21ms
+step:81/500 train_time:114.966s step_avg:1419.33ms
+step:82/500 train_time:115.354s step_avg:1406.76ms
+step:83/500 train_time:115.744s step_avg:1394.50ms
+step:84/500 train_time:116.132s step_avg:1382.53ms
+step:85/500 train_time:116.521s step_avg:1370.83ms
+step:86/500 train_time:116.911s step_avg:1359.43ms
+step:87/500 train_time:117.299s step_avg:1348.27ms
+step:88/500 train_time:117.689s step_avg:1337.37ms
+step:89/500 train_time:118.078s step_avg:1326.72ms
+step:90/500 train_time:118.469s step_avg:1316.33ms
+step:91/500 train_time:118.859s step_avg:1306.14ms
+step:92/500 train_time:119.248s step_avg:1296.17ms
+step:93/500 train_time:119.639s step_avg:1286.44ms
+step:94/500 train_time:120.029s step_avg:1276.91ms
+step:95/500 train_time:120.419s step_avg:1267.56ms
+step:96/500 train_time:120.808s step_avg:1258.42ms
+step:97/500 train_time:121.197s step_avg:1249.45ms
+step:98/500 train_time:121.586s step_avg:1240.67ms
+step:99/500 train_time:121.976s step_avg:1232.08ms
+step:100/500 train_time:122.365s step_avg:1223.65ms
+step:101/500 train_time:122.754s step_avg:1215.38ms
+step:102/500 train_time:123.143s step_avg:1207.28ms
+step:103/500 train_time:123.532s step_avg:1199.34ms
+step:104/500 train_time:123.922s step_avg:1191.56ms
+step:105/500 train_time:124.310s step_avg:1183.91ms
+step:106/500 train_time:124.700s step_avg:1176.42ms
+step:107/500 train_time:125.089s step_avg:1169.06ms
+step:108/500 train_time:125.479s step_avg:1161.84ms
+step:109/500 train_time:125.868s step_avg:1154.75ms
+step:110/500 train_time:126.258s step_avg:1147.80ms
+step:111/500 train_time:126.647s step_avg:1140.96ms
+step:112/500 train_time:127.037s step_avg:1134.26ms
+step:113/500 train_time:127.425s step_avg:1127.66ms
+step:114/500 train_time:127.815s step_avg:1121.19ms
+step:115/500 train_time:128.204s step_avg:1114.82ms
+step:116/500 train_time:128.594s step_avg:1108.57ms
+step:117/500 train_time:128.982s step_avg:1102.41ms
+step:118/500 train_time:129.373s step_avg:1096.38ms
+step:119/500 train_time:129.763s step_avg:1090.45ms
+step:120/500 train_time:130.152s step_avg:1084.60ms
+step:121/500 train_time:130.541s step_avg:1078.85ms
+step:122/500 train_time:130.930s step_avg:1073.19ms
+step:123/500 train_time:131.320s step_avg:1067.64ms
+step:124/500 train_time:131.709s step_avg:1062.17ms
+step:125/500 train_time:132.098s step_avg:1056.79ms
+step:125/500 val_loss:4.58694 train_time:132.228s step_avg:1057.82ms
+step:126/500 train_time:132.488s step_avg:1051.49ms
+step:127/500 train_time:132.878s step_avg:1046.28ms
+step:128/500 train_time:133.267s step_avg:1041.15ms
+step:129/500 train_time:133.656s step_avg:1036.10ms
+step:130/500 train_time:134.046s step_avg:1031.12ms
+step:131/500 train_time:134.436s step_avg:1026.23ms
+step:132/500 train_time:134.825s step_avg:1021.40ms
+step:133/500 train_time:135.215s step_avg:1016.65ms
+step:134/500 train_time:135.603s step_avg:1011.96ms
+step:135/500 train_time:135.993s step_avg:1007.35ms
+step:136/500 train_time:136.384s step_avg:1002.82ms
+step:137/500 train_time:136.774s step_avg:998.35ms
+step:138/500 train_time:137.163s step_avg:993.94ms
+step:139/500 train_time:137.552s step_avg:989.59ms
+step:140/500 train_time:137.941s step_avg:985.29ms
+step:141/500 train_time:138.330s step_avg:981.07ms
+step:142/500 train_time:138.721s step_avg:976.91ms
+step:143/500 train_time:139.109s step_avg:972.79ms
+step:144/500 train_time:139.499s step_avg:968.74ms
+step:145/500 train_time:139.889s step_avg:964.75ms
+step:146/500 train_time:140.278s step_avg:960.81ms
+step:147/500 train_time:140.667s step_avg:956.92ms
+step:148/500 train_time:141.055s step_avg:953.08ms
+step:149/500 train_time:141.445s step_avg:949.29ms
+step:150/500 train_time:141.835s step_avg:945.56ms
+step:151/500 train_time:142.225s step_avg:941.89ms
+step:152/500 train_time:142.615s step_avg:938.26ms
+step:153/500 train_time:143.006s step_avg:934.68ms
+step:154/500 train_time:143.395s step_avg:931.13ms
+step:155/500 train_time:143.784s step_avg:927.64ms
+step:156/500 train_time:144.173s step_avg:924.19ms
+step:157/500 train_time:144.562s step_avg:920.78ms
+step:158/500 train_time:144.951s step_avg:917.41ms
+step:159/500 train_time:145.341s step_avg:914.10ms
+step:160/500 train_time:145.732s step_avg:910.82ms
+step:161/500 train_time:146.121s step_avg:907.59ms
+step:162/500 train_time:146.509s step_avg:904.38ms
+step:163/500 train_time:146.899s step_avg:901.22ms
+step:164/500 train_time:147.287s step_avg:898.09ms
+step:165/500 train_time:147.677s step_avg:895.01ms
+step:166/500 train_time:148.066s step_avg:891.96ms
+step:167/500 train_time:148.456s step_avg:888.96ms
+step:168/500 train_time:148.846s step_avg:885.99ms
+step:169/500 train_time:149.235s step_avg:883.05ms
+step:170/500 train_time:149.627s step_avg:880.16ms
+step:171/500 train_time:150.016s step_avg:877.28ms
+step:172/500 train_time:150.405s step_avg:874.45ms
+step:173/500 train_time:150.795s step_avg:871.65ms
+step:174/500 train_time:151.185s step_avg:868.88ms
+step:175/500 train_time:151.574s step_avg:866.14ms
+step:176/500 train_time:151.964s step_avg:863.43ms
+step:177/500 train_time:152.354s step_avg:860.76ms
+step:178/500 train_time:152.742s step_avg:858.10ms
+step:179/500 train_time:153.132s step_avg:855.49ms
+step:180/500 train_time:153.521s step_avg:852.89ms
+step:181/500 train_time:153.910s step_avg:850.33ms
+step:182/500 train_time:154.300s step_avg:847.80ms
+step:183/500 train_time:154.689s step_avg:845.30ms
+step:184/500 train_time:155.080s step_avg:842.82ms
+step:185/500 train_time:155.470s step_avg:840.38ms
+step:186/500 train_time:155.859s step_avg:837.95ms
+step:187/500 train_time:156.248s step_avg:835.55ms
+step:188/500 train_time:156.640s step_avg:833.19ms
+step:189/500 train_time:157.029s step_avg:830.84ms
+step:190/500 train_time:157.418s step_avg:828.51ms
+step:191/500 train_time:158.173s step_avg:828.13ms
+step:192/500 train_time:158.563s step_avg:825.85ms
+step:193/500 train_time:158.953s step_avg:823.59ms
+step:194/500 train_time:159.343s step_avg:821.36ms
+step:195/500 train_time:159.734s step_avg:819.15ms
+step:196/500 train_time:160.124s step_avg:816.96ms
+step:197/500 train_time:160.513s step_avg:814.79ms
+step:198/500 train_time:160.902s step_avg:812.63ms
+step:199/500 train_time:161.290s step_avg:810.50ms
+step:200/500 train_time:161.680s step_avg:808.40ms
+step:201/500 train_time:162.069s step_avg:806.31ms
+step:202/500 train_time:162.460s step_avg:804.26ms
+step:203/500 train_time:162.849s step_avg:802.21ms
+step:204/500 train_time:163.239s step_avg:800.19ms
+step:205/500 train_time:163.629s step_avg:798.19ms
+step:206/500 train_time:164.018s step_avg:796.20ms
+step:207/500 train_time:164.407s step_avg:794.24ms
+step:208/500 train_time:164.797s step_avg:792.29ms
+step:209/500 train_time:165.186s step_avg:790.36ms
+step:210/500 train_time:165.575s step_avg:788.45ms
+step:211/500 train_time:165.963s step_avg:786.56ms
+step:212/500 train_time:166.353s step_avg:784.68ms
+step:213/500 train_time:166.742s step_avg:782.83ms
+step:214/500 train_time:167.133s step_avg:780.99ms
+step:215/500 train_time:167.522s step_avg:779.17ms
+step:216/500 train_time:167.911s step_avg:777.37ms
+step:217/500 train_time:168.300s step_avg:775.58ms
+step:218/500 train_time:168.688s step_avg:773.80ms
+step:219/500 train_time:169.078s step_avg:772.05ms
+step:220/500 train_time:169.466s step_avg:770.30ms
+step:221/500 train_time:169.856s step_avg:768.58ms
+step:222/500 train_time:170.246s step_avg:766.87ms
+step:223/500 train_time:170.636s step_avg:765.18ms
+step:224/500 train_time:171.025s step_avg:763.50ms
+step:225/500 train_time:171.414s step_avg:761.84ms
+step:226/500 train_time:171.804s step_avg:760.19ms
+step:227/500 train_time:172.195s step_avg:758.57ms
+step:228/500 train_time:172.583s step_avg:756.94ms
+step:229/500 train_time:172.975s step_avg:755.35ms
+step:230/500 train_time:173.364s step_avg:753.76ms
+step:231/500 train_time:173.754s step_avg:752.18ms
+step:232/500 train_time:174.143s step_avg:750.62ms
+step:233/500 train_time:174.533s step_avg:749.07ms
+step:234/500 train_time:174.923s step_avg:747.53ms
+step:235/500 train_time:175.313s step_avg:746.01ms
+step:236/500 train_time:175.704s step_avg:744.51ms
+step:237/500 train_time:176.094s step_avg:743.01ms
+step:238/500 train_time:176.482s step_avg:741.52ms
+step:239/500 train_time:176.871s step_avg:740.05ms
+step:240/500 train_time:177.260s step_avg:738.58ms
+step:241/500 train_time:177.651s step_avg:737.14ms
+step:242/500 train_time:178.040s step_avg:735.70ms
+step:243/500 train_time:178.431s step_avg:734.28ms
+step:244/500 train_time:178.821s step_avg:732.87ms
+step:245/500 train_time:179.209s step_avg:731.46ms
+step:246/500 train_time:179.597s step_avg:730.07ms
+step:247/500 train_time:179.987s step_avg:728.69ms
+step:248/500 train_time:180.377s step_avg:727.33ms
+step:249/500 train_time:180.768s step_avg:725.97ms
+[rank4]: Traceback (most recent call last):
+[rank4]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run20_muon_8gpu/script_used.py", line 392, in <module>
+[rank4]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank4]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank4]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]: AssertionError: ckpt only supports world_size 1
+[rank5]: Traceback (most recent call last):
+[rank5]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run20_muon_8gpu/script_used.py", line 392, in <module>
+[rank5]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank5]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank5]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]: AssertionError: ckpt only supports world_size 1
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run20_muon_8gpu/script_used.py", line 392, in <module>
+[rank3]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank3]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank3]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]: AssertionError: ckpt only supports world_size 1
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run20_muon_8gpu/script_used.py", line 392, in <module>
+[rank0]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank0]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank0]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: AssertionError: ckpt only supports world_size 1
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run20_muon_8gpu/script_used.py", line 392, in <module>
+[rank2]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank2]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank2]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]: AssertionError: ckpt only supports world_size 1
+[rank6]: Traceback (most recent call last):
+[rank6]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run20_muon_8gpu/script_used.py", line 392, in <module>
+[rank6]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank6]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank6]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]: AssertionError: ckpt only supports world_size 1
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run20_muon_8gpu/script_used.py", line 392, in <module>
+[rank1]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank1]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank1]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: AssertionError: ckpt only supports world_size 1
+[rank7]: Traceback (most recent call last):
+[rank7]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run20_muon_8gpu/script_used.py", line 392, in <module>
+[rank7]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank7]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank7]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]: AssertionError: ckpt only supports world_size 1
+[rank0]:[W1024 10:27:31.908327393 ProcessGroupNCCL.cpp:1536] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+W1024 10:27:32.078000 3124309 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3124429 closing signal SIGTERM
+W1024 10:27:32.079000 3124309 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3124430 closing signal SIGTERM
+W1024 10:27:32.079000 3124309 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3124431 closing signal SIGTERM
+W1024 10:27:32.081000 3124309 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3124432 closing signal SIGTERM
+W1024 10:27:32.081000 3124309 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3124433 closing signal SIGTERM
+W1024 10:27:32.082000 3124309 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3124434 closing signal SIGTERM
+W1024 10:27:32.085000 3124309 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3124435 closing signal SIGTERM
+E1024 10:27:33.646000 3124309 torch/distributed/elastic/multiprocessing/api.py:882] failed (exitcode: 1) local_rank: 0 (pid: 3124428) of binary: /usr/bin/python
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 936, in main
+    run(args)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 927, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 156, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 293, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+script_used.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-10-24_10:27:32
+  host      : atl1-1-03-020-6-0.pace.gatech.edu
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 3124428)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

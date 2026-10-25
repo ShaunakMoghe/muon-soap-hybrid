@@ -1,0 +1,375 @@
+W1024 10:27:38.309000 3126052 torch/distributed/run.py:803] 
+W1024 10:27:38.309000 3126052 torch/distributed/run.py:803] *****************************************
+W1024 10:27:38.309000 3126052 torch/distributed/run.py:803] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W1024 10:27:38.309000 3126052 torch/distributed/run.py:803] *****************************************
+logs/5239c059-4bb0-4b92-85d8-27e2a14321a6.txt
+step:0/500 val_loss:10.82584 train_time:0.000s step_avg:nanms
+/usr/local/lib/python3.12/dist-packages/torch/backends/cuda/__init__.py:131: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/Context.cpp:80.)
+  return torch._C._get_cublas_allow_tf32()
+/usr/local/lib/python3.12/dist-packages/torch/backends/cuda/__init__.py:131: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/Context.cpp:80.)
+  return torch._C._get_cublas_allow_tf32()
+/usr/local/lib/python3.12/dist-packages/torch/backends/cuda/__init__.py:131: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/Context.cpp:80.)
+  return torch._C._get_cublas_allow_tf32()
+/usr/local/lib/python3.12/dist-packages/torch/backends/cuda/__init__.py:131: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/Context.cpp:80.)
+  return torch._C._get_cublas_allow_tf32()
+/usr/local/lib/python3.12/dist-packages/torch/backends/cuda/__init__.py:131: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/Context.cpp:80.)
+  return torch._C._get_cublas_allow_tf32()
+/usr/local/lib/python3.12/dist-packages/torch/backends/cuda/__init__.py:131: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/Context.cpp:80.)
+  return torch._C._get_cublas_allow_tf32()
+/usr/local/lib/python3.12/dist-packages/torch/backends/cuda/__init__.py:131: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/Context.cpp:80.)
+  return torch._C._get_cublas_allow_tf32()
+step:1/500 train_time:73.502s step_avg:73501.70ms
+step:2/500 train_time:73.885s step_avg:36942.59ms
+step:3/500 train_time:74.279s step_avg:24759.55ms
+step:4/500 train_time:74.675s step_avg:18668.64ms
+step:5/500 train_time:75.069s step_avg:15013.79ms
+step:6/500 train_time:75.464s step_avg:12577.33ms
+step:7/500 train_time:75.858s step_avg:10836.91ms
+step:8/500 train_time:76.253s step_avg:9531.60ms
+step:9/500 train_time:76.648s step_avg:8516.48ms
+step:10/500 train_time:77.043s step_avg:7704.30ms
+step:11/500 train_time:77.437s step_avg:7039.74ms
+step:12/500 train_time:77.833s step_avg:6486.05ms
+step:13/500 train_time:78.227s step_avg:6017.50ms
+step:14/500 train_time:78.622s step_avg:5615.85ms
+step:15/500 train_time:79.017s step_avg:5267.77ms
+step:16/500 train_time:79.412s step_avg:4963.24ms
+step:17/500 train_time:79.807s step_avg:4694.50ms
+step:18/500 train_time:80.202s step_avg:4455.68ms
+step:19/500 train_time:80.597s step_avg:4241.96ms
+step:20/500 train_time:80.991s step_avg:4049.56ms
+step:21/500 train_time:81.385s step_avg:3875.50ms
+step:22/500 train_time:81.782s step_avg:3717.34ms
+step:23/500 train_time:82.176s step_avg:3572.88ms
+step:24/500 train_time:82.571s step_avg:3440.46ms
+step:25/500 train_time:82.966s step_avg:3318.65ms
+step:26/500 train_time:83.361s step_avg:3206.18ms
+step:27/500 train_time:83.755s step_avg:3102.03ms
+step:28/500 train_time:84.150s step_avg:3005.36ms
+step:29/500 train_time:84.544s step_avg:2915.32ms
+step:30/500 train_time:84.938s step_avg:2831.27ms
+step:31/500 train_time:85.331s step_avg:2752.63ms
+step:32/500 train_time:85.725s step_avg:2678.92ms
+step:33/500 train_time:86.120s step_avg:2609.71ms
+step:34/500 train_time:86.516s step_avg:2544.58ms
+step:35/500 train_time:86.911s step_avg:2483.17ms
+step:36/500 train_time:87.306s step_avg:2425.16ms
+step:37/500 train_time:87.700s step_avg:2370.28ms
+step:38/500 train_time:88.096s step_avg:2318.32ms
+step:39/500 train_time:88.492s step_avg:2269.01ms
+step:40/500 train_time:88.886s step_avg:2222.15ms
+step:41/500 train_time:89.282s step_avg:2177.60ms
+step:42/500 train_time:89.676s step_avg:2135.14ms
+step:43/500 train_time:90.070s step_avg:2094.66ms
+step:44/500 train_time:90.465s step_avg:2056.02ms
+step:45/500 train_time:90.860s step_avg:2019.11ms
+step:46/500 train_time:91.254s step_avg:1983.78ms
+step:47/500 train_time:91.648s step_avg:1949.96ms
+step:48/500 train_time:92.042s step_avg:1917.55ms
+step:49/500 train_time:92.437s step_avg:1886.48ms
+step:50/500 train_time:92.833s step_avg:1856.66ms
+step:51/500 train_time:93.228s step_avg:1828.00ms
+step:52/500 train_time:93.624s step_avg:1800.45ms
+step:53/500 train_time:94.018s step_avg:1773.93ms
+step:54/500 train_time:94.413s step_avg:1748.39ms
+step:55/500 train_time:94.808s step_avg:1723.78ms
+step:56/500 train_time:95.203s step_avg:1700.06ms
+step:57/500 train_time:95.597s step_avg:1677.14ms
+step:58/500 train_time:95.993s step_avg:1655.05ms
+step:59/500 train_time:96.388s step_avg:1633.69ms
+step:60/500 train_time:96.782s step_avg:1613.04ms
+step:61/500 train_time:97.178s step_avg:1593.08ms
+step:62/500 train_time:97.572s step_avg:1573.75ms
+step:63/500 train_time:97.967s step_avg:1555.04ms
+step:64/500 train_time:98.361s step_avg:1536.90ms
+step:65/500 train_time:98.757s step_avg:1519.33ms
+step:66/500 train_time:99.151s step_avg:1502.29ms
+step:67/500 train_time:99.546s step_avg:1485.76ms
+step:68/500 train_time:99.942s step_avg:1469.74ms
+step:69/500 train_time:100.336s step_avg:1454.15ms
+step:70/500 train_time:100.733s step_avg:1439.04ms
+step:71/500 train_time:101.128s step_avg:1424.33ms
+step:72/500 train_time:101.522s step_avg:1410.02ms
+step:73/500 train_time:101.917s step_avg:1396.12ms
+step:74/500 train_time:102.312s step_avg:1382.59ms
+step:75/500 train_time:102.707s step_avg:1369.42ms
+step:76/500 train_time:103.101s step_avg:1356.60ms
+step:77/500 train_time:103.496s step_avg:1344.10ms
+step:78/500 train_time:103.892s step_avg:1331.95ms
+step:79/500 train_time:104.288s step_avg:1320.10ms
+step:80/500 train_time:104.682s step_avg:1308.53ms
+step:81/500 train_time:105.077s step_avg:1297.24ms
+step:82/500 train_time:105.471s step_avg:1286.23ms
+step:83/500 train_time:105.866s step_avg:1275.49ms
+step:84/500 train_time:106.261s step_avg:1265.01ms
+step:85/500 train_time:106.655s step_avg:1254.76ms
+step:86/500 train_time:107.050s step_avg:1244.77ms
+step:87/500 train_time:107.446s step_avg:1235.01ms
+step:88/500 train_time:107.840s step_avg:1225.46ms
+step:89/500 train_time:108.235s step_avg:1216.12ms
+step:90/500 train_time:108.629s step_avg:1206.99ms
+step:91/500 train_time:109.024s step_avg:1198.07ms
+step:92/500 train_time:109.419s step_avg:1189.34ms
+step:93/500 train_time:109.813s step_avg:1180.79ms
+step:94/500 train_time:110.208s step_avg:1172.43ms
+step:95/500 train_time:110.603s step_avg:1164.24ms
+step:96/500 train_time:110.997s step_avg:1156.22ms
+step:97/500 train_time:111.392s step_avg:1148.37ms
+step:98/500 train_time:111.786s step_avg:1140.67ms
+step:99/500 train_time:112.182s step_avg:1133.15ms
+step:100/500 train_time:112.577s step_avg:1125.77ms
+step:101/500 train_time:112.971s step_avg:1118.53ms
+step:102/500 train_time:113.366s step_avg:1111.43ms
+step:103/500 train_time:113.761s step_avg:1104.48ms
+step:104/500 train_time:114.157s step_avg:1097.66ms
+step:105/500 train_time:114.551s step_avg:1090.96ms
+step:106/500 train_time:114.946s step_avg:1084.40ms
+step:107/500 train_time:115.341s step_avg:1077.96ms
+step:108/500 train_time:115.737s step_avg:1071.64ms
+step:109/500 train_time:116.133s step_avg:1065.44ms
+step:110/500 train_time:116.528s step_avg:1059.35ms
+step:111/500 train_time:116.924s step_avg:1053.37ms
+step:112/500 train_time:117.319s step_avg:1047.49ms
+step:113/500 train_time:117.714s step_avg:1041.72ms
+step:114/500 train_time:118.109s step_avg:1036.04ms
+step:115/500 train_time:118.504s step_avg:1030.47ms
+step:116/500 train_time:118.898s step_avg:1024.98ms
+step:117/500 train_time:119.294s step_avg:1019.60ms
+step:118/500 train_time:119.689s step_avg:1014.31ms
+step:119/500 train_time:120.082s step_avg:1009.10ms
+step:120/500 train_time:120.478s step_avg:1003.99ms
+step:121/500 train_time:120.874s step_avg:998.96ms
+step:122/500 train_time:121.268s step_avg:994.00ms
+step:123/500 train_time:121.663s step_avg:989.13ms
+step:124/500 train_time:122.059s step_avg:984.35ms
+step:125/500 train_time:122.456s step_avg:979.64ms
+step:125/500 val_loss:4.66410 train_time:122.467s step_avg:979.74ms
+step:126/500 train_time:122.851s step_avg:975.01ms
+step:127/500 train_time:123.246s step_avg:970.44ms
+step:128/500 train_time:123.642s step_avg:965.95ms
+step:129/500 train_time:124.036s step_avg:961.52ms
+step:130/500 train_time:124.431s step_avg:957.16ms
+step:131/500 train_time:124.827s step_avg:952.87ms
+step:132/500 train_time:125.221s step_avg:948.64ms
+step:133/500 train_time:125.615s step_avg:944.47ms
+step:134/500 train_time:126.010s step_avg:940.38ms
+step:135/500 train_time:126.405s step_avg:936.33ms
+step:136/500 train_time:126.801s step_avg:932.36ms
+step:137/500 train_time:127.196s step_avg:928.44ms
+step:138/500 train_time:127.592s step_avg:924.58ms
+step:139/500 train_time:127.986s step_avg:920.76ms
+step:140/500 train_time:128.381s step_avg:917.00ms
+step:141/500 train_time:128.776s step_avg:913.30ms
+step:142/500 train_time:129.171s step_avg:909.66ms
+step:143/500 train_time:129.566s step_avg:906.06ms
+step:144/500 train_time:129.961s step_avg:902.51ms
+step:145/500 train_time:130.356s step_avg:899.00ms
+step:146/500 train_time:130.752s step_avg:895.56ms
+step:147/500 train_time:131.147s step_avg:892.16ms
+step:148/500 train_time:131.542s step_avg:888.80ms
+step:149/500 train_time:131.938s step_avg:885.49ms
+step:150/500 train_time:132.335s step_avg:882.23ms
+step:151/500 train_time:132.730s step_avg:879.01ms
+step:152/500 train_time:133.126s step_avg:875.83ms
+step:153/500 train_time:133.521s step_avg:872.68ms
+step:154/500 train_time:133.916s step_avg:869.58ms
+step:155/500 train_time:134.311s step_avg:866.53ms
+step:156/500 train_time:134.706s step_avg:863.50ms
+step:157/500 train_time:135.103s step_avg:860.53ms
+step:158/500 train_time:135.498s step_avg:857.58ms
+step:159/500 train_time:135.893s step_avg:854.67ms
+step:160/500 train_time:136.288s step_avg:851.80ms
+step:161/500 train_time:136.683s step_avg:848.96ms
+step:162/500 train_time:137.079s step_avg:846.17ms
+step:163/500 train_time:137.475s step_avg:843.40ms
+step:164/500 train_time:137.871s step_avg:840.68ms
+step:165/500 train_time:138.266s step_avg:837.98ms
+step:166/500 train_time:138.662s step_avg:835.31ms
+step:167/500 train_time:139.056s step_avg:832.67ms
+step:168/500 train_time:139.452s step_avg:830.07ms
+step:169/500 train_time:139.847s step_avg:827.50ms
+step:170/500 train_time:140.243s step_avg:824.96ms
+step:171/500 train_time:140.638s step_avg:822.45ms
+step:172/500 train_time:141.034s step_avg:819.97ms
+step:173/500 train_time:141.429s step_avg:817.51ms
+step:174/500 train_time:141.823s step_avg:815.08ms
+step:175/500 train_time:142.217s step_avg:812.67ms
+step:176/500 train_time:142.613s step_avg:810.30ms
+step:177/500 train_time:143.009s step_avg:807.96ms
+step:178/500 train_time:143.404s step_avg:805.64ms
+step:179/500 train_time:143.798s step_avg:803.34ms
+step:180/500 train_time:144.194s step_avg:801.08ms
+step:181/500 train_time:144.591s step_avg:798.85ms
+step:182/500 train_time:144.986s step_avg:796.63ms
+step:183/500 train_time:145.382s step_avg:794.44ms
+step:184/500 train_time:145.776s step_avg:792.26ms
+step:185/500 train_time:146.171s step_avg:790.11ms
+step:186/500 train_time:146.565s step_avg:787.99ms
+step:187/500 train_time:146.961s step_avg:785.89ms
+step:188/500 train_time:147.355s step_avg:783.80ms
+step:189/500 train_time:147.751s step_avg:781.75ms
+step:190/500 train_time:148.147s step_avg:779.72ms
+step:191/500 train_time:148.673s step_avg:778.39ms
+step:192/500 train_time:149.069s step_avg:776.40ms
+step:193/500 train_time:149.464s step_avg:774.42ms
+step:194/500 train_time:149.860s step_avg:772.47ms
+step:195/500 train_time:150.255s step_avg:770.54ms
+step:196/500 train_time:150.649s step_avg:768.62ms
+step:197/500 train_time:151.045s step_avg:766.73ms
+step:198/500 train_time:151.440s step_avg:764.85ms
+step:199/500 train_time:151.835s step_avg:762.99ms
+step:200/500 train_time:152.232s step_avg:761.16ms
+step:201/500 train_time:152.626s step_avg:759.33ms
+step:202/500 train_time:153.022s step_avg:757.53ms
+step:203/500 train_time:153.416s step_avg:755.74ms
+step:204/500 train_time:153.811s step_avg:753.97ms
+step:205/500 train_time:154.206s step_avg:752.22ms
+step:206/500 train_time:154.600s step_avg:750.49ms
+step:207/500 train_time:154.995s step_avg:748.77ms
+step:208/500 train_time:155.390s step_avg:747.07ms
+step:209/500 train_time:155.786s step_avg:745.39ms
+step:210/500 train_time:156.181s step_avg:743.72ms
+step:211/500 train_time:156.577s step_avg:742.07ms
+step:212/500 train_time:156.972s step_avg:740.43ms
+step:213/500 train_time:157.368s step_avg:738.82ms
+step:214/500 train_time:157.764s step_avg:737.21ms
+step:215/500 train_time:158.159s step_avg:735.62ms
+step:216/500 train_time:158.554s step_avg:734.05ms
+step:217/500 train_time:158.950s step_avg:732.49ms
+step:218/500 train_time:159.345s step_avg:730.94ms
+step:219/500 train_time:159.740s step_avg:729.41ms
+step:220/500 train_time:160.138s step_avg:727.90ms
+step:221/500 train_time:160.532s step_avg:726.39ms
+step:222/500 train_time:160.928s step_avg:724.90ms
+step:223/500 train_time:161.324s step_avg:723.42ms
+step:224/500 train_time:161.719s step_avg:721.96ms
+step:225/500 train_time:162.115s step_avg:720.51ms
+step:226/500 train_time:162.510s step_avg:719.07ms
+step:227/500 train_time:162.904s step_avg:717.64ms
+step:228/500 train_time:163.299s step_avg:716.22ms
+step:229/500 train_time:163.694s step_avg:714.82ms
+step:230/500 train_time:164.089s step_avg:713.43ms
+step:231/500 train_time:164.485s step_avg:712.06ms
+step:232/500 train_time:164.881s step_avg:710.69ms
+step:233/500 train_time:165.277s step_avg:709.34ms
+step:234/500 train_time:165.672s step_avg:708.00ms
+step:235/500 train_time:166.067s step_avg:706.67ms
+step:236/500 train_time:166.463s step_avg:705.35ms
+step:237/500 train_time:166.858s step_avg:704.04ms
+step:238/500 train_time:167.253s step_avg:702.74ms
+step:239/500 train_time:167.647s step_avg:701.45ms
+step:240/500 train_time:168.042s step_avg:700.17ms
+step:241/500 train_time:168.437s step_avg:698.91ms
+step:242/500 train_time:168.833s step_avg:697.66ms
+step:243/500 train_time:169.228s step_avg:696.41ms
+step:244/500 train_time:169.622s step_avg:695.17ms
+step:245/500 train_time:170.019s step_avg:693.95ms
+step:246/500 train_time:170.413s step_avg:692.74ms
+step:247/500 train_time:170.809s step_avg:691.53ms
+step:248/500 train_time:171.204s step_avg:690.34ms
+step:249/500 train_time:171.600s step_avg:689.16ms
+[rank6]: Traceback (most recent call last):
+[rank6]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run21_cosmos_r32_8gpu/script_used.py", line 818, in <module>
+[rank6]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank6]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank6]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]: AssertionError: ckpt only supports world_size 1
+[rank7]: Traceback (most recent call last):
+[rank7]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run21_cosmos_r32_8gpu/script_used.py", line 818, in <module>
+[rank7]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank7]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank7]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]: AssertionError: ckpt only supports world_size 1
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run21_cosmos_r32_8gpu/script_used.py", line 818, in <module>
+[rank3]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank3]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank3]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]: AssertionError: ckpt only supports world_size 1
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run21_cosmos_r32_8gpu/script_used.py", line 818, in <module>
+[rank1]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank1]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank1]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: AssertionError: ckpt only supports world_size 1
+[rank5]: Traceback (most recent call last):
+[rank5]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run21_cosmos_r32_8gpu/script_used.py", line 818, in <module>
+[rank5]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank5]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank5]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]: AssertionError: ckpt only supports world_size 1
+[rank4]: Traceback (most recent call last):
+[rank4]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run21_cosmos_r32_8gpu/script_used.py", line 818, in <module>
+[rank4]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank4]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank4]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]: AssertionError: ckpt only supports world_size 1
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run21_cosmos_r32_8gpu/script_used.py", line 818, in <module>
+[rank2]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank2]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank2]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]: AssertionError: ckpt only supports world_size 1
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/storage/project/ps-moereasoning-0/smoghe6/runs/run21_cosmos_r32_8gpu/script_used.py", line 818, in <module>
+[rank0]:     ckpt_path = save_ckpt(step + 1, training_time + (time.perf_counter() - t0),
+[rank0]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/storage/project/ps-moereasoning-0/smoghe6/research_stack/ckpt.py", line 48, in save_ckpt
+[rank0]:     assert dist.get_world_size() == 1, "ckpt only supports world_size 1"
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: AssertionError: ckpt only supports world_size 1
+[rank0]:[W1024 10:30:48.813587963 ProcessGroupNCCL.cpp:1536] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+W1024 10:30:50.016000 3126052 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3126171 closing signal SIGTERM
+W1024 10:30:50.017000 3126052 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3126172 closing signal SIGTERM
+W1024 10:30:50.017000 3126052 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3126173 closing signal SIGTERM
+W1024 10:30:50.018000 3126052 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3126174 closing signal SIGTERM
+W1024 10:30:50.018000 3126052 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3126175 closing signal SIGTERM
+W1024 10:30:50.019000 3126052 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3126176 closing signal SIGTERM
+W1024 10:30:50.019000 3126052 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3126177 closing signal SIGTERM
+E1024 10:30:51.213000 3126052 torch/distributed/elastic/multiprocessing/api.py:882] failed (exitcode: 1) local_rank: 0 (pid: 3126170) of binary: /usr/bin/python
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 936, in main
+    run(args)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 927, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 156, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 293, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+script_used.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-10-24_10:30:50
+  host      : atl1-1-03-020-6-0.pace.gatech.edu
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 3126170)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

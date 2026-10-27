@@ -285,6 +285,9 @@ per-step, -4% wall vs Muon. Different track/harness here, so bands wide.
 - Smoke (12 steps): completes; step-12 val in [6.2, 6.6] (first 9 steps are
   pure Muon — identity until refresh at step 10 — so init should match
   Muon-family ~6.38); ckpt written; no OOM (the v1 failure mode).
+  OUTCOME (job 14508442): SMOKE_OK, step-12 val 6.40805 (in band), ckpt
+  written, ZERO recompile lines — the custom-op port traces cleanly, no
+  graph breaks, v1 failure mode eliminated. Full auto-released (14508443).
 - Full run7: crosses 3.28; crossing 3000-3200 (paper-analogous 6% under
   Muon's 3225 would be ~3030; band covers track differences); s/step
   1.9-2.1; final <=3.278 (at least Muon); max mem ~32GB (±1).

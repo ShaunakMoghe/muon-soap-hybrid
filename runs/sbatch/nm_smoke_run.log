@@ -1,0 +1,20 @@
+logs/43c004fb-f097-4abb-bee2-49ceff6d4fff.txt
+newton-muon: 72 Linear capture buffers registered
+step:0/12 val_loss:10.82583 train_time:0.000s step_avg:nanms
+step:1/12 train_time:25.288s step_avg:25288.36ms
+step:2/12 train_time:27.061s step_avg:13530.39ms
+step:3/12 train_time:28.850s step_avg:9616.78ms
+step:4/12 train_time:30.641s step_avg:7660.35ms
+step:5/12 train_time:32.433s step_avg:6486.69ms
+step:6/12 train_time:34.226s step_avg:5704.40ms
+step:7/12 train_time:36.022s step_avg:5146.05ms
+step:8/12 train_time:37.819s step_avg:4727.39ms
+step:9/12 train_time:39.614s step_avg:4401.60ms
+/usr/local/lib/python3.12/dist-packages/torch/backends/cuda/__init__.py:131: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/Context.cpp:80.)
+  return torch._C._get_cublas_allow_tf32()
+checkpoint: /tmp/nmsmoke/checkpoints/ckpt_00010.pt
+step:10/12 train_time:70.143s step_avg:7014.26ms
+step:11/12 train_time:71.961s step_avg:6541.91ms
+step:12/12 train_time:73.781s step_avg:6148.43ms
+step:12/12 val_loss:6.40805 train_time:73.787s step_avg:6148.92ms
+max_memory_allocated: 32.115 GB

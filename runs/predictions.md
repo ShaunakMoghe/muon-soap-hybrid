@@ -176,6 +176,22 @@ source snapshot archived in run dir / logs/*.txt).
   or a sharding bug, and would gate any 8-GPU crossing comparison.
 - NOT measured here: steps-to-cross at 8 GPUs (needs full 3250-step
   runs; this probe decides whether those are worth the queue + spend).
+  OUTCOME (jobs 14395302/14395303): step_avg 0.390 (Muon) / 0.395 s/step
+  (C-r32) — absolute band (1.6-2.0) MISS badly: prediction forgot compute
+  shards ~linearly (1.82/8=0.23 + comm); relative prediction HIT (+1.2%,
+  inside +5%). 8-GPU throughput ~4.7x 1-GPU.
+  Equivalence: FAIL beyond step ~125. Gaps (8-GPU vs 1-GPU): -0.2% @125,
+  -1.0% @250, -2.0% @375, -2.3% @500, same sign both optimizers. Mechanism
+  (hypothesized, supported): NCCL/reduction-order nondeterminism amplified
+  by training chaos — NOT a sharding bug. Evidence: (1) step-0 vals
+  identical (same init, broadcast works); (2) attempt-1 vs attempt-2 @125
+  differ 0.08-0.28% run-to-run at fixed seed0, so 8-GPU noise alone
+  accounts for the divergence scale; (3) grad/val math verified identical
+  in exact arithmetic (local sums + all_reduce SUM = global sum).
+  CONSEQUENCE: 8-GPU absolute curves are NOT portable to 1-GPU numbers —
+  do not compare 8-GPU crossings to 1-GPU crossings. But 8-GPU PAIRED
+  comparisons (both opts at 8 GPUs) remain FAIR; they need >=2 seeds each
+  since 8-GPU run noise (0.1-0.3% @125) exceeds 1-GPU seed spread.
 
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT

@@ -274,7 +274,7 @@ nvidia-smi topo/nvlink prolog in every sbatch (interconnect profiling).
   1v8-crossing gate LIFTED for matched schedules (Muon crossings match
   exactly both seeds: 3225/3250; C-r32 3200/3200 vs 3175 = 1 interval).
 
-## Newton-Muon v2 (run 7: custom-op capture; hooks deleted) — SUBMITTED (smoke 14502517, full 14502518 afterok)
+## Newton-Muon v2 (run 7: custom-op capture; hooks deleted) — SUBMITTED (smoke 14508442, full 14508443 afterok (attempt-1 smoke failed in 11s on unannotated custom_op signature; fixed))
 
 V1 failed twice (OOM 70-83GB, first forward): eager hooks graph-broke every
 Linear under model.compile. V2 ports the ref's compiled nm::accum_xtx op +

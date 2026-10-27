@@ -96,12 +96,14 @@ def _accum_xtx_impl(x_2d, accum, count, tmp):
 
 @torch.library.custom_op("nm::accum_xtx", mutates_args=("accum", "count", "tmp"))
 @torch.no_grad()
-def _accum_xtx_op(x_2d, accum, count, tmp):
+def _accum_xtx_op(x_2d: torch.Tensor, accum: torch.Tensor, count: torch.Tensor,
+                  tmp: torch.Tensor) -> torch.Tensor:
     return _accum_xtx_impl(x_2d, accum, count, tmp)
 
 
 @_accum_xtx_op.register_fake
-def _accum_xtx_fake(x_2d, accum, count, tmp):
+def _accum_xtx_fake(x_2d: torch.Tensor, accum: torch.Tensor, count: torch.Tensor,
+                    tmp: torch.Tensor) -> torch.Tensor:
     return accum.new_empty(())
 
 

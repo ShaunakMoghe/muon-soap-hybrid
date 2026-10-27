@@ -213,13 +213,21 @@ source snapshot archived in run dir / logs/*.txt).
   counterparts (p~0.06 under symmetric noise), i.e. even the earliest
   measurable point carries a systematic offset. Neither component is a
   correctness bug; paired-8-GPU fairness unaffected.
+  STATUS 2026-10-27: mechanism UNRESOLVED (chaos-amplification critique:
+  chaos predicts divergence, not same-sign same-size gaps in two different
+  optimizers; p~0.06 is weak). FREE TEST when runs 22/24 land: table val
+  @125/250/375/500 for Muon on both setups (1-GPU seeds 0/1/2 = runs
+  5/16/17; 8-GPU seeds 0/1 = runs 22/24). Verdict rule: if both 8-GPU vals
+  sit OUTSIDE the 1-GPU seed range @500 AND agree with each other ->
+  systematic gap, not noise. Paired directional hypothesis stands as
+  written; a miss (Muon first at either seed) gets reported plainly.
   SCOPE CAVEAT (cite with the parity number): single node, data-parallel
   param-gather sharding — NOT FSDP or TP. Interconnect unprofiled; RTX Pro
   class carries no datacenter NVLink fabric (verify via nvidia-smi topo,
   piggybacked into next 8-GPU sbatch prolog), so comm here likely runs
   over PCIe and overstates gather cost vs a DGX-class node.
 
-## 8-GPU fulls (runs 22-25: Muon/C-r32 x seed0/seed1, 3250 steps) + SinkSOAP probe (run26, 500 steps) — READY, UNSUBMITTED
+## 8-GPU fulls (runs 22-25: Muon/C-r32 x seed0/seed1, 3250 steps) + SinkSOAP probe (run26, 500 steps) — SUBMITTED (jobs 14467048-52)
 
 Design: paired 8-GPU crossing comparison (both opts at 8 GPUs each seed).
 NOT comparable to 1-GPU absolute crossings (gate stands). ckpt OFF all five

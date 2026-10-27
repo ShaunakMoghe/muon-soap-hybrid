@@ -213,7 +213,9 @@ source snapshot archived in run dir / logs/*.txt).
   counterparts (p~0.06 under symmetric noise), i.e. even the earliest
   measurable point carries a systematic offset. Neither component is a
   correctness bug; paired-8-GPU fairness unaffected.
-  STATUS 2026-10-27: mechanism UNRESOLVED (chaos-amplification critique:
+  STATUS 2026-10-27: mechanism RESOLVED (was UNRESOLVED; root cause = LR-schedule
+  confound, see runs 22-26 outcome; chaos-amplification critique below retained
+  for the record: chaos predicts divergence,
   chaos predicts divergence, not same-sign same-size gaps in two different
   optimizers; p~0.06 is weak). FREE TEST when runs 22/24 land: table val
   @125/250/375/500 for Muon on both setups (1-GPU seeds 0/1/2 = runs
@@ -249,6 +251,28 @@ nvidia-smi topo/nvlink prolog in every sbatch (interconnect profiling).
 - Topo expectation (hypothesized): no NVLink fabric reported (RTX Pro
   class); comm over PCIe. If NVLink IS present, the parity number is
   stronger than claimed (less comm handicap).
+  OUTCOME (jobs 14467048-52, all COMPLETED): directional hypothesis HIT at
+  BOTH seeds — seed0: C-r32 3200 < Muon 3225; seed1: C-r32 3200 < Muon
+  3250. Finals: Muon 3.27790/3.27978, C-r32 3.27635/3.27690. Per-step:
+  steady 0.389-0.395 (+1.4%), wall 0.402-0.416 (+2.5-3.5%) — within-5%
+  HIT. To-cross wall: Muon 1294/1305s, C-r32 1330/1318s (fewer steps but
+  slower steps net ~flat — the honest 8-GPU wall-clock read).
+  run26 SinkSOAP: 0.639 steady / 0.646 wall — inside 0.5-1.0 band;
+  ~1.6x Muon-8GPU (vs 2.0x at 1 GPU: eigh shards partially over ranks).
+  Contrast half complete: at 8 GPUs COSMOS-r32 costs ~Muon while SinkSOAP
+  costs ~1.6x Muon. Topo CONFIRMED: "Device does not have or support
+  Nvlink", GPU pairs PIX / cross-pair NODE — PCIe-only, so parity was
+  measured with a comm handicap; NVLink hardware can only help the
+  relative case.
+  FREE-TEST VERDICT (mechanism): NOT systematic — both 8-GPU Muon @500
+  vals (3.82961/3.82909) sit INSIDE the 1-GPU seed range [3.82585,
+  3.83128]; @125-375 gaps <=0.15%. Root cause of the probe -2.3% FOUND:
+  LR-SCHEDULE CONFOUND, not NCCL/chaos — the 500-step probes cool down
+  from step 150 (cooldown_frac=0.7 x 500) while 3250-step runs stay hot
+  to 975, so run20/21 were never on run5/18's schedule. Same-schedule
+  1v8 gaps are <=0.15% (noise). Chaos-amplification story RETRACTED;
+  1v8-crossing gate LIFTED for matched schedules (Muon crossings match
+  exactly both seeds: 3225/3250; C-r32 3200/3200 vs 3175 = 1 interval).
 
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT

@@ -1,0 +1,3 @@
+run23 COSMOS r32 seed0 8-GPU 3250-step @ HEAD
+variant: variants/train_gpt_cosmos_r32_seed0.py
+3250 steps, 8 GPUs, ckpt OFF (world_size assert)

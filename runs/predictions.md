@@ -180,6 +180,11 @@ source snapshot archived in run dir / logs/*.txt).
   (C-r32) — absolute band (1.6-2.0) MISS badly: prediction forgot compute
   shards ~linearly (1.82/8=0.23 + comm); relative prediction HIT (+1.2%,
   inside +5%). 8-GPU throughput ~4.7x 1-GPU.
+  METHOD NOTE (both figures are correct, different denominators): 0.390 /
+  0.395 are steady-state means over steps 376-500 (final step_avg field,
+  excludes ~74s compile + startup vals). Wall-per-step including everything
+  is 228.834/500=0.458 and 235.158/500=0.470 (+2.8%). Quote as "within
+  1-3%"; never mix the two denominators.
   Equivalence: FAIL beyond step ~125. Gaps (8-GPU vs 1-GPU): -0.2% @125,
   -1.0% @250, -2.0% @375, -2.3% @500, same sign both optimizers. Mechanism
   (hypothesized, supported): NCCL/reduction-order nondeterminism amplified
@@ -192,6 +197,50 @@ source snapshot archived in run dir / logs/*.txt).
   do not compare 8-GPU crossings to 1-GPU crossings. But 8-GPU PAIRED
   comparisons (both opts at 8 GPUs) remain FAIR; they need >=2 seeds each
   since 8-GPU run noise (0.1-0.3% @125) exceeds 1-GPU seed spread.
+  FOLLOW-UP (zero-GPU checks, 2026-10-26): (a) attempt-1v2 @250 infeasible
+  — attempt 1 died in the step-250 ckpt before logging val@250 (0 such
+  lines in both attempt-1 logs); @125 spread stands (0.08%/0.28%).
+  (b) Data order VERIFIED IDENTICAL across world sizes from code
+  (distributed_data_generator: global pos += batch_size on every rank;
+  rank windows tile [pos, pos+batch+1] exactly; file reload keyed on same
+  pos). Microbatch count differs (8x64 sequential at 1 GPU vs 1x64 per
+  rank at 8) but that is summation order only (fp rounding). Val sharding
+  exact (shards tile, SUM / val_tokens). Refined mechanism: DETERMINISTIC
+  fp offset (different kernel tilings at local-batch 64 vs 512 + different
+  reduction trees), identical every run, amplified by chaotic dynamics —
+  plus nondeterministic NCCL jitter on top (proven by attempt spread).
+  Supporting: all four 8-GPU @125 readings sit below their 1-GPU
+  counterparts (p~0.06 under symmetric noise), i.e. even the earliest
+  measurable point carries a systematic offset. Neither component is a
+  correctness bug; paired-8-GPU fairness unaffected.
+  SCOPE CAVEAT (cite with the parity number): single node, data-parallel
+  param-gather sharding — NOT FSDP or TP. Interconnect unprofiled; RTX Pro
+  class carries no datacenter NVLink fabric (verify via nvidia-smi topo,
+  piggybacked into next 8-GPU sbatch prolog), so comm here likely runs
+  over PCIe and overstates gather cost vs a DGX-class node.
+
+## 8-GPU fulls (runs 22-25: Muon/C-r32 x seed0/seed1, 3250 steps) + SinkSOAP probe (run26, 500 steps) — READY, UNSUBMITTED
+
+Design: paired 8-GPU crossing comparison (both opts at 8 GPUs each seed).
+NOT comparable to 1-GPU absolute crossings (gate stands). ckpt OFF all five
+(world_size assert; ~25-min inferno runs, preemption risk accepted).
+nvidia-smi topo/nvlink prolog in every sbatch (interconnect profiling).
+
+- Primary hypothesis (directional, paired): C-r32 crosses at an earlier
+  observed step than Muon at BOTH seeds. Absolute steps UNPREDICTABLE
+  (label untested): 8-GPU noise + deterministic fp offset mean 1-GPU
+  crossings (3225 vs 3175) do not port; any 3100-3250 outcome consistent.
+- Wall-clock: ~0.40 s/step steady-state both (from probes); to-cross wall
+  = steps x 0.40. C-r32 within 5% per-step of Muon (probe: +1.2%).
+- run26 SinkSOAP 500-step: predict 0.5-1.0 s/step (WIDE band, hypothesized:
+  eigh work shards over params across ranks — each rank handles ~9 params —
+  but 3072x3072 grams stay heavy per rank; compile unknown). Forms the
+  missing contrast half: COSMOS-cheap-at-scale vs SinkSOAP-cost-at-scale.
+  Expect val@125 within ~5% of a 1-GPU SinkSOAP early curve (no seeded 1-GPU
+  SinkSOAP full exists — compare shape only, label loose).
+- Topo expectation (hypothesized): no NVLink fabric reported (RTX Pro
+  class); comm over PCIe. If NVLink IS present, the parity number is
+  stronger than claimed (less comm handicap).
 
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT

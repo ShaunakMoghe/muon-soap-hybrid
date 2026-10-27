@@ -1,0 +1,3 @@
+run26 SinkSOAP seed0 8-GPU 500-step @ HEAD
+variant: variants/train_gpt_sinksoap_seed0.py
+500 steps, 8 GPUs, ckpt OFF (world_size assert)

@@ -22,7 +22,7 @@ import torch.distributed as dist
 from research_stack.ckpt import (CKPT_EVERY_DEFAULT, arm_preemption_handlers,
                                     load_ckpt, parse_resume_argv, save_ckpt,
                                     term_requested)
-from research_stack.newton_muon import NewtonMuon, attach_activation_hooks
+from research_stack.newton_muon import NewtonMuon, finalize_nm_buffers
 
 
 ########################################
@@ -104,8 +104,13 @@ class CausalSelfAttention(nn.Module):
         self.proj = Linear(hdim, dim)
         self.rotary = Rotary(head_dim)
 
-    def forward(self, x: Tensor):
+    def forward(self, x: Tensor, precond_flag: bool = False):
         B, T = x.size(0), x.size(1)
+        if precond_flag:  # capture q/k/v input (post-norm); compiled op, no graph break
+            x2d = x.reshape(-1, x.size(-1))
+            torch.ops.nm.accum_xtx(x2d, self.q._nm_accum, self.q._nm_count, self.q._nm_tmp)
+            torch.ops.nm.accum_xtx(x2d, self.k._nm_accum, self.k._nm_count, self.k._nm_tmp)
+            torch.ops.nm.accum_xtx(x2d, self.v._nm_accum, self.v._nm_count, self.v._nm_tmp)
         q = self.q(x).view(B, T, self.num_heads, self.head_dim)
         k = self.k(x).view(B, T, self.num_heads, self.head_dim)
         v = self.v(x).view(B, T, self.num_heads, self.head_dim)
@@ -114,6 +119,9 @@ class CausalSelfAttention(nn.Module):
         y = F.scaled_dot_product_attention(q.transpose(1, 2), k.transpose(1, 2),
                                            v.transpose(1, 2), scale=0.12, is_causal=True).transpose(1, 2)
         y = y.contiguous().view(B, T, self.num_heads * self.head_dim)
+        if precond_flag:  # capture attn-proj input
+            y2d = y.reshape(-1, y.size(-1))
+            torch.ops.nm.accum_xtx(y2d, self.proj._nm_accum, self.proj._nm_count, self.proj._nm_tmp)
         y = self.proj(y)
         return y
 
@@ -124,9 +132,15 @@ class MLP(nn.Module):
         self.fc = Linear(dim, hdim)
         self.proj = Linear(hdim, dim)
 
-    def forward(self, x: Tensor):
+    def forward(self, x: Tensor, precond_flag: bool = False):
+        if precond_flag:  # capture fc input (post-norm)
+            x2d = x.reshape(-1, x.size(-1))
+            torch.ops.nm.accum_xtx(x2d, self.fc._nm_accum, self.fc._nm_count, self.fc._nm_tmp)
         x = self.fc(x)
         x = x.relu().square()
+        if precond_flag:  # capture mlp-proj input (4-block split inside op)
+            h2d = x.reshape(-1, x.size(-1))
+            torch.ops.nm.accum_xtx(h2d, self.proj._nm_accum, self.proj._nm_count, self.proj._nm_tmp)
         x = self.proj(x)
         return x
 
@@ -138,9 +152,9 @@ class Block(nn.Module):
         self.norm1 = RMSNorm(dim)
         self.norm2 = RMSNorm(dim)
 
-    def forward(self, x: Tensor):
-        x = x + self.attn(self.norm1(x))
-        x = x + self.mlp(self.norm2(x))
+    def forward(self, x: Tensor, precond_flag: bool = False):
+        x = x + self.attn(self.norm1(x), precond_flag)
+        x = x + self.mlp(self.norm2(x), precond_flag)
         return x
 
 class GPT(nn.Module):
@@ -152,10 +166,10 @@ class GPT(nn.Module):
         self.norm1 = RMSNorm(model_dim)
         self.norm2 = RMSNorm(model_dim)
 
-    def forward(self, inputs: Tensor, targets: Tensor):
+    def forward(self, inputs: Tensor, targets: Tensor, precond_flag: bool = False):
         x = self.norm1(self.embed(inputs))
         for block in self.blocks:
-            x = block(x)
+            x = block(x, precond_flag)
         logits = self.proj(self.norm2(x)).float()
         logits = 15 * logits * (logits.square() + 15**2).rsqrt()
         return F.cross_entropy(logits.view(targets.numel(), -1), targets.view(-1), reduction="sum")
@@ -256,10 +270,9 @@ mbs = 64
 val_inputs, val_targets = next(distributed_data_generator("data/fineweb10B/fineweb_val_*.bin", val_tokens))
 
 model = GPT(vocab_size=50304, num_layers=12, model_dim=768).cuda()
-# cudagraphs OFF: 24 compiler-disabled hooks fragment the graph; per-fragment
-# cudagraph pools + fragmentation OOM first forward at 83/95GB (job 13945798).
-# Keeps inductor compile (s/step stays comparable); last-bit numerics only.
-model.compile(dynamic=False, options={"triton.cudagraphs": False})
+# Baseline compile settings restored: v2 capture is a compiled custom op with
+# zero graph breaks (v1 eager hooks fragmented the graph and OOM'd at 83GB).
+model.compile(dynamic=False)
 
 
 resume_path = parse_resume_argv(sys.argv)
@@ -307,7 +320,8 @@ for _ in range(num_trials):
                             lr=0.025, momentum=0.95, weight_decay=0.05,
                             beta=0.95, ridge=0.2, refresh_k=10)
     optimizers = [optimizer1, optimizer2]
-    attach_activation_hooks(model, optimizer2)
+    n_nm = finalize_nm_buffers(model, optimizer2)
+    print0(f"newton-muon: {n_nm} Linear capture buffers registered", console=True)
     assert set(p for opt in optimizers for group in opt.param_groups
                for p in group["params"]) == set(model.parameters())
     init_lrs = []  # re-applied after ckpt load (torch may drop custom group keys)
@@ -383,10 +397,11 @@ for _ in range(num_trials):
 
         # --------------- TRAINING SECTION -----------------
         inputs, targets = next(train_loader)
+        precond_flag = optimizer2.precond_flag_for_step(step)
         # accumulate across microbatches in case we are running with fewer than 8 gpus
         assert len(inputs) % mbs == 0
         for i in range(len(inputs) // mbs):
-            model(inputs[i*mbs:(i+1)*mbs], targets[i*mbs:(i+1)*mbs]).backward()
+            model(inputs[i*mbs:(i+1)*mbs], targets[i*mbs:(i+1)*mbs], precond_flag).backward()
         for name, p in model.named_parameters():
             assert p.grad is not None, name
             dist.all_reduce(p.grad, op=dist.ReduceOp.SUM)

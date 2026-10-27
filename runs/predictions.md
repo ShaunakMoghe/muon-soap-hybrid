@@ -274,6 +274,23 @@ nvidia-smi topo/nvlink prolog in every sbatch (interconnect profiling).
   1v8-crossing gate LIFTED for matched schedules (Muon crossings match
   exactly both seeds: 3225/3250; C-r32 3200/3200 vs 3175 = 1 interval).
 
+## Newton-Muon v2 (run 7: custom-op capture; hooks deleted) — SUBMITTED (smoke 14502517, full 14502518 afterok)
+
+V1 failed twice (OOM 70-83GB, first forward): eager hooks graph-broke every
+Linear under model.compile. V2 ports the ref's compiled nm::accum_xtx op +
+bool-flag gating; optimizer math unchanged (CPU-validated); baseline compile
+settings restored. Paper (short track, H100): 6% fewer steps, +1.8%
+per-step, -4% wall vs Muon. Different track/harness here, so bands wide.
+
+- Smoke (12 steps): completes; step-12 val in [6.2, 6.6] (first 9 steps are
+  pure Muon — identity until refresh at step 10 — so init should match
+  Muon-family ~6.38); ckpt written; no OOM (the v1 failure mode).
+- Full run7: crosses 3.28; crossing 3000-3200 (paper-analogous 6% under
+  Muon's 3225 would be ~3030; band covers track differences); s/step
+  1.9-2.1; final <=3.278 (at least Muon); max mem ~32GB (±1).
+- A miss on crossing still leaves a useful datum (NM cost at Track 3);
+  an OOM again kills the lane permanently (same-reason x3).
+
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT
   gated on it; resume gets fixed only if a run is actually cut off.

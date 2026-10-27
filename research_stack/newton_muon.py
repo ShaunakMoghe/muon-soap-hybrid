@@ -23,10 +23,17 @@ Faithfulness notes (paper + reference repo):
   decoupled wd), per the paper's own protocol ("replace the Muon update",
   keep settings). Reference used heavy-ball + NS5 (their harness flavor).
 - Ours: separate q/k/v linears (no fused-QKV splitting needed).
-- Accumulation: forward hooks, train-mode + grad-enabled + refresh-pending
-  only; fp32 X^T X summed over microbatches, normalized by token count.
+- Accumulation: COMPILED custom op (torch.library nm::accum_xtx + fake),
+  called inline in forward with a bool precond_flag (mirrors the reference;
+  v1 forward HOOKS caused dynamo graph-breaks at every Linear and OOM'd the
+  first forward at 70-83GB -- never use eager hooks under model.compile).
+  fp32 per-call mean X^T X, call counts; generic nblocks (ref: two fixed
+  ops); torch.bmm instead of the ref's Triton XXT kernel (same math).
+- q/k/v (same input): separate buffer sets per Linear (3x redundant tiny
+  outer products on refresh steps; identical result to the ref's shared
+  packed-QKV estimate).
 
-Distributed notes: hooks assume locally-available inputs. Under DP the local
+Distributed notes: capture assumes locally-available inputs. Under DP the local
 Sigma uses the local microbatch (approximation; grads are still allreduced).
 Under TP, column-parallel inputs are replicated across ranks, so ZZ^T is exact
 with ZERO communication (OUR inference from the paper's §6-flagged
@@ -70,6 +77,34 @@ def zeropower_ns(G, steps=12):
     return fn(G, steps)
 
 
+@torch.compile
+def _accum_xtx_impl(x_2d, accum, count, tmp):
+    # Generic nblocks version of the ref's _accum_xtx_impl/_blocks4 pair.
+    # x_2d: (T, nb*d); accum/tmp: (nb,d,d); count: scalar. Adds the per-call
+    # mean outer product; count tracks calls (refresh divides accum/count).
+    T = x_2d.size(0)
+    nb = accum.size(0)
+    d = accum.size(-1)
+    # .float(): block activations are bf16 (bf16 embedding); covariance stays fp32.
+    A = x_2d.reshape(T, nb, d).permute(1, 2, 0).float()  # (nb,d,T)
+    torch.bmm(A, A.mT, out=tmp)
+    tmp.mul_(1.0 / T)
+    accum.add_(tmp)
+    count.add_(1.0)
+    return accum.new_empty(())
+
+
+@torch.library.custom_op("nm::accum_xtx", mutates_args=("accum", "count", "tmp"))
+@torch.no_grad()
+def _accum_xtx_op(x_2d, accum, count, tmp):
+    return _accum_xtx_impl(x_2d, accum, count, tmp)
+
+
+@_accum_xtx_op.register_fake
+def _accum_xtx_fake(x_2d, accum, count, tmp):
+    return accum.new_empty(())
+
+
 def _blocks_for(n_out, n_in):
     """Contiguous input-dim blocks (paper's 4d rule, generalized).
 
@@ -109,34 +144,39 @@ class NewtonMuon(torch.optim.Optimizer):
         st = self.state[p]
         if "momentum_buf" in st:
             return st
+        # Accum buffers live on the Linear module (registered by
+        # finalize_nm_buffers BEFORE first forward); state holds references
+        # so the compiled forward and the eager refresh see one copy.
+        sref = getattr(p, "_nm_stats", None)
+        if sref is None:
+            raise RuntimeError("NewtonMuon: finalize_nm_buffers(model, opt) must run before step()")
         m, n = p.shape
         nb, d = _blocks_for(m, n)
+        assert (nb, d) == (sref["nblocks"], sref["block_d"]), "buffer/param shape drift"
         st["momentum_buf"] = torch.zeros_like(p)
         st["nblocks"] = nb
         st["block_d"] = d
         cov = torch.zeros((nb, d, d), device=p.device, dtype=torch.float32)
         cov.diagonal(dim1=-2, dim2=-1).fill_(self.init_diag)
         st["cov"] = cov
-        st["accum"] = torch.zeros_like(cov)
-        st["count"] = 0
+        st["accum"] = sref["accum"]
+        st["count"] = sref["count"]
         st["chol"] = None  # None => identity (pure Muon) until first refresh
         st["_step"] = 0
         return st
 
-    def _completed_steps(self, p):
-        st = self.state.get(p)
-        if st is not None and "_step" in st:
-            return st["_step"]
-        return self.global_step
+    def precond_flag_for_step(self, step: int) -> bool:
+        # True on refresh-pending steps: forward accumulates, step() refreshes.
+        return (int(step) + 1) % self.refresh_k == 0
 
     def _refresh_param(self, p):
         """EWMA update + Cholesky refactor (called on refresh steps)."""
         st = self.state[p]
         nb, d = st["nblocks"], st["block_d"]
-        if st["count"] > 0:
-            st["cov"].lerp_(st["accum"] / st["count"], 1.0 - self.beta)
+        if float(st["count"]) > 0:
+            st["cov"].lerp_(st["accum"] / st["count"].clamp_min(1.0), 1.0 - self.beta)
             st["accum"].zero_()
-            st["count"] = 0
+            st["count"].zero_()
         K = st["cov"].clone()
         tr = K.diagonal(dim1=-2, dim2=-1).sum(-1, keepdim=True).unsqueeze(-1)
         base = tr / d * self.ridge + self.eps  # (nb,1,1) relative ridge
@@ -216,45 +256,36 @@ class NewtonMuon(torch.optim.Optimizer):
                     self.state[p]["_step"] = self.global_step
 
 
-def attach_activation_hooks(model, optimizer):
-    """Register forward hooks on this optimizer's Linear modules.
+def finalize_nm_buffers(model, optimizer):
+    """Register fp32 accum/count/tmp buffers on this optimizer's Linears.
 
-    Accumulates fp32 X^T X (+ token counts) into optimizer state, ONLY on
-    refresh-pending steps and only in train mode with grad enabled (val
-    forwards must not pollute the training covariance). Returns handles.
+    Mirrors the reference (_stats_ref + module buffers): the compiled forward
+    calls torch.ops.nm.accum_xtx inline (zero graph breaks) and the eager
+    refresh reads the same tensors via weight._nm_stats. Must run before the
+    first forward. Returns the number of Linears matched (must equal the
+    optimizer's 2D param count).
     """
-    wanted = {id(p) for g in optimizer.param_groups for p in g["params"]}
-    handles = []
+    wanted = {id(p): p for g in optimizer.param_groups for p in g["params"]}
+    n = 0
     for mod in model.modules():
         if isinstance(mod, torch.nn.Linear) and id(mod.weight) in wanted:
-            if getattr(mod, "_nm_hook_attached", False):
-                continue  # idempotent: never double-accumulate
-            handles.append(mod.register_forward_hook(_make_hook(optimizer, mod.weight)))
-            mod._nm_hook_attached = True
-    assert handles, "attach_activation_hooks: no Linear modules matched optimizer params"
-    return handles
-
-
-def _make_hook(optimizer, param):
-    # Compiler-disabled BY DESIGN: dynamo must never inline this body (it reads
-    # the mutable global_step counter, whose guard would fail and recompile
-    # every step). The hook runs eager behind a static boundary break: bounded
-    # one-time fragmentation, zero per-step recompiles. Backward (no hooks)
-    # compiles whole. See research_stack/test_nm_smoke.sh for the check.
-    @torch.compiler.disable
-    def hook(mod, inp, out):
-        if not mod.training or not torch.is_grad_enabled():
-            return
-        done = optimizer._completed_steps(param)
-        if (done + 1) % optimizer.refresh_k != 0:
-            return
-        X = inp[0].detach().reshape(-1, inp[0].shape[-1]).float()
-        st = optimizer._ensure_state(param)
-        nb, d = st["nblocks"], st["block_d"]
-        Xb = X.reshape(-1, nb, d)
-        st["accum"] += torch.einsum("tbd,tbe->bde", Xb, Xb)
-        st["count"] += X.shape[0]
-    return hook
+            p = mod.weight
+            if getattr(p, "_nm_stats", None) is not None:
+                continue  # idempotent
+            m, n_in = p.shape
+            nb, d = _blocks_for(m, n_in)
+            dev = p.device
+            mod.register_buffer("_nm_accum", torch.zeros((nb, d, d), device=dev,
+                                                          dtype=torch.float32), persistent=False)
+            mod.register_buffer("_nm_count", torch.zeros((), device=dev,
+                                                         dtype=torch.float32), persistent=False)
+            mod.register_buffer("_nm_tmp", torch.zeros((nb, d, d), device=dev,
+                                                       dtype=torch.float32), persistent=False)
+            p._nm_stats = {"nblocks": nb, "block_d": d, "accum": mod._nm_accum,
+                           "count": mod._nm_count, "tmp": mod._nm_tmp}
+            n += 1
+    assert n == len(wanted), f"finalize_nm_buffers: matched {n} of {len(wanted)} params"
+    return n
 
 
 def _self_test():
@@ -262,36 +293,42 @@ def _self_test():
     _USE_COMPILED_NS = False  # validate math; compile is harness-validated
     torch.manual_seed(0)
 
-    # 1. block rules + hook wiring on a toy MLP
+    # 1. block rules + buffer wiring + custom-op accumulation on a toy MLP
     mlp = torch.nn.Sequential(torch.nn.Linear(32, 32), torch.nn.Linear(32, 128),
                               torch.nn.Linear(128, 32))
     params = [mlp[0].weight, mlp[1].weight, mlp[2].weight]
-    opt = NewtonMuon(params, lr=0.05, refresh_k=1)  # k=1: accumulate every forward
-    h = attach_activation_hooks(mlp, opt)
-    assert len(h) == 3, f"expected 3 hooks, got {len(h)}"
+    opt = NewtonMuon(params, lr=0.05, refresh_k=1)  # k=1: flag every step
+    assert finalize_nm_buffers(mlp, opt) == 3, "must match all 3 linears"
     x = torch.randn(64, 32)
     mlp.train()
     mlp(x).sum().backward()
-    assert opt.state[params[0]]["nblocks"] == 1
-    assert opt.state[params[2]]["nblocks"] == 4  # (32,128): 4 blocks
-    assert opt.state[params[0]]["count"] == 64, "hook must accumulate train tokens"
+    assert opt._ensure_state(params[0])["nblocks"] == 1
+    assert opt._ensure_state(params[2])["nblocks"] == 4  # (32,128): 4 blocks
+    # eager custom-op call = what the compiled forward does on flag steps
+    torch.ops.nm.accum_xtx(x, mlp[0]._nm_accum, mlp[0]._nm_count, mlp[0]._nm_tmp)
+    assert float(mlp[0]._nm_count) == 1.0, "op must count calls"
+    assert mlp[0]._nm_accum.abs().sum() > 0, "op must accumulate"
+    # val-style call (no op invocation) must not accumulate: count unchanged
     mlp.eval()
     mlp(x).sum().backward()
-    assert opt.state[params[0]]["count"] == 64, "eval forwards must not accumulate"
+    assert float(mlp[0]._nm_count) == 1.0, "flag-off forwards must not accumulate"
 
-    # 2. toy least-squares must converge (hooks + cov + cholesky + NS end to end)
+    # 2. toy least-squares must converge (op + cov + cholesky + NS end to end)
     torch.manual_seed(1)
     Xt = torch.randn(256, 8)
     Wt = torch.randn(6, 8)
     Yt = Xt @ Wt.mT + 0.01 * torch.randn(256, 6)
     lin = torch.nn.Linear(8, 6, bias=False)
     opt2 = NewtonMuon([lin.weight], lr=0.05, refresh_k=5)
-    attach_activation_hooks(lin, opt2)
+    finalize_nm_buffers(lin, opt2)
     lin.train()
     l0 = None
-    for _ in range(100):
+    for i in range(100):
         opt2.zero_grad()
-        loss = (lin(Xt) - Yt).pow(2).mean()
+        out = lin(Xt)
+        if opt2.precond_flag_for_step(i):
+            torch.ops.nm.accum_xtx(Xt, lin._nm_accum, lin._nm_count, lin._nm_tmp)
+        loss = (out - Yt).pow(2).mean()
         if l0 is None:
             l0 = loss.item()
         loss.backward()
@@ -301,12 +338,14 @@ def _self_test():
     assert opt2.state[lin.weight]["chol"] is not None, "never refreshed"
 
     # 3. PD fallback: indefinite cov -> ridge rescue, then identity degradation
-    p = torch.nn.Parameter(torch.randn(4, 4))
+    lin3 = torch.nn.Linear(4, 4, bias=False)
+    p = lin3.weight
     opt3 = NewtonMuon([p], lr=0.01, refresh_k=1, ridge=0.2)
+    finalize_nm_buffers(lin3, opt3)
     st = opt3._ensure_state(p)
     st["cov"][0].copy_(torch.eye(4))
     st["cov"][0][0, 1] = st["cov"][0][1, 0] = 2.0  # indefinite 2x2 corner
-    st["count"] = 0  # skip EMA so the crafted cov is used as-is
+    st["count"].zero_()  # skip EMA so the crafted cov is used as-is
     opt3._refresh_param(p)
     assert st["chol"] is not None and torch.isfinite(st["chol"]).all(), "ridge rescue failed"
     st["cov"][0].fill_(0.0)
@@ -322,15 +361,17 @@ def _self_test():
         torch.manual_seed(seed)
         m = torch.nn.Linear(8, 6, bias=False)
         o = NewtonMuon([m.weight], lr=0.05, refresh_k=5)
-        attach_activation_hooks(m, o)
+        finalize_nm_buffers(m, o)
         m.train()
-        for _ in range(10):
+        for i in range(10):
             o.zero_grad()
+            if o.precond_flag_for_step(i):
+                torch.ops.nm.accum_xtx(Xt, m._nm_accum, m._nm_count, m._nm_tmp)
             ((m(Xt) - Yt).pow(2).mean()).backward()
             o.step()
         return ((m(Xt) - Yt).pow(2).mean()).item()
     assert run_once(7) == run_once(7), "not a pure function of inputs"
-    print("SELFTEST OK: hooks/shapes/blocks, toy convergence "
+    print("SELFTEST OK: op/shapes/blocks, toy convergence "
           f"({l0:.4f}->{l1:.4f}), PD fallback, determinism")
 
 

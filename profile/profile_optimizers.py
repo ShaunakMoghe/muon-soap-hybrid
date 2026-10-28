@@ -50,7 +50,8 @@ def main():
     mu = load_optims("variants/train_gpt_baseline_seed0.py")
     sk = load_optims("variants/train_gpt_sinksoap_seed0.py")
     so = load_optims("variants/train_gpt_soap_seed0.py")
-    assert "Muon" in mu and "SinkSOAP" in sk and "SOAP" in so
+    co = load_optims("variants/train_gpt_cosmos_r32_seed0.py")
+    assert "Muon" in mu and "SinkSOAP" in sk and "SOAP" in so and "COSMOS" in co
 
     print("== 1. full update ms (mean of reps, post-warmup) ==")
     for name, (m, n) in SHAPES.items():
@@ -142,6 +143,42 @@ def main():
     s_em = m * n * 4 / 1e6
     print(f"embed/head-like: sinkhorn={t_em:8.2f}ms  state(fp32 momentum)={s_em:.0f}MB "
           f"(x2 params = {2 * s_em:.0f}MB; AdamW m+v would be {4 * s_em:.0f}MB)")
+
+    print("== 6. COSMOS-r32 full update + breakdown ms (r=32) ==")
+    for name, (m, n) in SHAPES.items():
+        r = 32
+        g = torch.randn(m, n, device=dev)
+        mom = torch.randn(m, n, device=dev)
+        sm = torch.zeros((m, 1) if m >= n else (1, n), device=dev)
+        U, _ = torch.linalg.qr(torch.randn(n, r, device=dev), mode="reduced")
+        O, _ = torch.linalg.qr(torch.randn(m, r, device=dev), mode="reduced")
+        S = torch.eye(r, device=dev)
+        R = torch.eye(r, device=dev)
+        stp = torch.tensor(10.0, device=dev)
+        fn = co["cosmos_normuon_update"]
+        for _ in range(3):  # burn-in: realistic states + compiled entry
+            fn(g, mom, sm, U, O, S, R, stp)
+        t_full = bench(lambda: fn(g, mom, sm, U, O, S, R, stp))
+        # pieces, replicated from the variant's update body
+        G = g.float()
+        GU = G @ U
+        t_qr = bench(lambda: torch.linalg.qr(
+            0.95 * (U @ S) + 0.05 * (G.mT @ GU), mode="reduced"))
+        t_qr += bench(lambda: torch.linalg.qr(
+            0.95 * (O @ R) + 0.05 * (G @ (G.mT @ O)), mode="reduced"))
+        Mh = mom.float()
+        t_proj = bench(lambda: O.mT @ Mh @ U) + bench(lambda: Mh @ U)
+        A11 = O.mT @ Mh @ U
+        s12 = torch.randn(r, device=dev)
+        s21 = torch.randn(r, device=dev)
+        S22 = torch.tensor(1.0, device=dev)
+        t_sink = bench(lambda: co["compressed_sinkhorn_coeffs"](
+            A11=A11, s12=s12, s21=s21, S22=S22, m=m, n=n,
+            steps=10, gamma=1.0, eps=1e-10))
+        M22 = torch.randn(m, n, device=dev)
+        t_ns = bench(lambda: co["zeropower_via_newtonschulz5"](M22))
+        print(f"{name:22s} full={t_full:8.2f}ms  qr={t_qr:7.2f} proj={t_proj:6.2f} "
+              f"sink={t_sink:6.2f} ns22={t_ns:6.2f}")
 
 
 if __name__ == "__main__":

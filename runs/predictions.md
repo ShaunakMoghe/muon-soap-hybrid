@@ -306,6 +306,35 @@ per-step, -4% wall vs Muon. Different track/harness here, so bands wide.
 - A miss on crossing still leaves a useful datum (NM cost at Track 3);
   an OOM again kills the lane permanently (same-reason x3).
 
+## Audit batch: COSMOS (track-3 variant) mechanical deltas — QUEUED IN WAVES
+
+Baselines (8-GPU, paired seeds): Muon s0 run22 (3225/3.27790), s1 run24
+(3250/3.27978); C-r32 s0 run23 (3200/3.27635), s1 run25 (3200/3.27690).
+Metrics: val @2500/3000/final + s/step + wall; crossings secondary.
+Single-variable diffs only; run22-25 are the NS12 controls.
+
+Step 0a (profile COSMOS-r32 breakdown): subspace QR/SVD + projections +
+Sinkhorn = bulk of the +1-4% overhead; NS-on-residual within 10% of
+full-NS cost (same shape/count — the saving, if any, is elsewhere).
+Step 0b (NS residuals M vs M_res, ckpt states): M_res residual < M
+residual at matched steps (flatter spectrum after top-r removal);
+8-step within ~2x of 12-step for both; 6-step materially worse for full
+Muon. Orderings primary, wide bands. Uses run18+run16 ckpt_02750
+(momentum bufs as M_hat proxy, documented) + exact in-training M_hat
+from Exp-1 smoke @50/100/150.
+Exp 1 (warm150 handoff, runs 27/28): final within ±0.002 of C-r32
+baselines (no-harm floor), upside past them if the early hole was
+load-bearing; crossing 3150-3200. Smoke: handoff ratios in [0.95,1.05].
+FALSIFIED if final worse than baseline by >0.002 (disruption).
+Exp 2 (NS 12/8/6 x both, runs 29-36): 8-step crosses within ±25 of NS12
+controls with 3-8% faster steps. At 6: INTERACTION (COSMOS holds, Muon
+slips >=50 steps or +0.002) vs UNIFORM (both move together) — record
+which, no preference stated.
+Exp 3 (square NorMuon, runs 37/38): final within ±0.002 of baseline,
+likelier +0 to +0.002 better (free renormalized preconditioning).
+Worse by >0.002 -> revert, stop.
+Exp 4 (ranks/lr-wd): HELD until Exps 1-3 verdicts.
+
 ## ckpt job 13945668 — pre-loadout, record only
 - Tests the RNG-device fix (265f37f). Whatever it says, Run 8 is NOT
   gated on it; resume gets fixed only if a run is actually cut off.

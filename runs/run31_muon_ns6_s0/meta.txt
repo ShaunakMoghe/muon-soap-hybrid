@@ -1,0 +1,3 @@
+run31 Muon NS6 seed0 8-GPU @ HEAD
+variant: variants/train_gpt_baseline_ns6_seed0.py
+8 GPUs, 3250 steps, ckpt OFF (world_size assert)

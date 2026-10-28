@@ -1,0 +1,257 @@
+logs/428e7a06-567e-457f-81aa-b675f927f709.txt
+step:0/155 val_loss:10.82583 train_time:0.000s step_avg:nanms
+step:1/155 train_time:16.230s step_avg:16229.64ms
+step:2/155 train_time:18.139s step_avg:9069.62ms
+step:3/155 train_time:20.050s step_avg:6683.44ms
+step:4/155 train_time:21.978s step_avg:5494.47ms
+step:5/155 train_time:23.924s step_avg:4784.81ms
+step:6/155 train_time:25.850s step_avg:4308.31ms
+step:7/155 train_time:27.775s step_avg:3967.85ms
+step:8/155 train_time:29.705s step_avg:3713.08ms
+step:9/155 train_time:31.636s step_avg:3515.09ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00010.pt
+step:10/155 train_time:34.859s step_avg:3485.87ms
+step:11/155 train_time:36.788s step_avg:3344.40ms
+step:12/155 train_time:38.717s step_avg:3226.42ms
+step:13/155 train_time:40.648s step_avg:3126.75ms
+step:14/155 train_time:42.580s step_avg:3041.43ms
+step:15/155 train_time:44.506s step_avg:2967.10ms
+step:16/155 train_time:46.443s step_avg:2902.71ms
+step:17/155 train_time:48.379s step_avg:2845.81ms
+step:18/155 train_time:50.310s step_avg:2794.97ms
+step:19/155 train_time:52.247s step_avg:2749.86ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00020.pt
+step:20/155 train_time:55.470s step_avg:2773.51ms
+step:21/155 train_time:57.409s step_avg:2733.78ms
+step:22/155 train_time:59.365s step_avg:2698.41ms
+step:23/155 train_time:61.297s step_avg:2665.09ms
+step:24/155 train_time:63.239s step_avg:2634.95ms
+step:25/155 train_time:65.172s step_avg:2606.89ms
+step:26/155 train_time:67.099s step_avg:2580.75ms
+step:27/155 train_time:69.040s step_avg:2557.04ms
+step:28/155 train_time:70.982s step_avg:2535.06ms
+step:29/155 train_time:72.922s step_avg:2514.54ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00030.pt
+step:30/155 train_time:76.185s step_avg:2539.50ms
+step:31/155 train_time:78.114s step_avg:2519.82ms
+step:32/155 train_time:80.057s step_avg:2501.78ms
+step:33/155 train_time:81.996s step_avg:2484.74ms
+step:34/155 train_time:83.939s step_avg:2468.80ms
+step:35/155 train_time:85.881s step_avg:2453.75ms
+step:36/155 train_time:87.826s step_avg:2439.60ms
+step:37/155 train_time:89.768s step_avg:2426.15ms
+step:38/155 train_time:91.712s step_avg:2413.47ms
+step:39/155 train_time:93.665s step_avg:2401.66ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00040.pt
+step:40/155 train_time:96.929s step_avg:2423.23ms
+step:41/155 train_time:98.858s step_avg:2411.17ms
+step:42/155 train_time:100.799s step_avg:2399.97ms
+step:43/155 train_time:102.742s step_avg:2389.34ms
+step:44/155 train_time:104.679s step_avg:2379.08ms
+step:45/155 train_time:106.625s step_avg:2369.44ms
+step:46/155 train_time:108.565s step_avg:2360.12ms
+step:47/155 train_time:110.514s step_avg:2351.36ms
+step:48/155 train_time:112.463s step_avg:2342.98ms
+step:49/155 train_time:114.411s step_avg:2334.91ms
+nsresid step=50 shape=(3072, 768) M=5.53e-03/3.85e-01/7.94e-01 Mr=1.42e-01/2.08e-01/5.29e-01
+nsresid step=50 shape=(768, 3072) M=5.84e-03/5.88e-01/8.77e-01 Mr=1.29e-01/2.14e-01/5.57e-01
+nsresid step=50 shape=(768, 768) M=2.20e-01/7.03e-01/9.00e-01 Mr=2.07e-01/4.26e-01/6.78e-01
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00050.pt
+step:50/155 train_time:117.694s step_avg:2353.88ms
+step:51/155 train_time:119.638s step_avg:2345.84ms
+step:52/155 train_time:121.579s step_avg:2338.05ms
+step:53/155 train_time:123.509s step_avg:2330.36ms
+step:54/155 train_time:125.462s step_avg:2323.38ms
+step:55/155 train_time:127.416s step_avg:2316.66ms
+step:56/155 train_time:129.361s step_avg:2310.02ms
+step:57/155 train_time:131.304s step_avg:2303.57ms
+step:58/155 train_time:133.251s step_avg:2297.43ms
+step:59/155 train_time:135.193s step_avg:2291.40ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00060.pt
+step:60/155 train_time:138.474s step_avg:2307.89ms
+step:61/155 train_time:140.416s step_avg:2301.90ms
+step:62/155 train_time:142.362s step_avg:2296.16ms
+step:63/155 train_time:144.304s step_avg:2290.53ms
+step:64/155 train_time:146.251s step_avg:2285.17ms
+step:65/155 train_time:148.199s step_avg:2279.99ms
+step:66/155 train_time:150.146s step_avg:2274.94ms
+step:67/155 train_time:152.097s step_avg:2270.10ms
+step:68/155 train_time:154.043s step_avg:2265.34ms
+step:69/155 train_time:155.992s step_avg:2260.76ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00070.pt
+step:70/155 train_time:159.262s step_avg:2275.18ms
+step:71/155 train_time:161.224s step_avg:2270.77ms
+step:72/155 train_time:163.184s step_avg:2266.44ms
+step:73/155 train_time:165.131s step_avg:2262.06ms
+step:74/155 train_time:167.066s step_avg:2257.65ms
+step:75/155 train_time:169.030s step_avg:2253.74ms
+step:76/155 train_time:170.983s step_avg:2249.77ms
+step:77/155 train_time:172.930s step_avg:2245.85ms
+step:78/155 train_time:174.880s step_avg:2242.05ms
+step:79/155 train_time:176.829s step_avg:2238.34ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00080.pt
+step:80/155 train_time:180.101s step_avg:2251.26ms
+step:81/155 train_time:182.042s step_avg:2247.44ms
+step:82/155 train_time:183.992s step_avg:2243.80ms
+step:83/155 train_time:185.941s step_avg:2240.25ms
+step:84/155 train_time:187.877s step_avg:2236.64ms
+step:85/155 train_time:189.824s step_avg:2233.22ms
+step:86/155 train_time:191.774s step_avg:2229.93ms
+step:87/155 train_time:193.712s step_avg:2226.58ms
+step:88/155 train_time:195.672s step_avg:2223.54ms
+step:89/155 train_time:197.611s step_avg:2220.35ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00090.pt
+step:90/155 train_time:200.882s step_avg:2232.02ms
+step:91/155 train_time:202.809s step_avg:2228.67ms
+step:92/155 train_time:204.764s step_avg:2225.69ms
+step:93/155 train_time:206.707s step_avg:2222.66ms
+step:94/155 train_time:208.644s step_avg:2219.62ms
+step:95/155 train_time:210.593s step_avg:2216.76ms
+step:96/155 train_time:212.541s step_avg:2213.97ms
+step:97/155 train_time:214.480s step_avg:2211.13ms
+step:98/155 train_time:216.429s step_avg:2208.46ms
+step:99/155 train_time:218.381s step_avg:2205.87ms
+nsresid step=100 shape=(3072, 768) M=5.77e-03/8.88e-02/5.85e-01 Mr=1.51e-01/2.04e-01/4.18e-01
+nsresid step=100 shape=(768, 3072) M=5.89e-03/2.04e-01/6.90e-01 Mr=1.50e-01/2.04e-01/4.48e-01
+nsresid step=100 shape=(768, 768) M=1.20e-01/4.55e-01/7.39e-01 Mr=2.14e-01/3.79e-01/6.16e-01
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00100.pt
+step:100/155 train_time:221.661s step_avg:2216.61ms
+step:101/155 train_time:223.608s step_avg:2213.94ms
+step:102/155 train_time:225.551s step_avg:2211.28ms
+step:103/155 train_time:227.502s step_avg:2208.76ms
+step:104/155 train_time:229.479s step_avg:2206.53ms
+step:105/155 train_time:231.421s step_avg:2204.01ms
+step:106/155 train_time:233.370s step_avg:2201.60ms
+step:107/155 train_time:235.318s step_avg:2199.24ms
+step:108/155 train_time:237.262s step_avg:2196.87ms
+step:109/155 train_time:239.213s step_avg:2194.62ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00110.pt
+step:110/155 train_time:242.474s step_avg:2204.31ms
+step:111/155 train_time:244.422s step_avg:2202.00ms
+step:112/155 train_time:246.359s step_avg:2199.63ms
+step:113/155 train_time:248.305s step_avg:2197.39ms
+step:114/155 train_time:250.253s step_avg:2195.20ms
+step:115/155 train_time:252.204s step_avg:2193.08ms
+step:116/155 train_time:254.157s step_avg:2191.00ms
+step:117/155 train_time:256.105s step_avg:2188.93ms
+step:118/155 train_time:258.053s step_avg:2186.89ms
+step:119/155 train_time:260.012s step_avg:2184.97ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00120.pt
+step:120/155 train_time:263.408s step_avg:2195.07ms
+step:121/155 train_time:265.360s step_avg:2193.06ms
+step:122/155 train_time:267.304s step_avg:2191.02ms
+step:123/155 train_time:269.251s step_avg:2189.03ms
+step:124/155 train_time:271.197s step_avg:2187.08ms
+step:125/155 train_time:273.141s step_avg:2185.13ms
+step:125/155 val_loss:4.60386 train_time:273.141s step_avg:2185.13ms
+step:126/155 train_time:275.097s step_avg:2183.31ms
+step:127/155 train_time:277.041s step_avg:2181.43ms
+step:128/155 train_time:278.996s step_avg:2179.66ms
+step:129/155 train_time:280.948s step_avg:2177.89ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00130.pt
+step:130/155 train_time:284.315s step_avg:2187.04ms
+step:131/155 train_time:286.259s step_avg:2185.18ms
+step:132/155 train_time:288.205s step_avg:2183.37ms
+step:133/155 train_time:290.156s step_avg:2181.62ms
+step:134/155 train_time:292.107s step_avg:2179.90ms
+step:135/155 train_time:294.057s step_avg:2178.20ms
+step:136/155 train_time:296.004s step_avg:2176.50ms
+step:137/155 train_time:297.953s step_avg:2174.84ms
+step:138/155 train_time:299.905s step_avg:2173.22ms
+step:139/155 train_time:301.857s step_avg:2171.64ms
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00140.pt
+step:140/155 train_time:305.141s step_avg:2179.58ms
+step:141/155 train_time:307.088s step_avg:2177.93ms
+step:142/155 train_time:309.036s step_avg:2176.31ms
+step:143/155 train_time:310.972s step_avg:2174.63ms
+step:144/155 train_time:312.921s step_avg:2173.07ms
+step:145/155 train_time:314.867s step_avg:2171.50ms
+step:146/155 train_time:316.819s step_avg:2169.99ms
+step:147/155 train_time:318.805s step_avg:2168.74ms
+step:148/155 train_time:320.754s step_avg:2167.26ms
+step:149/155 train_time:322.704s step_avg:2165.80ms
+nsresid step=150 shape=(3072, 768) M=5.56e-03/3.43e-02/4.96e-01 Mr=1.53e-01/2.04e-01/3.85e-01
+nsresid step=150 shape=(768, 3072) M=5.50e-03/3.89e-02/5.05e-01 Mr=1.55e-01/2.04e-01/4.09e-01
+nsresid step=150 shape=(768, 768) M=1.08e-01/4.13e-01/6.97e-01 Mr=2.12e-01/3.69e-01/6.00e-01
+checkpoint: /tmp/warm150smoke/checkpoints/ckpt_00150.pt
+step:150/155 train_time:325.991s step_avg:2173.27ms
+step:150/155 val_loss:4.50398 train_time:325.991s step_avg:2114.02ms
+warm150 handoff (3072, 768) ratio=1.0000
+warm150 handoff (3072, 768) ratio=1.0003
+warm150 handoff (3072, 768) ratio=1.0003
+warm150 handoff (3072, 768) ratio=1.0004
+warm150 handoff (3072, 768) ratio=1.0004
+warm150 handoff (3072, 768) ratio=1.0003
+warm150 handoff (3072, 768) ratio=1.0005
+warm150 handoff (3072, 768) ratio=1.0002
+warm150 handoff (3072, 768) ratio=1.0004
+warm150 handoff (3072, 768) ratio=1.0002
+warm150 handoff (3072, 768) ratio=0.9999
+warm150 handoff (3072, 768) ratio=0.9998
+warm150 handoff (768, 3072) ratio=1.0002
+warm150 handoff (768, 3072) ratio=1.0006
+warm150 handoff (768, 3072) ratio=1.0007
+warm150 handoff (768, 3072) ratio=1.0004
+warm150 handoff (768, 3072) ratio=1.0004
+warm150 handoff (768, 3072) ratio=1.0002
+warm150 handoff (768, 3072) ratio=1.0002
+warm150 handoff (768, 3072) ratio=1.0000
+warm150 handoff (768, 3072) ratio=1.0000
+warm150 handoff (768, 3072) ratio=1.0003
+warm150 handoff (768, 3072) ratio=0.9999
+warm150 handoff (768, 3072) ratio=0.9995
+warm150 handoff (768, 768) ratio=1.0084
+warm150 handoff (768, 768) ratio=1.0078
+warm150 handoff (768, 768) ratio=1.0107
+warm150 handoff (768, 768) ratio=1.0088
+warm150 handoff (768, 768) ratio=1.0144
+warm150 handoff (768, 768) ratio=1.0126
+warm150 handoff (768, 768) ratio=1.0154
+warm150 handoff (768, 768) ratio=1.0121
+warm150 handoff (768, 768) ratio=1.0132
+warm150 handoff (768, 768) ratio=1.0120
+warm150 handoff (768, 768) ratio=1.0145
+warm150 handoff (768, 768) ratio=1.0113
+warm150 handoff (768, 768) ratio=1.0146
+warm150 handoff (768, 768) ratio=1.0133
+warm150 handoff (768, 768) ratio=1.0147
+warm150 handoff (768, 768) ratio=1.0114
+warm150 handoff (768, 768) ratio=1.0121
+warm150 handoff (768, 768) ratio=1.0113
+warm150 handoff (768, 768) ratio=1.0153
+warm150 handoff (768, 768) ratio=1.0108
+warm150 handoff (768, 768) ratio=1.0144
+warm150 handoff (768, 768) ratio=1.0116
+warm150 handoff (768, 768) ratio=1.0154
+warm150 handoff (768, 768) ratio=1.0116
+warm150 handoff (768, 768) ratio=1.0123
+warm150 handoff (768, 768) ratio=1.0102
+warm150 handoff (768, 768) ratio=1.0148
+warm150 handoff (768, 768) ratio=1.0116
+warm150 handoff (768, 768) ratio=1.0119
+warm150 handoff (768, 768) ratio=1.0106
+warm150 handoff (768, 768) ratio=1.0161
+warm150 handoff (768, 768) ratio=1.0143
+warm150 handoff (768, 768) ratio=1.0124
+warm150 handoff (768, 768) ratio=1.0126
+warm150 handoff (768, 768) ratio=1.0167
+warm150 handoff (768, 768) ratio=1.0134
+warm150 handoff (768, 768) ratio=1.0123
+warm150 handoff (768, 768) ratio=1.0109
+warm150 handoff (768, 768) ratio=1.0160
+warm150 handoff (768, 768) ratio=1.0148
+warm150 handoff (768, 768) ratio=1.0107
+warm150 handoff (768, 768) ratio=1.0103
+warm150 handoff (768, 768) ratio=1.0157
+warm150 handoff (768, 768) ratio=1.0148
+warm150 handoff (768, 768) ratio=1.0095
+warm150 handoff (768, 768) ratio=1.0095
+warm150 handoff (768, 768) ratio=1.0183
+warm150 handoff (768, 768) ratio=1.0201
+step:151/155 train_time:328.088s step_avg:2172.77ms
+step:152/155 train_time:330.036s step_avg:2171.29ms
+step:153/155 train_time:331.979s step_avg:2169.80ms
+step:154/155 train_time:333.913s step_avg:2168.27ms
+step:155/155 train_time:335.861s step_avg:2166.85ms
+step:155/155 val_loss:4.49933 train_time:335.862s step_avg:1974.05ms
+max_memory_allocated: 31.097 GB

@@ -316,6 +316,14 @@ Single-variable diffs only; run22-25 are the NS12 controls.
 Step 0a (profile COSMOS-r32 breakdown): subspace QR/SVD + projections +
 Sinkhorn = bulk of the +1-4% overhead; NS-on-residual within 10% of
 full-NS cost (same shape/count — the saving, if any, is elsewhere).
+  OUTCOME (job 14532721): per-shape update COSMOS 1.52-1.67ms vs Muon
+  0.56-0.70ms (~2.5x the microbench; end-to-end only +1-4% since
+  forward/backward dominate). ns22 0.60-0.81ms vs full-NS (+7/+8/+16%
+  per shape — within-10% on 2/3, marginal on mlp-proj). Overhead =
+  qr 0.31-0.35 + sink 0.32-0.33 + proj 0.03 (~0.7ms/layer). Subspace
+  machinery dominates: HIT. Implication: cuttable cost, if any, is QR /
+  Sinkhorn cadence — NS-count cuts help Muon equally (no COSMOS-
+  specific win there).
 Step 0b (NS residuals M vs M_res, ckpt states): M_res residual < M
 residual at matched steps (flatter spectrum after top-r removal);
 8-step within ~2x of 12-step for both; 6-step materially worse for full
@@ -335,6 +343,10 @@ Exp 1 (warm150 handoff, runs 27/28): final within ±0.002 of C-r32
 baselines (no-harm floor), upside past them if the early hole was
 load-bearing; crossing 3150-3200. Smoke: handoff ratios in [0.95,1.05].
 FALSIFIED if final worse than baseline by >0.002 (disruption).
+  SMOKE (job 14532682): PASS — 72/72 handoff ratios in [0.9995, 1.0201]
+  (scale match verified live); 9/9 nsresid lines; exact in-training M_hat
+  confirms the ckpt-proxy pattern (M_res worse at 12/8, e.g. step-150
+  mlp-proj M=5.6e-3/3.4e-2 vs Mr=1.5e-1/2.0e-1); 0 recompiles.
 Exp 2 (NS 12/8/6 x both, runs 29-36): 8-step crosses within ±25 of NS12
 controls with 3-8% faster steps. At 6: INTERACTION (COSMOS holds, Muon
 slips >=50 steps or +0.002) vs UNIFORM (both move together) — record

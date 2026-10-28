@@ -1,0 +1,26 @@
+/usr/local/lib/python3.12/dist-packages/torch/backends/cuda/__init__.py:131: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/Context.cpp:80.)
+  return torch._C._get_cublas_allow_tf32()
+== 1. full update ms (mean of reps, post-warmup) ==
+attn (768x768)         muon=    0.56ms  sinksoap=   14.59ms  soap=    0.70ms
+mlp-fc (768x3072)      muon=    0.61ms  sinksoap=   46.21ms  soap=    2.63ms
+mlp-proj (3072x768)    muon=    0.70ms  sinksoap=   46.12ms  soap=    2.61ms
+== 2. sinksoap breakdown ms ==
+attn (768x768)         eigh=  13.86 proj=  0.03 sink=  0.42 recon=  0.02 scale= 0.03 normuon= 0.00
+mlp-fc (768x3072)      eigh=  45.12 proj=  0.12 sink=  0.42 recon=  0.12 scale= 0.03 normuon= 0.08
+mlp-proj (3072x768)    eigh=  45.06 proj=  0.12 sink=  0.48 recon=  0.12 scale= 0.03 normuon= 0.08
+== 3. eigh noise floor: rel ||QQ^T - Q0Q0^T||_F over 20 calls ==
+gram   768x768   mean=0.00e+00 max=0.00e+00
+gram  3072x3072  mean=0.00e+00 max=0.00e+00
+gram  3072x3072  mean=0.00e+00 max=0.00e+00
+== 4. optimizer-state MB (fp32, analytic, exact) ==
+(768x768) x4/layer: muon=  2.36MB  sinksoap=  7.08MB  soap= 14.16MB
+(768x3072) x1/layer: muon=  9.44MB  sinksoap= 49.56MB  soap= 99.09MB
+(3072x768) x1/layer: muon=  9.44MB  sinksoap= 49.56MB  soap= 99.09MB
+12-layer totals: muon=340MB  sinksoap=1529MB  soap=3058MB
+(excludes AdamW embed/head/1D states, identical for both)
+== 5. sinkhorn-embed (50304x768, K=11): ms/step + state MB ==
+embed/head-like: sinkhorn=    5.39ms  state(fp32 momentum)=155MB (x2 params = 309MB; AdamW m+v would be 618MB)
+== 6. COSMOS-r32 full update + breakdown ms (r=32) ==
+attn (768x768)         full=    1.52ms  qr=   0.31 proj=  0.03 sink=  0.32 ns22=  0.60
+mlp-fc (768x3072)      full=    1.63ms  qr=   0.35 proj=  0.03 sink=  0.33 ns22=  0.66
+mlp-proj (3072x768)    full=    1.67ms  qr=   0.34 proj=  0.03 sink=  0.33 ns22=  0.81

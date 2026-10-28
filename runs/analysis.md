@@ -3,7 +3,14 @@
 Single-GPU Track-3 optimizer comparisons plus an analytical
 distributed-cost model, toward hybrid updates matching SOAP quality at
 Muon cost. Rig: 1x RTX PRO 6000 Blackwell 96GB. Run ledger: `runs.csv`.
-Methods and provenance: `method_notes.md`. Last updated 2026-10-16.
+Methods and provenance: `method_notes.md`. Last updated 2026-10-28.
+
+Terminology (2026-10-28): "COSMOS" throughout means the **track-3 variant**
+(4-block subspace Sinkhorn + Newton-Schulz on the residual + NorMuon
+second-moment update) as adapted in the upstream fork — not COSMOS in
+general. No "Pareto winner" language: 8-GPU wall-clock is flat and 1-GPU
+is ~1.5% slower than Muon; the claim is a step-count edge at ~cost parity.
+Newton-Muon lane closed (run7 footnote).
 
 ## 1. Setup
 

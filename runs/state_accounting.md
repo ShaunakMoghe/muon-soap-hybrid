@@ -97,3 +97,26 @@ GiB, SinkSOAP 1.86 GiB vs COSMOS-256 0.94 GiB), exactly the concern raised
 about full-rank curvature. Under tensor-parallel sharding, by contrast, the
 m x m / n x n factors would enter the per-step comm volume; that model is
 untested here.
+
+## Width scaling (ANALYTIC MODEL, not measured)
+
+Same architecture scaled to width d: 12 layers, MLP 4d, vocab 50304 fixed,
+seq/batch fixed, fp32 states (embed bf16). Formulas above; d=768 row
+reproduces the measured-anchored totals. GiB total optimizer state (incl.
+shared AdamW) and FSDP 8-GPU all-gather bytes/step (optimizer-independent).
+
+| d | Params | Muon | SOAP | SinkSOAP | C32 | C256 | all-gather/step |
+|---|---|---|---|---|---|---|---|
+| 768 | 0.16B | 0.75 | 3.28 | 1.86 | 0.77 | 0.94 | 1.06 |
+| 2048 | 0.81B | 3.40 | 21.40 | 11.28 | 3.45 | 3.86 | 5.65 |
+| 4096 | 2.83B | 11.30 | 83.30 | 42.80 | 11.41 | 12.18 | 20.30 |
+| 8192 | 10.49B | 40.61 | 328.61 | 166.61 | 40.82 | 42.33 | 76.61 |
+
+At d=8192: SOAP state is 8.1x Muon's (329 GiB — exceeds single-device memory
+on its own), SinkSOAP 4.1x (167 GiB), while COSMOS-32 is within 0.5% of Muon
+and COSMOS-256 within 5%. The rotation matrices (m^2+n^2 per layer) grow with
+the square of width; rank-r state grows linearly in r and is width-dominant
+only through the shared momentum term. This is the quantitative form of the
+scale argument: full-rank curvature becomes unshardable while low-rank
+curvature rides at ~Muon cost. Model only — no multi-hundred-GB run exists
+to confirm it.

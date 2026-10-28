@@ -299,8 +299,10 @@ per-step, -4% wall vs Muon. Different track/harness here, so bands wide.
   transfer to this Track-3 harness (measured). Candidate transfer gaps
   (hypothesized, untested): NS12+rect-scale harness vs paper's NS5;
   refresh_k=10 vs 32; squared-ReLU MLP + RMSNorm layout vs paper's GPT-2;
-  possibly their lr tuning. Lane closed: method runs cleanly, result is a
-  negative datum, no further NM runs planned.
+  possibly their lr tuning. CALIBRATION (do not overcite): this was ONE run
+  of a port with several deviations — it shows this port didn't cross in
+  this harness, nothing more. Not evidence against the paper; keep as a
+  footnote. Lane closed: no further NM runs planned.
 - A miss on crossing still leaves a useful datum (NM cost at Track 3);
   an OOM again kills the lane permanently (same-reason x3).
 

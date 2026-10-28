@@ -1,15 +1,14 @@
 #!/bin/bash
-# Newton-Muon GPU smoke: correctness + zero-per-step-recompiles. Needs idle GPU (~10 min).
-# 12-step x2 runs with TORCH_LOGS=recompiles.
-# Run 1: must complete + val must decrease (hooks fire, preconditioner sane).
-# Run 2 (warm file cache): must print ZERO recompile lines + stable step times.
+# Newton-Muon GPU smoke (interactive use; batch uses runs/sbatch/nm_smoke.sbatch).
+# 12-step x2 runs with TORCH_LOGS=recompiles. Needs idle GPU (~10 min).
+# Run 1: must complete + val must decrease (capture op runs, refresh sane).
+# Run 2 (warm file cache): must print zero recompile lines + stable step times.
 #
-# Why this invariant (NOT "zero graph breaks"): the gated hooks read a mutable
-# step counter, so they are @torch.compiler.disable BY DESIGN -- dynamo breaks
-# at each hook boundary (bounded, one-time fragmentation) and runs hooks eager.
-# Zero breaks is therefore unachievable AND undesirable; the catastrophic failure
-# would be per-step recompiles (a global_step guard failing every step), which
-# recur in EVERY run -- hence run 2 must be recompile-silent.
+# Capture is a compiled custom op, so dynamo sees no graph breaks; the
+# failure mode this guards is per-step recompiles (a counter guard failing
+# every step), which would recur in every run -- hence run 2 must be
+# recompile-silent. (v1 eager hooks graph-broke every Linear and OOM'd;
+# see research_stack/newton_muon.py.)
 set -u
 PROJ=/storage/project/ps-moereasoning-0/smoghe6
 cd "$PROJ" || exit 1

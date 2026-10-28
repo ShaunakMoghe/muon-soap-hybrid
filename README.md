@@ -11,8 +11,9 @@ step efficiency at Muon's compute and communication cost.
 - `research_stack/` — shared infra: checkpoint/resume (`ckpt.py`),
   determinism tests, optimizer modules (Newton-Muon, Sinkhorn).
 - `runs/` — the ledger: `runs.csv` (every run), `analysis.md` (tradeoff
-  write-up), `method_notes.md` (forensics + load-bearing lessons),
-  `curves.png`, `sbatch/` (batch scripts + job outputs), per-run dirs.
+  write-up), `method_notes.md` (protocols), `state_accounting.md`
+  (optimizer-state model), `curves.png`, `sbatch/` (batch scripts +
+  job outputs), per-run dirs.
 - `profile/` — optimizer microbenchmarks (time / memory / noise floor).
 
 ## Upstreams (all public)
@@ -24,17 +25,19 @@ step efficiency at Muon's compute and communication cost.
 
 ## Compute
 
-Georgia Tech PACE Phoenix, `gpu-rtxpro-blackwell`, standard shape 1 GPU +
-8 CPUs + 96GB via `sbatch` (see `runs/sbatch/`). Work from the login node;
-GPU work only through queued jobs.
+Georgia Tech PACE Phoenix, `gpu-rtxpro-blackwell`, via `sbatch`
+(see `runs/sbatch/`): 1-GPU shape is 1 GPU + 8 CPUs + 96GB, 8-GPU shape
+is 8 GPUs + 16 CPUs + 400GB. Work from the login node; GPU work only
+through queued jobs.
 
 ## Status
 
-Measured: Muon / SinkSOAP / SOAP-QR / seeded-control crossings + per-step
-costs (runs 1–5); profiler closure 1.88s vs 1.92s; eigh determinism
-(20x + 3x identical on CUDA).
-In progress: Run 8 (amortized SinkSOAP) smoke → full; COSMOS benchmark;
-Newton-Muon smoke (full only if smoke passes); ckpt re-validation.
-Unverified: amortized-cost estimate (~1.9s/step); SOAP-QR chaos mechanism
-(hypothesis only); Newton-Muon paper claims incl. novelty framing;
-distributed (multi-GPU) behavior — all single-GPU + analytical so far.
+Measured (runs 1–28): Muon 3-seed spread; COSMOS (track-3 variant)
+3-seed edge over Muon at r256, rank sweep r32–r512 (quality nearly
+flat), warm-start amortization finding, SOAP recipes, Newton-Muon
+port (no-cross footnote); 8-GPU paired Muon/COSMOS-r32 crossings +
+SinkSOAP cost probe (PCIe-only node).
+In progress: audit batch Exps 1–3 (warmup handoff, NS sweep,
+square-matrix NorMuon).
+Open: COSMOS lr/wd tuning, rank 8/16 knee, asymmetric ranks; SOAP-QR
+chaos mechanism (hypothesis only).

@@ -264,9 +264,9 @@ class Muon(torch.optim.Optimizer):
 # Modded-NanoGPT-Private/records/track_3_optimization/train_gpt_simple.py
 # compressed_sinkhorn_coeffs + cosmos_normuon_update VERBATIM;
 # COSMOS class verbatim EXCEPT dist calls guarded for uninitialized-dist
-# robustness (no-op under torchrun). Harness = OUR seeded Sep baseline
-# (3250 steps, seed0, Sep optimizer1 lr 0.7/0.004/0.015) — NOT upstream's
-# May harness (3225 steps, unseeded, optimizer1 0.3/1/320/0.01): isolates
+# robustness (no-op under torchrun). Harness = seeded Sep baseline
+# (3250 steps, seed0, optimizer1 0.7/0.004/0.015; upstream May harness was
+# 3225 steps, unseeded, optimizer1 0.3/1/320/0.01): isolates
 # the 2D-optimizer effect vs run5, same protocol as run2's SinkSOAP splice.
 # Wiring: lr=0.04, wd=0.025, rank_o=rank_u=32; EXP 1 warmup handoff (Muon steps 1-150 + background U/V/S/R/second-moment, COSMOS after) (rank sweep; otherwise identical to cosmos seed0).
 ########################################

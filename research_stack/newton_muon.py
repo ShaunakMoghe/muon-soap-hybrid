@@ -2,45 +2,45 @@
 """Newton-Muon optimizer (Du & Su, arXiv:2604.01472) for the Track-3 harness.
 
 Update: W <- W - eta * msgn(G @ (ZZ^T + gamma*I)^{-1}): right-precondition the
-RAW gradient by the inverse input-activation second moment, then run the
+raw gradient by the inverse input-activation second moment, then run the
 harness-standard Muon pipeline (EMA momentum + Nesterov + Newton-Schulz +
 rect scaling + decoupled wd). Reference repo: zhehangdu/Newton-Muon
-(cloned at Newton-Muon-ref/; our port follows their Algorithm 1 + code).
+(cloned at Newton-Muon-ref/; this port follows their Algorithm 1 + code).
 
 Faithfulness notes (paper + reference repo):
-- Refresh cov + factor every k steps (default k=10 HERE vs paper k=32 --
-  aligned with our SOAP/SinkSOAP precond cadence for comparability).
+- Refresh cov + factor every k steps (k=10 here vs paper k=32, aligned
+  with the SOAP/SinkSOAP precondition cadence for comparability).
 - EWMA beta=0.95, relative ridge 0.2*tr(K)/d + 1e-8, K init 1e-3*I.
-- Preconditioner applied to RAW grad BEFORE momentum (paper Alg.1 comment).
-- MLP contraction (d x 4d input): FOUR d-block covariances (paper rule);
+- Preconditioner applied to the raw grad before momentum (paper Alg.1).
+- MLP contraction (d x 4d input): four d-block covariances (paper rule);
   split activations/gradients into contiguous d-chunks along input dim.
 - First (k-1) steps run pure Muon (identity) until first refresh (reference).
-- Deviation 1: cached Cholesky FACTOR + per-step triangular solves instead of
-  the reference's explicit Cholesky inverse + matmul (identical math, better
-  stability). PD fallback: ridge x10 retry (x3, the paper's own diagnostic
-  rule), then keep previous factor (reference resets to identity).
-- Deviation 2: momentum/NS/wd = HARNESS Muon (EMA mu, NS12, rect scale,
-  decoupled wd), per the paper's own protocol ("replace the Muon update",
-  keep settings). Reference used heavy-ball + NS5 (their harness flavor).
-- Ours: separate q/k/v linears (no fused-QKV splitting needed).
-- Accumulation: COMPILED custom op (torch.library nm::accum_xtx + fake),
-  called inline in forward with a bool precond_flag (mirrors the reference;
-  v1 forward HOOKS caused dynamo graph-breaks at every Linear and OOM'd the
-  first forward at 70-83GB -- never use eager hooks under model.compile).
-  fp32 per-call mean X^T X, call counts; generic nblocks (ref: two fixed
-  ops); torch.bmm instead of the ref's Triton XXT kernel (same math).
+- Deviation 1: cached Cholesky factor + per-step triangular solves instead
+  of the reference's explicit Cholesky inverse + matmul (identical math,
+  better stability). PD fallback: ridge x10 retry (x3, the paper's own
+  diagnostic rule), then keep previous factor (reference resets to identity).
+- Deviation 2: momentum/NS/wd follow this harness (EMA mu, NS12, rect
+  scale, decoupled wd), per the paper's protocol ("replace the Muon
+  update", keep settings). Reference used heavy-ball + NS5.
+- Separate q/k/v linears (no fused-QKV splitting needed).
+- Accumulation: compiled custom op (torch.library nm::accum_xtx + fake),
+  called inline in forward with a bool precond_flag (mirrors the
+  reference; v1 eager hooks graph-broke every Linear under
+  model.compile and OOM'd the first forward at 70-83GB). fp32 per-call
+  mean X^T X, call counts; generic nblocks (ref: two fixed ops);
+  torch.bmm instead of the ref's Triton XXT kernel (same math).
 - q/k/v (same input): separate buffer sets per Linear (3x redundant tiny
   outer products on refresh steps; identical result to the ref's shared
   packed-QKV estimate).
 
-Distributed notes: capture assumes locally-available inputs. Under DP the local
-Sigma uses the local microbatch (approximation; grads are still allreduced).
-Under TP, column-parallel inputs are replicated across ranks, so ZZ^T is exact
-with ZERO communication (OUR inference from the paper's §6-flagged
-distributed gap — the paper only says distributed eval is future work;
-untested here).
+Distributed notes: capture assumes locally-available inputs. Under DP the
+local Sigma uses the local microbatch (approximation; grads are still
+allreduced). Under TP, column-parallel inputs are replicated across ranks,
+so ZZ^T is exact with zero communication (our inference; the paper only
+says distributed eval is future work; untested here).
 Checkpointing: refresh cadence is preserved across resume via per-param
-state['_step'] (optimizer attrs are NOT in state_dict).
+state['_step'] (optimizer attrs are not in state_dict).
+Status: run7 no-cross footnote; lane closed.
 """
 import torch
 import torch.compiler

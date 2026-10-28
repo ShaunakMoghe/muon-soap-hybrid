@@ -3,7 +3,7 @@
 Single-GPU Track-3 optimizer comparisons plus an analytical
 distributed-cost model, toward hybrid updates matching SOAP quality at
 Muon cost. Rig: 1x RTX PRO 6000 Blackwell 96GB. Run ledger: `runs.csv`.
-Methods and provenance: `method_notes.md`. Last updated 2026-10-28.
+Methods and provenance: `method_notes.md`. Last updated 2026-10-28 (runs 1–28).
 
 Terminology (2026-10-28): "COSMOS" throughout means the **track-3 variant**
 (4-block subspace Sinkhorn + Newton-Schulz on the residual + NorMuon
@@ -34,21 +34,39 @@ Newton-Muon lane closed (run7 footnote).
 | run8 | amort SinkSOAP (freq=10/T=1) | 0 | — | — | 3.29182 | 6473s | — |
 | run4 | SOAP-QR (lr=0.002, no warmup) | 0 | — | — | 3.34559 | 6155s | — |
 | run3 | SOAP-QR (killed@968) | 0 | — | — | 3.769@875 | — | — |
+| run9/10 | COSMOS-256 | 1/2 | 3150/3175 | — | 3.27373/3.27430 | 6491/6616s | — |
+| run12 | amort SinkSOAP (freq=10/T=10) | 0 | — | — | 3.28985 | 6556s | — |
+| run13 | amort SinkSOAP (warm-start ≤200) | 0 | 3125 | (3100,3125] | 3.26992 | 6837s | — |
+| run11 | SOAP (lr=0.0018 + warmup) | 0 | — | — | 3.30265 | 6106s | — |
+| run14/15/18/19 | COSMOS r64/r128/r32/r512 | 0 | 3200/3200/3175/3125 | — | 3.27649/3.27640/3.27517/3.27021 | — | — |
+| run16/17 | Muon | 1/2 | 3250/3225 | — | 3.27959/3.27922 | 5924/5904s | — |
+| run7 | Newton-Muon port (v2) | 0 | — | — | 3.31761 | 6357s | — |
 
-Final-loss order: SinkSOAP 3.26769 > COSMOS 3.27399 > Muon 3.27714 >
-seeded Muon 3.27844 > amort-SinkSOAP 3.29182 > SOAP-QR 3.34559.
+Best to worst final loss (1-GPU): SinkSOAP 3.26769, warm-start amort
+3.26992, COSMOS-512 3.27021, COSMOS-256 ~3.274, COSMOS-32 3.27517,
+Muon 3.277–3.280 (3 seeds), amort-SinkSOAP ~3.290, SOAP-ref 3.30265,
+Newton-Muon port 3.31761, SOAP-QR 3.34559.
 Crossing grid is ±25 steps late; run1/run2 carry unpaired init noise
 (Sec. 5 for the noise floor this sits on). Run4 is one chaotic draw.
+
+8-GPU (paired seeds, same 3250-step protocol): Muon s0/s1 cross
+3225/3250 (finals 3.27790/3.27978); COSMOS-r32 s0/s1 cross 3200/3200
+(3.27635/3.27690) — directional edge holds, ~0.40 s/step both, to-cross
+wall roughly flat (1294/1305s vs 1330/1318s). SinkSOAP 500-step probe:
+0.64 s/step (~1.6x Muon-8GPU).
 
 ## 3. Per-step cost (measured, 1x Blackwell)
 
 | method | s/step | note |
 |---|---|---|
-| Muon | 1.83–1.86 | run1/run5 |
+| Muon | 1.82–1.86 | run1/run5/run16/run17 |
 | SinkSOAP (eigh every step) | 3.75 | 96–98% eigh; Sinkhorn ~0.5ms |
 | amort SinkSOAP (freq=10/T=1) | 1.95 | ~1.8 normal, ~3.7 refresh steps |
-| COSMOS (rank-256 QR) | 1.99 | per-step subspace QR |
+| COSMOS (rank-256 QR) | 1.99–2.04 | run6/run9/run10 |
+| COSMOS r32/r64/r128/r512 | 1.89/1.93/1.90/2.15 | rank sweep, seed0 |
 | SOAP-QR (eigh once + track) | 1.89 | full eigh at init only |
+| Newton-Muon port | 1.96 | run7 |
+| 8-GPU Muon / COSMOS-r32 | 0.39–0.42 | steady-state; SinkSOAP 0.64 |
 
 Cost-model closure: microbenchmark-predicted SinkSOAP overhead (1.88s)
 matches the measured run2−run1 delta (1.92s). The 2x SinkSOAP slowdown
@@ -61,9 +79,11 @@ punishes unamortized SinkSOAP (shards ÷W on multi-GPU); treat these as
 ## 4. Memory
 
 Optimizer state, 2D block params, fp32 exact: Muon 340MB <
-SinkSOAP 1.53GB (grams) < SOAP 3.06GB (m/v + grams + Qs).
-Observed peak (`max_memory_allocated`): run5 31.1, run6 31.3,
-run8 33.5, run4A 33.8 GB.
+COSMOS-32 360MB < COSMOS-256 548MB < SinkSOAP 1.53GB (grams) <
+SOAP 3.06GB (m/v + grams + Qs). Full table: `state_accounting.md`.
+Observed peak (`max_memory_allocated`): Muon 31.1, COSMOS-256 31.3,
+COSMOS-32 31.1, COSMOS-512 31.6, SinkSOAP-family 33.5, SOAP-ref 41.4
+(large transient), Newton-Muon port 33.4 GB.
 
 ## 5. Noise and reproducibility
 
@@ -88,44 +108,46 @@ Practical consequence: ±5e-3 loss jitter maps to ~±70 crossing steps
 near target, so single-seed gaps near that floor are inconclusive,
 and SOAP-QR needs multi-seed spread before any crossing claim.
 
-## 6. Distributed cost (analytical; no multi-GPU runs yet)
+## 6. Distributed cost (8-GPU measured + analytical)
 
 Two regimes, with different bottlenecks:
-- FSDP/ZeRO-style (this harness: data-parallel + optimizer param
-  sharding). Each rank owns whole 2D matrices, so eigh/QR is purely
-  rank-local compute; SOAP-family methods pay local compute + memory
-  only, and per-GPU communication matches Muon's (gradient allreduce +
-  parameter all_gather). The 1-GPU compute/memory numbers characterize
-  exactly this regime.
+- Data-parallel + optimizer param sharding (this harness). Each rank
+  owns whole 2D matrices, so eigh/QR is rank-local compute; per-step
+  comm matches Muon's (gradient allreduce + parameter all_gather).
+  Measured at 8 GPUs (single node, PCIe-only, no NVLink): Muon and
+  COSMOS-r32 both ~0.40 s/step (within 1–3%); SinkSOAP 0.64 s/step.
 - Tensor parallelism (single 2D weights sharded across GPUs).
   Assembling each mode's Gram matrix needs a cross-rank AllReduce over
   the sharded dimension, and the eigendecomposition becomes a
   distributed eigensolve — cubic work that parallelizes poorly plus
   fine-grained synchronization. Muon's Newton-Schulz iteration is
-  structurally local here (no Gram eigenbasis needed).
+  structurally local here (no Gram eigenbasis needed). Untested.
 Implementation notes: the transplanted SOAP.step does not shard
 (redundant optimizer compute + full states per rank; correct but
-wasteful, fixable). No multi-GPU measurements exist yet; 2-GPU
-strong-scaling probes would convert regime-1 scaling into numbers.
+wasteful, fixable). FSDP all-gather model + width scaling table:
+`state_accounting.md` (analytic).
 
 ## 7. Method landscape
 
 - Muon: no curvature anywhere; orthogonalization by Newton-Schulz GEMMs.
 - Newton-Muon (Du & Su, arXiv:2604.01472): unilateral right
   preconditioning by input activation covariance (ZZᵀ, Cholesky-tracked)
-  under an isotropic-output assumption. The paper's §6 flags single-GPU
-  evaluation as future work; the observation that ZZᵀ accumulates locally
-  under column-parallel TP is ours (untested). Status: module implemented
-  and CPU-validated; OOMs at 83/95GB under hooks+compile on this rig
-  (two attempts, cudagraphs on and off); lane paused pending decision.
+  under an isotropic-output assumption. Status: closed as a footnote —
+  v1 (eager hooks) OOM'd twice under compile; v2 (compiled custom op,
+  NS12, refresh k=10) ran clean but did not cross (3.31761, run7).
+  One ported run; not evidence against the paper.
 - Plain SOAP: bilateral gradient covariance (dual eigh/QR). Status:
-  unresolved — one no-cross draw (+0.066, lr=0.002 no warmup), one
-  draw killed early, 0.037 same-seed spread. No claim either way.
+  unresolved — hot recipe no-cross (+0.066), reference recipe no-cross
+  (+0.023, run11), one draw killed early, 0.037 same-seed spread.
+  Recipe matters but is not the fix. No claim either way.
 - SinkSOAP: bilateral dual eigh every step + Sinkhorn coordinate
   balance. Same rotation cost as SOAP for ~0.5ms of post-processing.
-- COSMOS: rank-256 subspace QR tracking + compressed Sinkhorn blocks;
-  crossed 3150 at 1.99s/step. Best seed0 final (3.27399) and best
-  SOAP-family wall-clock to target (6258s, ~4–7% slower than Muon).
+  Warm-started freq-10 amortization (run13) matches it at ~56% cost.
+- COSMOS (track-3 variant): rank-r subspace QR tracking + compressed
+  Sinkhorn blocks + NorMuon update. 3-seed edge over Muon at r256
+  (3150/3150/3175 vs 3225/3250/3225); quality nearly flat in rank
+  (r32 ≈ r256); directional edge holds at 8 GPUs. Step-count edge at
+  ~cost parity; wall-clock flat-to-slower at measured scales.
 
 ## 8. Claim register
 
@@ -134,24 +156,29 @@ strong-scaling probes would convert regime-1 scaling into numbers.
 - [measured, low-confidence] SinkSOAP crossed ~100 steps before Muon
   (3100 vs 3200); gap is near the ±70-step noise floor, single
   unseeded draws — suggestive, not conclusive.
-- [measured] COSMOS (seed0): cross 3150, final 3.27399, 1.99s/step.
+- [measured] COSMOS-256 edge over Muon, 3 seeds each: 3150/3150/3175
+  vs 3225/3250/3225, no overlap.
+- [measured] Quality nearly flat in rank: r32/r64/r128 cross
+  3175/3200/3200 vs r256 3150–3175; r512 3125 (final 3.27021).
 - [measured] Amortized SinkSOAP (freq=10/T=1): 1.95s/step, NO crossing,
-  final 3.29182 — the step savings do not survive at these settings.
-  T-vs-frequency unattributed (both changed in run8).
+  final 3.29182. T exonerated (run12 T=10 also no-cross); warm-start
+  recovers (run13 crosses 3125) — the failure is cold-start staleness.
 - [measured] SOAP-QR (seed0, lr=0.002, no warmup): no crossing, 3.34559.
+- [measured] SOAP reference recipe (lr=0.0018 + warmup): no crossing,
+  3.30265 (run11) — closer, but recipe is not the fix.
 - [measured] Same-seed SOAP-QR @875 differs by 0.037 (run3 vs run4A).
 - [measured] eigh bit-identical 20x + 3x on CUDA (job 13848105).
+- [measured] 8-GPU: COSMOS-r32 within 1–3%/step of Muon, crosses first
+  at both seeds (3200 vs 3225/3250); SinkSOAP 1.6x/step. PCIe-only node.
+- [measured] Newton-Muon port (v2): no crossing, 3.31761. Footnote only.
 - [hypothesized] SOAP-QR chaos mechanism (low-rank Grams, near-tied
   eigenvalues, argsort/QR divergence). Decisive battery pending.
 - [hypothesized] Noise-robustness axis (NS contraction vs eigengap
   amplification); supported by fp64 traces, needs tensor-level proof.
-- [hypothesized] run4A shortfall partly from no-warmup + 3250-step
-  horizon (reference recipe uses warmup 250 + 7000 steps at lr 0.0018).
-- [untested] Gentler amortization (freq=3/5, T=10); COSMOS replicates;
-  reference-recipe SOAP; Newton-Muon full benchmark; anything multi-GPU.
-- [analytical] FSDP-vs-TP distributed-cost split.
+- [untested] COSMOS lr/wd tuning; rank 8/16 knee; asymmetric ranks.
+- [analytical] FSDP-vs-TP distributed-cost split; width scaling table.
 
-## 9. Collaborator questions (two answered 2026-10-16)
+## 9. Collaborator questions
 
 1. [answered] Distributed regime: both FSDP and TP matter, framed as
    step-count reduction under limited overhead — at scale, gradient
@@ -159,11 +186,13 @@ strong-scaling probes would convert regime-1 scaling into numbers.
    optimizer adds little overhead and its state shards (or is cheap to
    replicate). Full rotation matrices (SOAP/SinkSOAP) are the expensive
    case; low-rank (COSMOS) the promising one.
-2. [open] SOAP recipe: is lr=0.002 with no warmup a fair test, or
-   should the reference recipe (lr=0.0018 + 250 warmup, 7000 steps)
-   be matched?
-3. [open] Newton-Muon priority: worth deeper surgery for the 96GB OOM?
+2. [answered] SOAP recipe: reference recipe (lr=0.0018 + 250 warmup)
+   tested in run11 — no crossing at +0.023. Fair test; method still
+   open, lane deprioritized.
+3. [answered] Newton-Muon priority: v2 port ran clean (custom-op
+   capture) and did not cross; lane closed as a footnote per
+   cost/benefit, not worth further surgery.
 4. [answered] COSMOS config: lr=0.04/wd=0.025/ranks=256 confirmed as
-   his initial speedrun config, but untuned — room for improvement.
+   the initial speedrun config, but untuned — room for improvement.
    Directed next step: rank–convergence–runtime tradeoff at lower
-   ranks, then larger scale.
+   ranks (done, Sec. 2), then larger scale.

@@ -2,7 +2,7 @@
 
 How runs are paired, checked, profiled, and checkpointed, plus variant
 provenance and operational rules. Results live in `analysis.md`; the run
-ledger is `runs.csv`. Last updated 2026-10-16.
+ledger is `runs.csv`. Last updated 2026-10-28.
 
 ## 1. Seeding and pairing
 
@@ -46,8 +46,11 @@ mlp-fc 768x3072 (0.66ms / 49.34ms), mlp-proj 3072x768 (0.76ms /
 49.46ms); 96–98% of SinkSOAP time is eigh, ~0.5ms Sinkhorn.
 Full-model overhead prediction (1.88s) closes against the measured
 run2−run1 delta (1.92s). SOAP tracked form (precond_freq=10): 0.75ms
-attn / 2.7ms MLP rects. State memory (fp32 exact, 12-layer 2D totals):
-Muon 340MB, SinkSOAP 1529MB, SOAP 3058MB.
+attn / 2.7ms MLP rects. COSMOS-r32 full update (§6): 1.5–1.7ms/shape
+vs Muon 0.6–0.7ms; overhead is subspace QR + Sinkhorn (~0.7ms/layer),
+NS-on-residual ≈ full-NS cost. State memory (fp32 exact, 12-layer 2D
+totals): Muon 340MB, SinkSOAP 1529MB, SOAP 3058MB; see
+`state_accounting.md` for the full table incl. COSMOS ranks.
 
 ## 5. Variant provenance
 
@@ -56,7 +59,8 @@ infrastructure only in `research_stack/`.
 
 | variant | base + change | source |
 |---|---|---|
-| baseline_seed0 | Sep harness + seed0 | public Track 3 @bc3a0c2 |
+| baseline_seed{0,1,2} | Sep harness + seed | public Track 3 @bc3a0c2 |
+| baseline_ns{8,6}_seed{0,1} | baseline + NS steps 12→8/6 | ours (Exp 2) |
 | sinksoap_seed0 | baseline + SinkSOAP swap (lr=0.04, wd=0.025) | lliu606 fork, May recipe @a93a972 |
 | soap_seed0 | baseline + SOAP class verbatim (lr=0.002, betas .95/.95, wd=0, freq=10) | public Track-1 record 2024-10-09 |
 | soap_ref_seed0 | soap_seed0 + lr=0.0018, 250-step linear warmup (reimplemented) | recipe vs nikhilvyas SOAP-ref (read-only) |
@@ -64,7 +68,12 @@ infrastructure only in `research_stack/`.
 | sinksoap_amortT10_seed0 | amort + T restored to 10 | ours |
 | sinksoap_warmstart_seed0 | amort + per-step eigh for steps 1–200 | ours |
 | cosmos_seed{0,1,2} | baseline + COSMOS swap (lr=0.04, wd=0.025, ranks=256) | lliu606 fork track-3 wiring |
-| newton_muon_seed0 | baseline + NewtonMuon + activation hooks | port of zhehangdu/Newton-Muon Alg. 1 |
+| cosmos_r{32,64,128,512}_seed0 | cosmos_seed0 + rank_o=rank_u=r | ours (rank sweep) |
+| cosmos_r32_seed1 | r32 + seed1 | ours |
+| cosmos_r32_warm150_seed{0,1} | r32 + Muon steps 1–150, COSMOS after | ours (Exp 1) |
+| cosmos_r32_ns{8,6}_seed{0,1} | r32 + NS steps 12→8/6 | ours (Exp 2) |
+| cosmos_r32_sqnorm_seed{0,1} | r32 + NorMuon on square matrices | ours (Exp 3) |
+| newton_muon_seed0 | baseline + NewtonMuon, custom-op capture (v2; v1 hooks OOM'd) | port of zhehangdu/Newton-Muon Alg. 1 |
 | sinkhorn_embed_seed0 | parked (built on a misread brief; run2 covers SinkSOAP) | DeepSeek-V4.1-Flash report §2.5 |
 
 Deviations from verbatim sources are bannered in each file (dist-call
@@ -87,16 +96,12 @@ structure still open). Resume lane closed unless a run is cut off.
 ## 7. Operational rules
 
 - Never edit a script while a process may be executing it: the running
-  shell executes its buffered image, including since-removed lines.
-  (run4b: a mid-flight wrapper edit launched a ghost duplicate run;
-  recorded in runs.csv.) Verify with pgrep first; batch scripts are
+  shell executes its buffered image, including since-removed lines
+  (run4b ghost duplicate, recorded in runs.csv). Batch scripts are
   immune (sbatch spools at submit).
-- `pgrep -f <pattern>` matches your own wrapper shell; use
-  self-excluding patterns (`train_gpt_soa[p]`) and resolve PIDs before
-  killing; verify with nvidia-smi afterwards.
-- GPU work only through sbatch (standard shape: 1 GPU + 8 CPUs + 96GB);
-  the SLURM account passes via CLI flag, never committed. Batch `.out`
-  logs stay on disk, out of the repo.
+- GPU work only through sbatch (1-GPU: 1 GPU + 8 CPUs + 96GB; 8-GPU:
+  8 GPUs + 16 CPUs + 400GB); the SLURM account passes via CLI flag,
+  never committed. Batch `.out` logs stay on disk, out of the repo.
 
 ## 8. Reference recipes (read-only)
 

@@ -291,6 +291,16 @@ per-step, -4% wall vs Muon. Different track/harness here, so bands wide.
 - Full run7: crosses 3.28; crossing 3000-3200 (paper-analogous 6% under
   Muon's 3225 would be ~3030; band covers track differences); s/step
   1.9-2.1; final <=3.278 (at least Muon); max mem ~32GB (±1).
+  OUTCOME (job 14508443): NO CROSSING, min 3.31761 (+0.038), 1.956s/step,
+  33.394GB — crossing MISS, final MISS, s/step HIT, mem marginal MISS
+  (+1.4GB over band; 2.3GB over Muon baseline — covariance/inverse/grad
+  buffers + transients exceed the ~1GB static estimate). Early deficit vs
+  Muon (+0.068 @500) never closed. Paper's 6%-fewer-steps gain does NOT
+  transfer to this Track-3 harness (measured). Candidate transfer gaps
+  (hypothesized, untested): NS12+rect-scale harness vs paper's NS5;
+  refresh_k=10 vs 32; squared-ReLU MLP + RMSNorm layout vs paper's GPT-2;
+  possibly their lr tuning. Lane closed: method runs cleanly, result is a
+  negative datum, no further NM runs planned.
 - A miss on crossing still leaves a useful datum (NM cost at Track 3);
   an OOM again kills the lane permanently (same-reason x3).
 

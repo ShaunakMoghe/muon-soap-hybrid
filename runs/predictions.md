@@ -322,6 +322,15 @@ residual at matched steps (flatter spectrum after top-r removal);
 Muon. Orderings primary, wide bands. Uses run18+run16 ckpt_02750
 (momentum bufs as M_hat proxy, documented) + exact in-training M_hat
 from Exp-1 smoke @50/100/150.
+  OUTCOME (job 14532681): M_res WORSE than M at 12/8 (means 0.190/0.295
+  vs 0.064/0.244), marginally better only at 6 (0.459 vs 0.538) —
+  flatter-spectrum hypothesis REJECTED for NS purposes (residual likely
+  loses bf16 precision at its lower norm — hypothesized). 8-step ~3.8x
+  worse than 12-step (ratio MISS, ordering HIT); 6-step catastrophic for
+  both (~0.5). Muon-M ~= COSMOS-M (0.062 vs 0.064). Implication: Exp-2
+  interaction branch (COSMOS tolerates 6) WEAKENED pre-runs; rectangular
+  layers show the worst residual penalty (0.148 vs 0.0055 @12).
+  End-to-end decides.
 Exp 1 (warm150 handoff, runs 27/28): final within ±0.002 of C-r32
 baselines (no-harm floor), upside past them if the early hole was
 load-bearing; crossing 3150-3200. Smoke: handoff ratios in [0.95,1.05].

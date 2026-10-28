@@ -28,10 +28,17 @@ SETUP_MARKER = ("########################################\n"
 
 
 def load_variant(path):
+    # Exec head (imports/arch, side-effect-free) plus the def-only optimizer
+    # block for cosmos variants (spliced AFTER the Setup marker). Baseline
+    # files have no optimizer code past the marker; the tail split is a no-op
+    # guard that must still find the dist setup line.
     src = open(path).read()
     assert src.count(SETUP_MARKER) == 1, path
+    head, rest = src.split(SETUP_MARKER)
+    tail = rest.split("\ndevice = torch.device")[0]
     ns = {}
-    exec(compile(src.split(SETUP_MARKER)[0], path, "exec"), ns)
+    exec(compile(head, path, "exec"), ns)
+    exec(compile(tail, path, "exec"), ns)
     return ns
 
 

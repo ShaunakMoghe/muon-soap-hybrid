@@ -29,6 +29,21 @@ def load_optims(path):
     return ns
 
 
+def load_optims_tail(path):
+    # Cosmos variants splice the optimizer AFTER the Setup marker: exec the
+    # head (imports/arch, no side effects) plus the def-only optimizer block
+    # up to the dist setup line.
+    src = open(path).read()
+    parts = src.split(SETUP_MARKER)
+    assert len(parts) == 2, path
+    tail = parts[1].split("\ndevice = torch.device")[0]
+    assert "class COSMOS" in tail, path
+    ns = {}
+    exec(compile(parts[0], path, "exec"), ns)
+    exec(compile(tail, path, "exec"), ns)
+    return ns
+
+
 def bench(fn, reps=20, warmup=3):
     for _ in range(warmup):
         fn()
@@ -50,7 +65,7 @@ def main():
     mu = load_optims("variants/train_gpt_baseline_seed0.py")
     sk = load_optims("variants/train_gpt_sinksoap_seed0.py")
     so = load_optims("variants/train_gpt_soap_seed0.py")
-    co = load_optims("variants/train_gpt_cosmos_r32_seed0.py")
+    co = load_optims_tail("variants/train_gpt_cosmos_r32_seed0.py")
     assert "Muon" in mu and "SinkSOAP" in sk and "SOAP" in so and "COSMOS" in co
 
     print("== 1. full update ms (mean of reps, post-warmup) ==")

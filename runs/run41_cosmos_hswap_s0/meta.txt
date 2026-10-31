@@ -1,0 +1,3 @@
+run41 COSMOS r32 at Muon hypers seed0 8-GPU @ HEAD
+variant: variants/train_gpt_cosmos_r32_hswap_seed0.py
+8 GPUs, 3250 steps, ckpt OFF (world_size assert)

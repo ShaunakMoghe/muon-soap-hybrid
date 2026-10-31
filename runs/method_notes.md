@@ -102,6 +102,11 @@ structure still open). Resume lane closed unless a run is cut off.
 - GPU work only through sbatch (1-GPU: 1 GPU + 8 CPUs + 96GB; 8-GPU:
   8 GPUs + 16 CPUs + 400GB); the SLURM account passes via CLI flag,
   never committed. Batch `.out` logs stay on disk, out of the repo.
+- ICE screening tier (standby): PACE ICE `~/ice-screening` (repo clones
+  + 4GB data, system torch 2.9, Blackwell routable, validated
+  2026-10-31: step-12 val + max-mem match Phoenix). Screening only —
+  crash/divergence/rank pruning. Never ledger numbers; timings
+  inadmissible cross-cluster.
 
 ## 8. Reference recipes (read-only)
 

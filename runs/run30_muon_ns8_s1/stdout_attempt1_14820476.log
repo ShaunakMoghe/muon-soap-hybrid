@@ -1,0 +1,136 @@
+W1103 11:09:08.608000 3277795 torch/distributed/run.py:803] 
+W1103 11:09:08.608000 3277795 torch/distributed/run.py:803] *****************************************
+W1103 11:09:08.608000 3277795 torch/distributed/run.py:803] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W1103 11:09:08.608000 3277795 torch/distributed/run.py:803] *****************************************
+logs/e9f48370-1ff7-496d-a03d-bb97eccfd174.txt
+step:0/3250 val_loss:10.82584 train_time:0.000s step_avg:nanms
+[rank7]: Traceback (most recent call last):
+[rank7]:   File "/storage/project/ps-moereasoning-0/smoghe6/variants/train_gpt_baseline_ns8_seed1.py", line 392, in <module>
+[rank7]:     opt.step()
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/optim/optimizer.py", line 517, in wrapper
+[rank7]:     out = func(*args, **kwargs)
+[rank7]:           ^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+[rank7]:     return func(*args, **kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/storage/project/ps-moereasoning-0/smoghe6/variants/train_gpt_baseline_ns8_seed1.py", line 216, in step
+[rank7]:     update = muon_update(p.grad, state["momentum"], mu=group["mu"])
+[rank7]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_dynamo/eval_frame.py", line 845, in compile_wrapper
+[rank7]:     raise e.remove_dynamo_frames() from None  # see TORCHDYNAMO_VERBOSE=1
+[rank7]:     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/compile_fx.py", line 990, in _compile_fx_inner
+[rank7]:     raise InductorError(e, currentframe()).with_traceback(
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/compile_fx.py", line 974, in _compile_fx_inner
+[rank7]:     mb_compiled_graph = fx_codegen_and_compile(
+[rank7]:                         ^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/compile_fx.py", line 1695, in fx_codegen_and_compile
+[rank7]:     return scheme.codegen_and_compile(gm, example_inputs, inputs_to_check, graph_kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/compile_fx.py", line 1505, in codegen_and_compile
+[rank7]:     compiled_module = graph.compile_to_module()
+[rank7]:                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/graph.py", line 2319, in compile_to_module
+[rank7]:     return self._compile_to_module()
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/graph.py", line 2329, in _compile_to_module
+[rank7]:     mod = self._compile_to_module_lines(wrapper_code)
+[rank7]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/graph.py", line 2397, in _compile_to_module_lines
+[rank7]:     mod = PyCodeCache.load_by_key_path(
+[rank7]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/codecache.py", line 3548, in load_by_key_path
+[rank7]:     mod = _reload_python_module(key, path, set_sys_modules=in_toplevel)
+[rank7]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/runtime/compile_tasks.py", line 33, in _reload_python_module
+[rank7]:     exec(code, mod.__dict__, mod.__dict__)
+[rank7]:   File "/storage/project/ps-moereasoning-0/smoghe6/.cache/inductor/za/czalukhkfqvn36y3rzrkd6v7ptzxnyh72tk3apfrljojcbcgbljr.py", line 424, in <module>
+[rank7]:     async_compile.wait(globals())
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/async_compile.py", line 629, in wait
+[rank7]:     self._wait_futures(scope)
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/async_compile.py", line 649, in _wait_futures
+[rank7]:     kernel = result.result()
+[rank7]:              ^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/codecache.py", line 4297, in result
+[rank7]:     return self.result_fn()
+[rank7]:            ^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/async_compile.py", line 461, in get_result
+[rank7]:     raise e.with_name(kernel_name) from e
+[rank7]: torch._inductor.exc.InductorError: SubprocException: An exception occurred in a subprocess:
+
+[rank7]: Name=triton_poi_fused__to_copy_add_copy__div_lerp_linalg_vector_norm_mul_transpose_2
+[rank7]: Traceback (most recent call last):
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/compile_worker/subproc_pool.py", line 397, in do_job
+[rank7]:     result = job()
+[rank7]:              ^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/runtime/compile_tasks.py", line 66, in _worker_compile_triton
+[rank7]:     kernel.precompile(warm_cache_only=True)
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/runtime/triton_heuristics.py", line 439, in precompile
+[rank7]:     self._precompile_worker()
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/runtime/triton_heuristics.py", line 470, in _precompile_worker
+[rank7]:     compile_results.append(self._precompile_config(c))
+[rank7]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/torch/_inductor/runtime/triton_heuristics.py", line 770, in _precompile_config
+[rank7]:     binary = triton.compile(*compile_args, **compile_kwargs)
+[rank7]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/triton/compiler/compiler.py", line 403, in compile
+[rank7]:     return CompiledKernel(src, metadata_group, hash)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/local/lib/python3.12/dist-packages/triton/compiler/compiler.py", line 448, in __init__
+[rank7]:     metadata = json.loads(metadata_path.read_text())
+[rank7]:                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/usr/lib/python3.12/pathlib.py", line 1030, in read_text
+[rank7]:     return f.read()
+[rank7]:            ^^^^^^^^
+[rank7]: OSError: [Errno 116] Stale file handle
+
+
+[rank7]: Set TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you're reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS="+dynamo"
+
+W1103 11:09:38.246000 3277795 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3277914 closing signal SIGTERM
+W1103 11:09:38.247000 3277795 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3277915 closing signal SIGTERM
+W1103 11:09:38.248000 3277795 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3277916 closing signal SIGTERM
+W1103 11:09:38.249000 3277795 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3277917 closing signal SIGTERM
+W1103 11:09:38.249000 3277795 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3277918 closing signal SIGTERM
+W1103 11:09:38.281000 3277795 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3277919 closing signal SIGTERM
+W1103 11:09:38.331000 3277795 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 3277920 closing signal SIGTERM
+W1103 11:10:08.341000 3277795 torch/distributed/elastic/multiprocessing/api.py:927] Unable to shutdown process 3277914 via 15, forcefully exiting via 9
+W1103 11:10:08.562000 3277795 torch/distributed/elastic/multiprocessing/api.py:927] Unable to shutdown process 3277915 via 15, forcefully exiting via 9
+W1103 11:10:08.775000 3277795 torch/distributed/elastic/multiprocessing/api.py:927] Unable to shutdown process 3277916 via 15, forcefully exiting via 9
+W1103 11:10:08.998000 3277795 torch/distributed/elastic/multiprocessing/api.py:927] Unable to shutdown process 3277917 via 15, forcefully exiting via 9
+W1103 11:10:09.215000 3277795 torch/distributed/elastic/multiprocessing/api.py:927] Unable to shutdown process 3277918 via 15, forcefully exiting via 9
+W1103 11:10:09.436000 3277795 torch/distributed/elastic/multiprocessing/api.py:927] Unable to shutdown process 3277919 via 15, forcefully exiting via 9
+W1103 11:10:09.643000 3277795 torch/distributed/elastic/multiprocessing/api.py:927] Unable to shutdown process 3277920 via 15, forcefully exiting via 9
+E1103 11:10:09.847000 3277795 torch/distributed/elastic/multiprocessing/api.py:882] failed (exitcode: 1) local_rank: 7 (pid: 3277921) of binary: /usr/bin/python
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 936, in main
+    run(args)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 927, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 156, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 293, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/storage/project/ps-moereasoning-0/smoghe6/variants/train_gpt_baseline_ns8_seed1.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-11-03_11:09:38
+  host      : atl1-1-03-020-2-0.pace.gatech.edu
+  rank      : 7 (local_rank: 7)
+  exitcode  : 1 (pid: 3277921)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

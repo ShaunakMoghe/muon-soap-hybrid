@@ -2,7 +2,7 @@
 
 How runs are paired, checked, profiled, and checkpointed, plus variant
 provenance and operational rules. Results live in `analysis.md`; the run
-ledger is `runs.csv`. Last updated 2026-10-28.
+ledger is `runs.csv`. Last updated 2026-11-04 (runs 1–42).
 
 ## 1. Seeding and pairing
 
@@ -33,8 +33,9 @@ level (rel ~1e-12), located in the shared harness forward/backward
 (consistent with CUDA atomic races, e.g. flash-attention dQ). Muon
 contracts the perturbation below print precision in one step
 (Newton-Schulz toward the orthogonal manifold); SinkSOAP amplifies it
-~360x in one step (grad rel-d 2.6e-13 to param rel-d 9.4e-11) via small
-Gram eigengaps (Davis-Kahan). Growth probe (seeded SinkSOAP, 2x130
+~360x in one step (grad rel-d 2.6e-13 to param rel-d 9.4e-11);
+small-Gram-eigengap amplification (Davis-Kahan) is the hypothesized
+mechanism, unproven. Growth probe (seeded SinkSOAP, 2x130
 steps): 7e-5 @12, 4.8e-3 @125, 4.7e-3 @130. Saturation level unknown
 (a 2x500-step probe was lost to job expiry).
 
@@ -71,6 +72,8 @@ infrastructure only in `research_stack/`.
 | cosmos_r{32,64,128,512}_seed0 | cosmos_seed0 + rank_o=rank_u=r | ours (rank sweep) |
 | cosmos_r32_seed1 | r32 + seed1 | ours |
 | cosmos_r32_warm150_seed{0,1} | r32 + Muon steps 1–150, COSMOS after | ours (Exp 1) |
+| baseline_hswap_seed{0,1} | baseline + COSMOS hypers (lr=0.04, wd=0.025) | ours (hyper-swap) |
+| cosmos_r32_hswap_seed{0,1} | r32 + Muon hypers (lr=0.025, wd=0.05) | ours (hyper-swap) |
 | cosmos_r32_ns{8,6}_seed{0,1} | r32 + NS steps 12→8/6 | ours (Exp 2) |
 | cosmos_r32_sqnorm_seed{0,1} | r32 + NorMuon on square matrices | ours (Exp 3) |
 | newton_muon_seed0 | baseline + NewtonMuon, custom-op capture (v2; v1 hooks OOM'd) | port of zhehangdu/Newton-Muon Alg. 1 |
@@ -91,24 +94,35 @@ SIGTERM/SIGINT sets a flag; the loop saves and exits 143 at the next
 safe point (end of step, no NCCL in flight).
 Validation status: CPU round-trip PASS (job 13945667); GPU resume has
 two recorded failure modes (CPU RNG device fixed in 265f37f; CUDA RNG
-structure still open). Resume lane closed unless a run is cut off.
+structure still open). Resume work is closed unless a run is cut off.
 
 ## 7. Operational rules
 
 - Never edit a script while a process may be executing it: the running
   shell executes its buffered image, including since-removed lines
-  (run4b ghost duplicate, recorded in runs.csv). Batch scripts are
-  immune (sbatch spools at submit).
+  (run4b duplicate launch — see the incidents note in `RUNS.md`).
+  Batch scripts are immune (sbatch spools at submit).
 - GPU work only through sbatch (1-GPU: 1 GPU + 8 CPUs + 96GB; 8-GPU:
   8 GPUs + 16 CPUs + 400GB); the SLURM account passes via CLI flag,
   never committed. Batch `.out` logs stay on disk, out of the repo.
-- ICE screening tier (standby): PACE ICE `~/ice-screening` (repo clones
-  + 4GB data, system torch 2.9, Blackwell routable, validated
-  2026-10-31: step-12 val + max-mem match Phoenix). Screening only —
-  crash/divergence/rank pruning. Never ledger numbers; timings
-  inadmissible cross-cluster.
+- Separate screening setup on PACE ICE (standby): `~/ice-screening`
+  (repo clones + 4GB data, system torch 2.9, Blackwell routable,
+  validated 2026-10-31: step-12 val + max-mem match Phoenix). For
+  crash/divergence/pruning checks only — never ledger numbers, and
+  timings don't transfer across clusters.
 
-## 8. Reference recipes (read-only)
+## 8. 8-GPU runs
+
+Paired seeds (0/1) on the same 3250-step protocol and LR schedule as
+1-GPU; only the 2D optimizer (or its hyperparameters) differs between
+arms. Whole-node shape (8 GPUs + 16 CPUs + 400GB). Checkpointing is
+off: the checkpoint code is single-GPU-only (asserts world_size 1),
+and ~20-minute runs need no resume. Step times are compared only
+within one node (cross-node spread ~30%); node names are logged in
+`runs.csv` for every 8-GPU run. Step-count and loss comparisons stand
+across nodes.
+
+## 9. Reference recipes (read-only)
 
 - nikhilvyas/modded-nanogpt-SOAP (`SOAP-ref/`, gitignored): lr=0.0018,
   250 warmup, wd=0, betas (0.95,0.95), freq=10, 7000 iters, same

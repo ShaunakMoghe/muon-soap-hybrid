@@ -1,0 +1,3 @@
+run51 COSMOS r32 Sink3 seed0 8-GPU @ HEAD
+variant: variants/train_gpt_cosmos_r32_sink3_seed0.py
+8 GPUs, 3250 steps, ckpt OFF (world_size assert)

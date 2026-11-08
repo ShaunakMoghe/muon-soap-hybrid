@@ -76,11 +76,23 @@ infrastructure only in `research_stack/`.
 | cosmos_r32_hswap_seed{0,1} | r32 + Muon hypers (lr=0.025, wd=0.05) | ours (hyper-swap) |
 | cosmos_r32_ns{8,6}_seed{0,1} | r32 + NS steps 12→8/6 | ours (Exp 2) |
 | cosmos_r32_sqnorm_seed{0,1} | r32 + NorMuon on square matrices | ours (Exp 3) |
+| cosmos_r32_qrk{2,4,8}_seed{0,1} | r32 + subspace refresh every k steps | ours (QR cadence) |
+| cosmos_r32_sink{5,3,1}_seed{0,1} | r32 + Sinkhorn iters 10→5/3/1 | ours (Sinkhorn iters) |
+| baseline_specns6_seed{0,1} | NS6 + spectral-norm start, 500 steps | ours (normalization probe) |
 | newton_muon_seed0 | baseline + NewtonMuon, custom-op capture (v2; v1 hooks OOM'd) | port of zhehangdu/Newton-Muon Alg. 1 |
 | sinkhorn_embed_seed0 | parked (built on a misread brief; run2 covers SinkSOAP) | DeepSeek-V4.1-Flash report §2.5 |
 
 Deviations from verbatim sources are bannered in each file (dist-call
 guards, import renames, warmup scope).
+
+QR cadence k (definition): the subspace refresh — power-iteration
+blend plus QR re-orthogonalization of O and U, and the S/R core
+rotation into the new basis — runs on steps 1, 1+k, 1+2k, ... On
+other steps O, U, S, R carry over unchanged: no Gram accumulation
+happens on skipped steps. Momentum, Sinkhorn coefficients, the NS
+residual step, and all hyperparameters run every step as in the r32
+baseline. Refresh phase is a per-optimizer Python counter (all ranks
+agree); it resets on resume, which is fine for checkpoint-off runs.
 
 ## 6. Checkpointing
 

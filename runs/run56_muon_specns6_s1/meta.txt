@@ -1,0 +1,3 @@
+run56 Muon spec-norm NS6 seed1 500-step 8-GPU @ HEAD
+variant: variants/train_gpt_baseline_specns6_seed1.py
+8 GPUs, 500 steps, ckpt OFF (world_size assert)

@@ -1,0 +1,55 @@
+W1111 23:30:51.302000 1199301 torch/distributed/run.py:803] 
+W1111 23:30:51.302000 1199301 torch/distributed/run.py:803] *****************************************
+W1111 23:30:51.302000 1199301 torch/distributed/run.py:803] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W1111 23:30:51.302000 1199301 torch/distributed/run.py:803] *****************************************
+Traceback (most recent call last):
+  File "/storage/project/ps-moereasoning-0/smoghe6/variants/train_gpt_cosmos_r32_qrk2_seed0.py", line 667, in <module>
+    torch.cuda.set_device(device)
+  File "/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py", line 567, in set_device
+    torch._C._cuda_setDevice(device)
+torch.AcceleratorError: CUDA error: CUDA-capable device(s) is/are busy or unavailable
+Search for `cudaErrorDevicesUnavailable' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+W1111 23:30:59.552000 1199301 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 1199421 closing signal SIGTERM
+W1111 23:30:59.553000 1199301 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 1199422 closing signal SIGTERM
+W1111 23:30:59.554000 1199301 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 1199423 closing signal SIGTERM
+W1111 23:30:59.554000 1199301 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 1199424 closing signal SIGTERM
+W1111 23:30:59.557000 1199301 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 1199425 closing signal SIGTERM
+W1111 23:30:59.560000 1199301 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 1199426 closing signal SIGTERM
+W1111 23:30:59.561000 1199301 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 1199427 closing signal SIGTERM
+E1111 23:31:00.304000 1199301 torch/distributed/elastic/multiprocessing/api.py:882] failed (exitcode: 1) local_rank: 7 (pid: 1199428) of binary: /usr/bin/python
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 936, in main
+    run(args)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 927, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 156, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 293, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/storage/project/ps-moereasoning-0/smoghe6/variants/train_gpt_cosmos_r32_qrk2_seed0.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-11-11_23:30:59
+  host      : atl1-1-03-020-6-0.pace.gatech.edu
+  rank      : 7 (local_rank: 7)
+  exitcode  : 1 (pid: 1199428)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

@@ -1,0 +1,3 @@
+run64 COSMOS rank-0 (NorMuon-only) seed2 8-GPU @ HEAD
+variant: variants/train_gpt_cosmos_r0_seed2.py
+8 GPUs, 3250 steps, ckpt OFF (world_size assert)

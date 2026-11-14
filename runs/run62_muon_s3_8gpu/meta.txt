@@ -1,0 +1,3 @@
+run62 Muon seed3 8-GPU @ HEAD
+variant: variants/train_gpt_baseline_seed3.py
+8 GPUs, 3250 steps, ckpt OFF (world_size assert)

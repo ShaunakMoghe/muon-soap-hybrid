@@ -27,7 +27,12 @@ Columns: run_id,date,variant,script,git_hash,steps,val@328_step,val_final,wallcl
 | warmup | 27, 28 | 150 Muon steps then COSMOS |
 | NS sweep | 29–36 | NS iterations 12/8/6 × Muon/COSMOS |
 | hyper-swap | 39–42 | attribution: hyperparameters vs method |
-| square NorMuon | 37, 38 | queued |
+| square NorMuon | 37, 38 | NorMuon extended to square matrices (no effect) |
+| QR cadence | 43–48 | subspace refresh every 2/4/8 steps (attempt 2 queued) |
+| Sinkhorn iterations | 49–54 | 5/3/1 iterations instead of 10 (attempt 2 queued) |
+| spectral-norm NS6 | 55, 56 | is Muon's NS6 collapse a normalization artifact? (attempt 2 queued) |
+| NorMuon-only control | 57–60, 64–66 | COSMOS with the subspace removed: does the subspace add anything? (queued) |
+| extra seeds | 61–63, 67–69 | Muon and COSMOS-r32 seeds 2–4 at 8 GPUs (queued) |
 
 ## Incidents
 
@@ -43,3 +48,14 @@ details live here.
   infrastructure (the variant differs from healthy run29 by seed
   only). Log preserved as `stdout_attempt1_14820476.log`; resubmitted
   as job 15003180.
+- runs 43–56 attempt 1 (2026-11-11, jobs 15331274–15331289): all 14
+  failed in 12–20s each with `CUDA-capable device(s) is/are busy or
+  unavailable` at `torch.cuda.set_device`, always local rank 7, always
+  node `atl1-1-03-020-6-0` — before any model or optimizer code ran,
+  for both script families (COSMOS and Muon). One faulty GPU slot
+  drained the whole batch in 3.5 minutes after a ~78h queue wait
+  (each fast failure freed the node for the next job). No scientific
+  content. Logs preserved as `stdout_attempt1_<job>.log`. Other
+  users' pending jobs have excluded that node since 2026-11-10.
+  Resubmitted 2026-11-13 with the node excluded and a GPU preflight
+  in every 8-GPU batch script (`method_notes.md` §7).

@@ -6,21 +6,32 @@ Muon-family vs SOAP-family optimizers on modded-NanoGPT Track 3 (124M
 parameters, 3250 steps) to find out, and to identify concrete hybrid
 ingredients.
 
-Headline findings (runs 1–42; caveats in `runs/analysis.md`):
+Headline findings (runs 1–69; caveats in `runs/analysis.md`):
 
-- The COSMOS track-3 variant crosses 25–50 steps before Muon at roughly
-  Muon-like per-step cost: 3 seeds on 1 GPU, 2 paired seeds on 8 GPUs.
-  Quality is nearly flat across ranks 32–256.
-- That edge is not just hyperparameter tuning. With hyperparameters
-  swapped, Muon never matches COSMOS, and COSMOS stays ahead or tied in
-  all four matched comparisons — but margins are small and paired stats
-  are suggestive, not significant (p~0.07).
+- The COSMOS track-3 variant beats Muon by a small, well-resolved
+  margin: 0.0026 lower final loss and 25–50 fewer steps to 3.28 on all
+  five paired seeds at 8 GPUs (paired t, one-sided p = 0.0006), at
+  +1.4% step time for rank 32. Quality is nearly flat across ranks
+  32–256.
+- That edge comes from the variant's NorMuon update, not from the
+  tracked subspace. With the subspace removed (rank 0: no QR, no
+  Sinkhorn) the final loss is the same within noise (+0.0003, 95% CI
+  −0.0006 to +0.0012, 5 seeds) at Muon's step time. The subspace does
+  give an early lead (0.10 in loss at step 125) that is gone by step
+  2500. Tested at rank 32 only; COSMOS without NorMuon is untested.
+- Subspace upkeep can be made cheaper with little or no visible harm
+  (QR refresh every 2/4/8 steps: 0 to +0.0023 final loss; Sinkhorn 5
+  or 3 iterations: within noise; 1 iteration: +0.0024). The saving is
+  under 1% of step time, and the rank-0 result makes it moot at this
+  rank.
 - COSMOS tolerates 6 Newton-Schulz iterations where Muon collapses (no
-  crossing, +0.010 loss), pointing at fewer residual iterations as a
-  possible hybrid ingredient.
-- Plain SOAP and a Newton-Muon port did not cross under the tested
-  recipes. SOAP-family runs show large same-seed spread, so single-seed
-  gaps near the noise floor are inconclusive.
+  crossing, +0.010 loss). Offline spectra support the premise of the
+  deflation explanation, but a spectral-norm start recovers only
+  13–15% of Muon's early gap, so the cause is still open.
+- SinkSOAP reaches 3.28 about 100 steps before Muon (single runs) at
+  1.6x (8 GPUs) to 2x (1 GPU) the step time; a warm-started
+  amortization recovers the crossing at ~56% of that cost. Plain SOAP
+  and a Newton-Muon port did not cross under the tested recipes.
 
 ## Layout
 
@@ -33,6 +44,8 @@ Headline findings (runs 1–42; caveats in `runs/analysis.md`):
   `method_notes.md` (protocols), `state_accounting.md`
   (optimizer-state model), `curves.png`, `sbatch/` (batch scripts +
   job outputs; smoke checks under `sbatch/smoke/`), per-run dirs.
+  `parse_results.py` reads the 8-GPU logs into one table;
+  `attribution_stats.py` prints the seed-paired statistics.
 - `profile/` — optimizer microbenchmarks (time / memory / noise floor).
 
 ## Upstreams (all public)
@@ -51,14 +64,13 @@ through queued jobs.
 
 ## Status
 
-Measured (runs 1–42, 2026-11-04): Muon 3-seed spread; COSMOS (track-3
-variant) edge over Muon at r256 (3 seeds, 1-GPU) and r32 (2 paired
-seeds, 8-GPU); rank sweep r32–r512 (quality nearly flat); warm-start
-amortization finding; SOAP recipes; Newton-Muon port (no-cross
-footnote); 150-step Muon warmup (no effect); NS-count sweep
-(COSMOS holds at 6, Muon collapses); hyperparameter swap
-(tuning ruled out as the full explanation).
-Queued: square-matrix NorMuon (runs 37/38) + Muon-NS8 seed-1 retry
-(run30).
-Open: COSMOS lr/wd tuning, rank 8/16 knee, asymmetric ranks, larger
-scale; SOAP-QR spread mechanism (hypothesis only).
+Measured (runs 1–69, 2026-11-15): the findings above, with Muon, the
+rank-0 control and COSMOS-r32 at five paired seeds on 8 GPUs; rank
+sweep r32–r512 on 1 GPU (nearly flat to r256, r512 better in one run);
+amortized SinkSOAP (cold start fails, warm start recovers); SOAP
+recipes; Newton-Muon port (no-cross footnote); 150-step Muon warmup
+and square-matrix NorMuon (no effect); hyperparameter swap.
+Queued: nothing.
+Open: COSMOS without the NorMuon update (the missing cell of the
+attribution); the rank-0 control at 6 Newton-Schulz iterations; ranks
+above 32 and SinkSOAP against the rank-0 control; a larger model.

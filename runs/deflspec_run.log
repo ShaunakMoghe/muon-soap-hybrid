@@ -1,0 +1,44 @@
+cosmos step=2750 muon step=2750
+cosmos 2D params: 72, muon 2D params: 72
+
+== shape (3072, 768) (n=12/12/12) ==
+  M: fnorm=322.3 n_zero=0.0/768 smin_nz=0.008092 p10_nz=0.01091 mean_nz=0.02617
+    NS12: err_all=9.443e-19 err_nz=9.443e-19 zero_share_of sumsq=0.000
+    NS8: err_all=0.002156 err_nz=0.002156 zero_share_of sumsq=0.000
+    NS6: err_all=0.3392 err_nz=0.3392 zero_share_of sumsq=0.000
+  M_res: fnorm=222.4 n_zero=32.0/768 smin_nz=0.01165 p10_nz=0.01559 mean_nz=0.03292
+    NS12: err_all=0.2041 err_nz=0 zero_share_of sumsq=1.000
+    NS8: err_all=0.2041 err_nz=0.0002302 zero_share_of sumsq=1.000
+    NS6: err_all=0.2764 err_nz=0.189 zero_share_of sumsq=0.555
+  M_muon: fnorm=511.3 n_zero=0.0/768 smin_nz=0.008592 p10_nz=0.01181 mean_nz=0.0275
+    NS12: err_all=0 err_nz=0 zero_share_of sumsq=0.000
+    NS8: err_all=0.001011 err_nz=0.001011 zero_share_of sumsq=0.000
+    NS6: err_all=0.3051 err_nz=0.3051 zero_share_of sumsq=0.000
+
+== shape (768, 3072) (n=12/12/12) ==
+  M: fnorm=726.4 n_zero=0.0/768 smin_nz=0.007378 p10_nz=0.01171 mean_nz=0.02589
+    NS12: err_all=1.422e-06 err_nz=1.422e-06 zero_share_of sumsq=0.000
+    NS8: err_all=0.02701 err_nz=0.02701 zero_share_of sumsq=0.000
+    NS6: err_all=0.3433 err_nz=0.3433 zero_share_of sumsq=0.000
+  M_res: fnorm=412.8 n_zero=32.0/768 smin_nz=0.01038 p10_nz=0.01681 mean_nz=0.03338
+    NS12: err_all=0.2041 err_nz=1.808e-09 zero_share_of sumsq=1.000
+    NS8: err_all=0.2043 err_nz=0.002769 zero_share_of sumsq=0.998
+    NS6: err_all=0.2585 err_nz=0.1611 zero_share_of sumsq=0.628
+  M_muon: fnorm=880 n_zero=0.0/768 smin_nz=0.008982 p10_nz=0.01381 mean_nz=0.02938
+    NS12: err_all=4.13e-11 err_nz=4.13e-11 zero_share_of sumsq=0.000
+    NS8: err_all=0.003471 err_nz=0.003471 zero_share_of sumsq=0.000
+    NS6: err_all=0.2493 err_nz=0.2493 zero_share_of sumsq=0.000
+
+== shape (768, 768) (n=48/48/48) ==
+  M: fnorm=190 n_zero=0.1/768 smin_nz=1.384e-05 p10_nz=0.001929 mean_nz=0.02012
+    NS12: err_all=0.09269 err_nz=0.09223 zero_share_of sumsq=0.010
+    NS8: err_all=0.3568 err_nz=0.3567 zero_share_of sumsq=0.001
+    NS6: err_all=0.6365 err_nz=0.6365 zero_share_of sumsq=0.000
+  M_res: fnorm=109 n_zero=32.0/768 smin_nz=1.983e-05 p10_nz=0.003185 mean_nz=0.02732
+    NS12: err_all=0.2163 err_nz=0.07236 zero_share_of sumsq=0.892
+    NS8: err_all=0.3412 err_nz=0.279 zero_share_of sumsq=0.360
+    NS6: err_all=0.5541 err_nz=0.5262 zero_share_of sumsq=0.136
+  M_muon: fnorm=336.5 n_zero=0.0/768 smin_nz=1.114e-05 p10_nz=0.002014 mean_nz=0.02087
+    NS12: err_all=0.09045 err_nz=0.09031 zero_share_of sumsq=0.003
+    NS8: err_all=0.3488 err_nz=0.3488 zero_share_of sumsq=0.000
+    NS6: err_all=0.6262 err_nz=0.6262 zero_share_of sumsq=0.000

@@ -4,13 +4,18 @@ Track-3 optimizer comparisons on 1 GPU plus paired 8-GPU experiments
 and an analytical distributed-cost model, asking whether curvature
 information can buy step-efficiency at Muon-like cost. Rig: RTX PRO
 6000 Blackwell 96GB (PACE Phoenix). Run ledger: `runs.csv`. Methods
-and provenance: `method_notes.md`. Last updated 2026-11-04 (runs 1–42).
+and provenance: `method_notes.md`. Last updated 2026-11-16 (runs 1–69).
 
 "COSMOS (track-3 variant)" in this file means the optimizer as adapted
 in the upstream fork: 4-block subspace Sinkhorn + Newton-Schulz on the
 residual + NorMuon second-moment update — not COSMOS in general. No
 "Pareto winner" language: 8-GPU wall-clock is flat and 1-GPU is ~1.5%
 slower than Muon; the claim is a step-count edge at ~cost parity.
+
+Since the rank-0 control (Sec. 2.1) the claim is narrower. The
+variant's edge over Muon is real (five paired seeds), and it comes
+from the NorMuon update: with the subspace removed, the final loss is
+unchanged within noise. Tested at rank 32 only.
 
 ## 1. Setup
 
@@ -21,7 +26,10 @@ slower than Muon; the claim is a step-count edge at ~cost parity.
 - Protocol: run1/run2 are unseeded pilots. All later runs are seed-paired
   (`torch.manual_seed` + `cuda.manual_seed_all` at trial start) and swap
   ONLY the 2D block-parameter optimizer against the seeded Muon control
-  (run5). 8-GPU runs use the same 3250-step protocol and LR schedule.
+  (run5). 8-GPU runs use the same 3250-step protocol and LR schedule,
+  except the 500-step probes (runs 20/21/26/55/56): their LR cools
+  from step 150, so they compare only with each other, or with longer
+  runs before step 150.
 - Per-step times are 1-GPU measurements unless marked 8-GPU (Sec. 3
   states the bound this is). 8-GPU wall-clock is compared only within
   one node (Sec. 6).
@@ -60,22 +68,156 @@ Crossing grid is ±25 steps late; run1/run2 carry unpaired init noise
 | run23/25 | COSMOS-r32 NS12 | 0/1 | 3200/3200 | 3.27635/3.27690 |
 | run27/28 | Muon 150 steps then COSMOS | 0/1 | 3175/3200 | 3.27504/3.27673 |
 | run29 | Muon NS8 | 0 | 3250 | 3.27939 |
-| run30 | Muon NS8 | 1 | retry queued | — |
+| run30 | Muon NS8 | 1 | — | 3.28071 |
 | run31/32 | Muon NS6 | 0/1 | — | 3.29083/3.29012 |
 | run33/34 | COSMOS NS8 | 0/1 | 3175/3175 | 3.27500/3.27507 |
 | run35/36 | COSMOS NS6 | 0/1 | 3225/3200 | 3.27832/3.27628 |
 | run39/40 | Muon at COSMOS hypers | 0/1 | 3225/— | 3.27934/3.28142 |
 | run41/42 | COSMOS at Muon hypers | 0/1 | 3225/3200 | 3.27899/3.27610 |
+| run37/38 | COSMOS-r32 + NorMuon on square matrices | 0/1 | 3200/3200 | 3.27645/3.27771 |
 
 Reading the 8-GPU rows: the warmup (runs 27/28) lands within Muon seed
 spread of the COSMOS baselines — no detectable effect, no harm. At NS8
-both methods stay within ±25 steps of their NS12 controls (3/3 so
-far). At NS6 they split: COSMOS crosses both seeds (3225/3200, within
+all four finals stay within 0.002 of their NS12 controls; Muon seed 1
+(run30) misses the crossing at 3.28071, +0.0009 above its NS12 run.
+NorMuon on the square matrices (runs 37/38) changes nothing
+(+0.0001/+0.0008, same crossings). At NS6 they split: COSMOS crosses both seeds (3225/3200, within
 +0.002 of NS12), Muon crosses neither (+0.010–0.013). In the
 hyperparameter swap, Muon at COSMOS hypers never matches COSMOS (s1 is
 worse than Muon at its own hypers), while COSMOS at Muon hypers ties
 Muon at s0 and beats it by 50 steps at s1. SinkSOAP 500-step probe:
 0.64 s/step (~1.6x Muon-8GPU).
+
+### 2.1 Attribution: subspace vs NorMuon update (runs 57–69)
+
+The COSMOS track-3 variant differs from Muon in two ways at once: the
+tracked rank-r subspace (QR + compressed Sinkhorn + NS on the
+residual) and the NorMuon second-moment update on the rectangular
+(MLP) matrices. The rank-0 control keeps the variant's code path with
+the subspace removed: Nesterov momentum, NS12 on the full momentum,
+rescale to the Muon-level Frobenius norm (a no-op once NS has
+converged), NorMuon on the rectangular matrices. No QR, no Sinkhorn.
+`research_stack/test_variant_math_cpu.py` checks it against the
+verbatim update called at rank 0.
+
+Three arms, seeds 0–4, 8 GPUs, 3250 steps. Muon runs at lr .025 /
+wd .05; the control and COSMOS-r32 at lr .04 / wd .025.
+
+| arm | runs | final val loss, seeds 0–4 | mean | first obs <=3.28 |
+|---|---|---|---|---|
+| Muon | 22, 24, 61, 62, 63 | 3.27790 3.27978 3.27917 3.27778 3.27959 | 3.27884 | 3225 3250 3225 3225 3250 |
+| rank-0 control | 57, 58, 64, 65, 66 | 3.27638 3.27691 3.27531 3.27688 3.27736 | 3.27657 | 3200 3200 3175 3200 3200 |
+| COSMOS-r32 | 23, 25, 67, 68, 69 | 3.27635 3.27690 3.27580 3.27553 3.27680 | 3.27628 | 3200 3200 3175 3175 3200 |
+
+Seed-paired differences in final loss (`runs/attribution_stats.py`):
+
+| comparison | mean | se | paired t, one-sided | 95% CI |
+|---|---|---|---|---|
+| Muon − COSMOS-r32 | +0.00257 | 0.00031 | p = 0.0006 | +0.0017 to +0.0034 |
+| Muon − control | +0.00228 | 0.00052 | p = 0.0058 | +0.0008 to +0.0037 |
+| control − COSMOS-r32 | +0.00029 | 0.00031 | p = 0.20 | −0.0006 to +0.0012 |
+
+Decision rule, fixed before the runs: the subspace contributes if
+control − r32 > 0 at p < 0.05; NorMuon explains the edge if
+|control − r32| < 0.001 and the control beats Muon at p < 0.05. The
+second branch holds. The control reproduces 89% of the r32 edge; the
+subspace's share is 0.0003, with an interval that includes zero and
+tops out at 0.0012. With five seeds the exact sign-flip p-value cannot
+go below 1/32, which both Muon comparisons reach.
+
+What the subspace does do: it leads the control early, and the lead
+decays through training. Mean control − r32 gap: +0.099 at step 125,
++0.017 at 500, +0.005 at 1000, +0.0016 at 2000, +0.0004 at 2500. Muon
+leads both at step 125 (by 0.076 over r32) and trails from step 500 on.
+
+At Muon's hyperparameters (lr .025 / wd .05, seeds 0/1, runs 59/60)
+the control crosses at 3175/3200 with finals 3.27439/3.27750: ahead of
+Muon by 0.0035/0.0023 and 50 steps at both seeds, so its edge does not
+depend on COSMOS's lr/wd. COSMOS-r32 at the same hyperparameters (runs
+41/42) finished at 3.27899/3.27610.
+
+Scope: rank 32, 124M parameters, one benchmark. Not tested: COSMOS
+without the NorMuon update (the two could be substitutes, which is
+different from the subspace being inert), ranks above 32 against the
+control (on 1 GPU, r512 crossed at 3125 in one run), larger models.
+
+### 2.2 Subspace upkeep: QR cadence and Sinkhorn iterations (runs 43–54)
+
+Each cell is first obs <=3.28 / final, with the change against the
+seed-paired COSMOS-r32 baseline (QR every step, 10 Sinkhorn
+iterations; runs 23/25).
+
+| variant | seed 0 | seed 1 |
+|---|---|---|
+| QR every 2 steps | 3225 / 3.27810 (+25, +0.0018) | 3225 / 3.27916 (+25, +0.0023) |
+| QR every 4 steps | 3225 / 3.27864 (+25, +0.0023) | 3200 / 3.27665 (0, −0.0003) |
+| QR every 8 steps | 3200 / 3.27794 (0, +0.0016) | 3200 / 3.27748 (0, +0.0006) |
+| Sinkhorn 5 iterations | 3175 / 3.27608 (−25, −0.0003) | 3200 / 3.27756 (0, +0.0007) |
+| Sinkhorn 3 iterations | 3200 / 3.27764 (0, +0.0013) | 3200 / 3.27727 (0, +0.0004) |
+| Sinkhorn 1 iteration | 3225 / 3.27870 (+25, +0.0024) | 3225 / 3.27928 (+25, +0.0024) |
+
+QR cadence: five of six finals sit above baseline, but the shift is
+not ordered in k (every-8 is the closest), so +0.001–0.002 is at the
+edge of same-seed rerun noise (runs 37/38 moved +0.0001/+0.0008 with
+no real change). A refresh every 8 steps starts behind (step 125:
+4.77 vs 4.67) and recovers. Sinkhorn: 5 and 3 iterations are within
+noise; 1 iteration costs 0.0024 and 25 steps at both seeds.
+
+Step time on one node: QR every 8 steps 398.7 ms against 401.7 ms
+(−0.7%); 1 Sinkhorn iteration 401.0 ms (−0.2%). The whole subspace
+path costs 1.4% of step time at rank 32 (Sec. 3), which bounds what
+any of these knobs can save. The rank-0 control drops both components
+and matches the final loss, so at this rank they do not matter for
+cost.
+
+### 2.3 Newton-Schulz tolerance: what the probes say
+
+Runs 31–36: COSMOS-r32 holds at 6 NS iterations where Muon loses
+0.010–0.013. Candidate explanation (deflation): removing the dominant
+directions shrinks the residual's Frobenius norm, so after Frobenius
+normalization the remaining singular values start larger and need
+fewer iterations.
+
+Offline check of the premise (`runs/deflation_spectra_scratch.py`,
+log `runs/deflspec_run.log`; step-2750 checkpoints, saved momentum
+buffer as the proxy for the NS input, fp64 singular-value polynomials):
+- Deflation removes exactly 32 directions, shrinks the Frobenius norm
+  to 0.57–0.69x, and raises the normalized remaining singular values
+  1.3–1.6x (smallest nonzero, 10th percentile and mean; every shape).
+- On the nonzero support the residual orthogonalizes better than the
+  full momentum at 6 iterations: error 0.19 vs 0.34 (MLP fc), 0.16 vs
+  0.34 (MLP proj), 0.53 vs 0.64 (attention).
+- The earlier reading that the residual orthogonalizes worse was an
+  artifact: the metric counted the 32 exactly-zero deflated directions
+  as misses (0.2041 = sqrt(32/768) at NS12).
+
+So the premise holds on this proxy. Whether it explains the end-to-end
+split is a separate question. `runs/ns_norm_shape_scratch.py` (log
+`runs/nsnorm_run.log`) shows that a spectral-norm start would
+orthogonalize Muon's momentum at 6 iterations better than deflation
+does for COSMOS: share of directions above 0.9 is 98/95/63%
+(fc/proj/attention) against 75/79/50%, with Frobenius-normalized Muon
+at 57/65/34%. If input orthogonalization were the whole story, Muon
+with a spectral-norm start should recover. Runs 55/56 tested that and
+do not settle it:
+- They are 500-step runs, so their LR cools from step 150 and their
+  step-500 loss is not comparable to the 3250-step NS6/NS12 runs. This
+  was a design error in the probe.
+- At step 125, where the schedules agree: spectral-norm NS6
+  4.758/4.752, Frobenius NS6 4.785/4.779, NS12 4.587/4.599 — 13% and
+  15% of the gap recovered.
+- Against the one same-schedule reference (500-step NS12 Muon, seed 0,
+  run20): +0.035 at step 500.
+
+Reading: little early rescue. Either the late-checkpoint proxy does
+not describe early training, where NS6 does most of its damage, or
+the tolerance comes from something else the COSMOS path has and Muon
+lacks: the fixed-norm rescale (Muon applies the raw NS output, which
+at 6 iterations is 9–29% short of nominal norm on this proxy) or the
+NorMuon update. The rank-0 control has both and no deflation, so the
+control at 6 iterations separates these, and a full-length
+spectral-norm run gives the missing final-loss comparison. Neither has
+been run.
 
 ## 3. Per-step cost (measured, 1x Blackwell unless marked)
 
@@ -89,6 +231,7 @@ Muon at s0 and beats it by 50 steps at s1. SinkSOAP 500-step probe:
 | SOAP-QR (eigh once + track) | 1.89 | full eigh at init only |
 | Newton-Muon port | 1.96 | run7 |
 | 8-GPU Muon / COSMOS-r32 | 0.39–0.42 | same-node steady-state; SinkSOAP 0.64 |
+| 8-GPU Muon / rank-0 control / COSMOS-r32 | 0.3961 / 0.3963 / 0.4017 | node `atl1-1-03-020-2-0`, 2026-11-15, steps 1000–3250; 3 / 5 / 3 runs |
 
 Cost-model closure: microbenchmark-predicted SinkSOAP overhead (1.88s)
 matches the measured run2−run1 delta (1.92s). The 2x SinkSOAP slowdown
@@ -98,6 +241,10 @@ but run8 shows aggressive amortization can erase the quality edge
 punishes unamortized SinkSOAP (shards ÷W on multi-GPU); treat these as
 1-GPU bounds. NS count barely moves step time (~2% NS8-vs-NS12 within
 one node): Newton-Schulz iterations are a small cost fraction.
+At 8 GPUs the rank-0 control runs at Muon's step time (+0.03%) and
+COSMOS-r32 at +1.4%. Seconds to reach 3.28 on that node: Muon
+1309–1319, control 1292–1302 (leaving out the batch's first job, which
+paid a cold compile cache), COSMOS-r32 1310–1320.
 
 ## 4. Memory
 
@@ -140,7 +287,9 @@ Two regimes, with different bottlenecks:
   comm matches Muon's (gradient allreduce + parameter all_gather).
   Measured at 8 GPUs (single node, PCIe-only, no NVLink): Muon and
   COSMOS-r32 both ~0.40 s/step (within 1–3% on one node; runs 22–26
-  share `atl1-1-03-020-6-0`); SinkSOAP 0.64 s/step.
+  share `atl1-1-03-020-6-0`); SinkSOAP 0.64 s/step. The 2026-11-15
+  batch on `atl1-1-03-020-2-0` puts COSMOS-r32 at +1.4% and the rank-0
+  control at +0.03% (Sec. 3).
 - Tensor parallelism (single 2D weights sharded across GPUs).
   Assembling each mode's Gram matrix needs a cross-rank AllReduce over
   the sharded dimension, and the eigendecomposition becomes a
@@ -173,13 +322,19 @@ wasteful, fixable). FSDP all-gather model + width scaling table:
   balance. Same rotation cost as SOAP for ~0.5ms of post-processing.
   Warm-started freq-10 amortization (run13) matches it at ~56% cost.
 - COSMOS (track-3 variant): rank-r subspace QR tracking + compressed
-  Sinkhorn blocks + NorMuon update. 3-seed edge over Muon at r256
-  (3150/3150/3175 vs 3225/3250/3225); quality nearly flat in rank
-  (r32 ≈ r256); directional edge holds at 8 GPUs. The edge is not
-  hyperparameter tuning (swap: Muon at COSMOS hypers never matches
-  COSMOS; COSMOS ahead-or-tied in all 4 matched comparisons, small
-  margins). Tolerates NS6 where Muon collapses. Step-count edge at
-  ~cost parity; wall-clock flat-to-slower at measured scales.
+  Sinkhorn blocks + NorMuon update. Beats Muon by 25–50 steps and
+  0.0026 final loss at five paired 8-GPU seeds (r32), and by 50–100
+  steps at r256 on 1 GPU (3 paired seeds); quality nearly flat in rank
+  (r32 ≈ r256). The rank-0 control attributes the r32 edge to the
+  NorMuon update: removing the subspace moves the final loss by
+  +0.0003 (within noise) and removes the 1.4% step-time overhead. The
+  subspace gives an early lead that is gone by step 2500. The edge is
+  not hyperparameter tuning (swap runs; the control also beats Muon at
+  Muon's lr/wd). Tolerates NS6 where Muon collapses; cause open
+  (Sec. 2.3). Wall-clock flat-to-slower than Muon at measured scales.
+- Rank-0 control (NorMuon only): Muon plus the NorMuon second-moment
+  update on the rectangular matrices, through the COSMOS code path.
+  Matches COSMOS-r32 on final loss at Muon's step time.
 
 ## 8. Claim register
 
@@ -200,13 +355,27 @@ wasteful, fixable). FSDP all-gather model + width scaling table:
   3.30265 (run11) — closer, but recipe is not the fix.
 - [measured] Same-seed SOAP-QR @875 differs by 0.037 (run3 vs run4A).
 - [measured] eigh bit-identical 20x + 3x on CUDA (job 13848105).
-- [measured] 8-GPU: COSMOS-r32 within 1–3%/step of Muon, crosses first
-  at both seeds (3200 vs 3225/3250); SinkSOAP 1.6x/step. PCIe-only node.
+- [measured] 8-GPU, 5 paired seeds: COSMOS-r32 beats Muon by 0.0026
+  final loss (paired t, one-sided p = 0.0006) and 25–50 steps at every
+  seed, at +1.4% step time; SinkSOAP 1.6x/step. PCIe-only node.
+- [measured] That edge is the NorMuon update, not the subspace: the
+  rank-0 control matches COSMOS-r32 (control − r32 = +0.0003, 95% CI
+  −0.0006 to +0.0012) and beats Muon by 0.0023 (p = 0.006) at Muon's
+  step time. Rank 32 only.
+- [measured] The subspace gives an early lead over the control (0.10
+  at step 125) that decays to zero by step 2500.
+- [measured] The rank-0 control at Muon's lr/wd beats Muon at both
+  seeds (0.0035/0.0023, 50 steps each).
+- [measured] QR refresh every 2/4/8 steps: 0 to +0.0023 final, not
+  ordered in k. Sinkhorn 5/3 iterations within noise; 1 iteration
+  +0.0024 at both seeds. Step-time savings under 1%.
+- [measured] NorMuon on square matrices (runs 37/38): no detectable
+  effect (+0.0001/+0.0008, same crossings).
 - [measured] Newton-Muon port (v2): no crossing, 3.31761. Footnote only.
 - [measured] 150-step Muon warmup then COSMOS (runs 27/28): no
   detectable effect, no harm — all diffs within Muon seed spread.
-- [measured] NS8 ≈ NS12 (within ±25 steps, 3/3 so far; run30 seed-1
-  retry queued). NS6 splits: COSMOS holds (3225/3200, within +0.002
+- [measured] NS8 ≈ NS12 on final loss (all four within 0.002); Muon
+  seed 1 misses the crossing at 3.28071. NS6 splits: COSMOS holds (3225/3200, within +0.002
   of NS12), Muon collapses (no crossing, +0.010–0.013). Interaction,
   not uniform.
 - [measured] Hyperparameter swap rules out tuning as the full
@@ -216,29 +385,41 @@ wasteful, fixable). FSDP all-gather model + width scaling table:
   matched-hyperparameter comparisons, small margins. Paired stats
   (n=4): sign test on crossings 3/3, one-sided p=0.125; paired t on
   finals t=2.03, one-sided p~0.07 — suggestive, not significant.
-- [measured] Offline NS-residual check misled: the residual
-  orthogonalizes worse than full momentum, yet COSMOS tolerates NS6
-  end-to-end. Proxy rejected; end-to-end decides.
+  Superseded at default hyperparameters by the 5-seed result above.
+- [measured, corrected] Offline NS-residual check: the earlier
+  "residual orthogonalizes worse" reading was an artifact of counting
+  the 32 deflated (exactly zero) directions as misses. On the nonzero
+  support the residual orthogonalizes better than the full momentum at
+  6/8/12 iterations, and deflation raises the normalized remaining
+  singular values 1.3–1.6x (one late checkpoint, buffer proxy).
+- [inconclusive] Spectral-norm start for Muon at NS6 (runs 55/56):
+  13–15% of the gap recovered at step 125; the step-500 comparison is
+  invalid (500-step schedule). Cause of the NS6 split still open.
 - [measured] 8-GPU step time is node-linked (~30% spread across nodes);
   wall-clock compared only within one node. Runs 22–26 share one node.
 - [hypothesized] SOAP-QR spread mechanism (low-rank Grams, near-tied
   eigenvalues, argsort/QR divergence). Decisive battery pending.
 - [hypothesized] Noise-robustness axis (NS contraction vs eigengap
   amplification); supported by fp64 traces, needs tensor-level proof.
-- [untested] COSMOS lr/wd tuning; rank 8/16 knee; asymmetric ranks.
+- [untested] COSMOS without the NorMuon update; rank-0 control at
+  NS6; ranks above 32 and SinkSOAP paired with the control; COSMOS
+  lr/wd tuning; rank 8/16 knee; asymmetric ranks; larger models.
 - [analytical] FSDP-vs-TP distributed-cost split; width scaling table.
 
 ## 9. Open questions
 
-- Larger scale: does the COSMOS step-count edge persist past 124M
-  parameters and 3250 steps?
-- Rank knee: quality is flat from r32 to r256 — where below r32 does
-  it break (r8/r16 untested)?
-- COSMOS hyperparameters (lr=0.04/wd=0.025) are untuned — is there a
-  better setting?
+- The missing cell: COSMOS-r32 without the NorMuon update, against
+  Muon. If it beats Muon, subspace and NorMuon are substitutes; if
+  not, the subspace is inert at this rank and scale.
+- Higher rank and full rotation against the rank-0 control: r512
+  (3125 in one 1-GPU run) and SinkSOAP (~3100) are the only points
+  ahead of the control, and neither has been paired with it.
+- Larger scale: does the picture (NorMuon carries the edge, the
+  rank-32 subspace adds nothing by the end) hold past 124M parameters
+  and 3250 steps?
+- NS6 tolerance: the rank-0 control at 6 iterations, and
+  spectral-norm Muon at full length (Sec. 2.3).
+- COSMOS hyperparameters (lr=0.04/wd=0.025) are untuned.
 - SOAP-QR spread mechanism: the low-rank-Gram hypothesis needs the
   decisive battery (tolerance-quantized sort, deterministic rerun,
   autotune check).
-- Hybrid ingredients: fewer residual NS iterations (from the NS6
-  split) and square-matrix NorMuon (runs 37/38, queued) are
-  candidates; selection waits on the queued runs.

@@ -1,0 +1,30 @@
+muon_s1: step=2750 2D params=72
+muon_s2: step=2750 2D params=72
+cosmos_r32: step=2750 2D params=72
+
+== shape (3072, 768) ==
+  cosmos M_res frob(support)   n=12 | NS12: rho=1.000 pr=1.000 conv=1.000 | NS8: rho=1.000 pr=1.000 conv=1.000 | NS6: rho=0.943 pr=0.970 conv=0.754 | rho_6 range [0.915, 0.955]
+  muon_s1 frob                 n=12 | NS12: rho=1.000 pr=1.000 conv=1.000 | NS8: rho=1.000 pr=1.000 conv=1.000 | NS6: rho=0.888 pr=0.927 conv=0.568 | rho_6 range [0.865, 0.908]
+  muon_s1 spec                 n=12 | NS12: rho=1.000 pr=1.000 conv=1.000 | NS8: rho=1.000 pr=1.000 conv=1.000 | NS6: rho=0.991 pr=0.998 conv=0.976 | rho_6 range [0.979, 1.000]
+                                      sigma_est/sigma_1: min=0.9999 mean=1.0000 max=1.0000; stable rank mean=5.5
+  muon_s2 frob                 n=12 | NS12: rho=1.000 pr=1.000 conv=1.000 | NS8: rho=1.000 pr=1.000 conv=1.000 | NS6: rho=0.888 pr=0.927 conv=0.567 | rho_6 range [0.865, 0.907]
+  muon_s2 spec                 n=12 | NS12: rho=1.000 pr=1.000 conv=1.000 | NS8: rho=1.000 pr=1.000 conv=1.000 | NS6: rho=0.992 pr=0.998 conv=0.977 | rho_6 range [0.982, 1.000]
+                                      sigma_est/sigma_1: min=1.0000 mean=1.0000 max=1.0000; stable rank mean=5.4
+
+== shape (768, 3072) ==
+  cosmos M_res frob(support)   n=12 | NS12: rho=1.000 pr=1.000 conv=1.000 | NS8: rho=1.000 pr=1.000 conv=1.000 | NS6: rho=0.952 pr=0.979 conv=0.791 | rho_6 range [0.932, 0.961]
+  muon_s1 frob                 n=12 | NS12: rho=1.000 pr=1.000 conv=1.000 | NS8: rho=1.000 pr=1.000 conv=1.000 | NS6: rho=0.911 pr=0.948 conv=0.648 | rho_6 range [0.784, 0.941]
+  muon_s1 spec                 n=12 | NS12: rho=1.000 pr=1.000 conv=1.000 | NS8: rho=1.000 pr=1.000 conv=1.000 | NS6: rho=0.985 pr=0.991 conv=0.949 | rho_6 range [0.842, 1.000]
+                                      sigma_est/sigma_1: min=0.9999 mean=1.0000 max=1.0001; stable rank mean=21.0
+  muon_s2 frob                 n=12 | NS12: rho=1.000 pr=1.000 conv=1.000 | NS8: rho=1.000 pr=1.000 conv=1.000 | NS6: rho=0.910 pr=0.947 conv=0.642 | rho_6 range [0.788, 0.941]
+  muon_s2 spec                 n=12 | NS12: rho=1.000 pr=1.000 conv=1.000 | NS8: rho=1.000 pr=1.000 conv=1.000 | NS6: rho=0.985 pr=0.991 conv=0.948 | rho_6 range [0.848, 1.000]
+                                      sigma_est/sigma_1: min=0.9967 mean=0.9997 max=1.0001; stable rank mean=20.0
+
+== shape (768, 768) ==
+  cosmos M_res frob(support)   n=48 | NS12: rho=0.996 pr=0.995 conv=0.990 | NS8: rho=0.944 pr=0.923 conv=0.843 | NS6: rho=0.798 pr=0.736 conv=0.495 | rho_6 range [0.754, 0.818]
+  muon_s1 frob                 n=48 | NS12: rho=0.994 pr=0.992 conv=0.984 | NS8: rho=0.913 pr=0.880 conv=0.759 | NS6: rho=0.712 pr=0.631 conv=0.341 | rho_6 range [0.653, 0.769]
+  muon_s1 spec                 n=48 | NS12: rho=0.997 pr=0.996 conv=0.993 | NS8: rho=0.961 pr=0.945 conv=0.889 | NS6: rho=0.856 pr=0.807 conv=0.628 | rho_6 range [0.747, 0.952]
+                                      sigma_est/sigma_1: min=0.9718 mean=0.9989 max=1.0000; stable rank mean=8.1
+  muon_s2 frob                 n=48 | NS12: rho=0.994 pr=0.992 conv=0.983 | NS8: rho=0.912 pr=0.879 conv=0.758 | NS6: rho=0.711 pr=0.630 conv=0.341 | rho_6 range [0.651, 0.784]
+  muon_s2 spec                 n=48 | NS12: rho=0.997 pr=0.996 conv=0.992 | NS8: rho=0.961 pr=0.945 conv=0.889 | NS6: rho=0.856 pr=0.807 conv=0.627 | rho_6 range [0.747, 0.948]
+                                      sigma_est/sigma_1: min=0.9706 mean=0.9983 max=1.0000; stable rank mean=7.8

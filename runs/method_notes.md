@@ -132,6 +132,11 @@ structure still open). Resume work is closed unless a run is cut off.
   `runs/sbatch/variant_math_cpu.sbatch` (cpu-small; apptainer is not
   installed on the login nodes). New variant families also get a
   12-step 1-GPU smoke (`runs/sbatch/smoke/`).
+- Short probes change the LR schedule: the cooldown starts at 30% of
+  `train_steps`, so a 500-step run cools from step 150. Compare a
+  short run only with runs of the same length, or before the earlier
+  cooldown starts (runs 55/56 were designed against 3250-step curves
+  at step 500 and cannot be read that way).
 - Separate screening setup on PACE ICE (standby): `~/ice-screening`
   (repo clones + 4GB data, system torch 2.9, Blackwell routable,
   validated 2026-10-31: step-12 val + max-mem match Phoenix). For
@@ -140,14 +145,18 @@ structure still open). Resume work is closed unless a run is cut off.
 
 ## 8. 8-GPU runs
 
-Paired seeds (0/1) on the same 3250-step protocol and LR schedule as
-1-GPU; only the 2D optimizer (or its hyperparameters) differs between
+Paired seeds (0/1; 0–4 for the Muon, rank-0 control and COSMOS-r32
+arms) on the same 3250-step protocol and LR schedule as 1-GPU; only the 2D optimizer (or its hyperparameters) differs between
 arms. Whole-node shape (8 GPUs + 16 CPUs + 400GB). Checkpointing is
 off: the checkpoint code is single-GPU-only (asserts world_size 1),
 and ~20-minute runs need no resume. Step times are compared only
 within one node (cross-node spread ~30%); node names are logged in
 `runs.csv` for every 8-GPU run. Step-count and loss comparisons stand
-across nodes.
+across nodes. `runs/parse_results.py` reads crossings, finals, step
+times and nodes from the logs (and checks that the logged source
+equals the variant script); `runs/attribution_stats.py` prints the
+seed-paired statistics. "Steady" step time there is the train-time
+slope over steps 1000–3250.
 
 ## 9. Reference recipes (read-only)
 

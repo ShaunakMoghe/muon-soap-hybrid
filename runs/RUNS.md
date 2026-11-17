@@ -28,11 +28,11 @@ Columns: run_id,date,variant,script,git_hash,steps,val@328_step,val_final,wallcl
 | NS sweep | 29–36 | NS iterations 12/8/6 × Muon/COSMOS |
 | hyper-swap | 39–42 | attribution: hyperparameters vs method |
 | square NorMuon | 37, 38 | NorMuon extended to square matrices (no effect) |
-| QR cadence | 43–48 | subspace refresh every 2/4/8 steps (attempt 2 queued) |
-| Sinkhorn iterations | 49–54 | 5/3/1 iterations instead of 10 (attempt 2 queued) |
-| spectral-norm NS6 | 55, 56 | is Muon's NS6 collapse a normalization artifact? (attempt 2 queued) |
-| NorMuon-only control | 57–60, 64–66 | COSMOS with the subspace removed: does the subspace add anything? (queued) |
-| extra seeds | 61–63, 67–69 | Muon and COSMOS-r32 seeds 2–4 at 8 GPUs (queued) |
+| QR cadence | 43–48 | subspace refresh every 2/4/8 steps (0 to +0.0023 final vs every-step, not monotonic in k) |
+| Sinkhorn iterations | 49–54 | 5/3/1 iterations instead of 10 (5 and 3 within noise; 1 costs +0.0024 and 25 steps at both seeds) |
+| spectral-norm NS6 | 55, 56 | is Muon's NS6 collapse a normalization artifact? (13–15% of the gap recovered at step 125; the planned step-500 comparison is invalid — 500-step schedule) |
+| NorMuon-only control | 57–60, 64–66 | COSMOS with the subspace removed: does the subspace add anything? (no detectable effect on final loss at rank 32: r0 − r32 = +0.0003, 95% CI −0.0006 to +0.0012, 5 seeds) |
+| extra seeds | 61–63, 67–69 | Muon and COSMOS-r32 seeds 2–4 at 8 GPUs (Muon − r32 = +0.0026 final, 25–50 steps, 5/5 seeds) |
 
 ## Incidents
 

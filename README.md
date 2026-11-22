@@ -70,7 +70,12 @@ sweep r32–r512 on 1 GPU (nearly flat to r256, r512 better in one run);
 amortized SinkSOAP (cold start fails, warm start recovers); SOAP
 recipes; Newton-Muon port (no-cross footnote); 150-step Muon warmup
 and square-matrix NorMuon (no effect); hyperparameter swap.
-Queued: nothing.
-Open: COSMOS without the NorMuon update (the missing cell of the
-attribution); the rank-0 control at 6 Newton-Schulz iterations; ranks
-above 32 and SinkSOAP against the rank-0 control; a larger model.
+Queued (2026-11-22, runs 70–96, 8 GPUs): COSMOS-r256, COSMOS-r512 and
+SinkSOAP against the rank-0 control (3 seeds each); the NorMuon update
+switched off at rank 0, 32, 512 and SinkSOAP (3 seeds each), for the
+subspace and NorMuon contributions and their interaction; rank 32 with
+rank 512 on one group of sides — attention matrices, the 768-wide side
+of the MLP matrices, the 3072-wide side — to see where the rank is
+needed (2 seeds each).
+Open: the rank-0 control at 6 Newton-Schulz iterations; a larger model
+(on hold until the rank and NorMuon picture is settled at 124M).

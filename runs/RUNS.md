@@ -33,6 +33,9 @@ Columns: run_id,date,variant,script,git_hash,steps,val@328_step,val_final,wallcl
 | spectral-norm NS6 | 55, 56 | is Muon's NS6 collapse a normalization artifact? (13–15% of the gap recovered at step 125; the planned step-500 comparison is invalid — 500-step schedule) |
 | NorMuon-only control | 57–60, 64–66 | COSMOS with the subspace removed: does the subspace add anything? (no detectable effect on final loss at rank 32: r0 − r32 = +0.0003, 95% CI −0.0006 to +0.0012, 5 seeds) |
 | extra seeds | 61–63, 67–69 | Muon and COSMOS-r32 seeds 2–4 at 8 GPUs (Muon − r32 = +0.0026 final, 25–50 steps, 5/5 seeds) |
+| rank against the control | 70–78 | COSMOS-r512, SinkSOAP and COSMOS-r256 at 8 GPUs, seeds 0–2: does a higher rank beat the rank-0 control, and at what step cost? (queued 2026-11-22) |
+| NorMuon off | 79–90 | rank 0 / 32 / 512 / SinkSOAP with the NorMuon step switched off, seeds 0–2: what the subspace and NorMuon each contribute, and whether the gains add (queued) |
+| rank placement | 91–96 | rank 32 with rank 512 on one group of sides — attention matrices, MLP 768-wide side, MLP 3072-wide side — seeds 0–1: where the rank is needed (queued) |
 
 ## Incidents
 

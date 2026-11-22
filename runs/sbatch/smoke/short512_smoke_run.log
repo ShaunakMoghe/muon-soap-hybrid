@@ -1,0 +1,18 @@
+logs/b3a5d38a-b6e7-4aca-a8db-575662524820.txt
+step:0/12 val_loss:10.82583 train_time:0.000s step_avg:nanms
+/usr/local/lib/python3.12/dist-packages/torch/backends/cuda/__init__.py:131: UserWarning: Please use the new API settings to control TF32 behavior, such as torch.backends.cudnn.conv.fp32_precision = 'tf32' or torch.backends.cuda.matmul.fp32_precision = 'ieee'. Old settings, e.g, torch.backends.cuda.matmul.allow_tf32 = True, torch.backends.cudnn.allow_tf32 = True, allowTF32CuDNN() and allowTF32CuBLAS() will be deprecated after Pytorch 2.9. Please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/Context.cpp:80.)
+  return torch._C._get_cublas_allow_tf32()
+step:1/12 train_time:39.824s step_avg:39823.73ms
+step:2/12 train_time:41.738s step_avg:20868.86ms
+step:3/12 train_time:43.738s step_avg:14579.21ms
+step:4/12 train_time:45.727s step_avg:11431.65ms
+step:5/12 train_time:47.715s step_avg:9542.95ms
+step:6/12 train_time:49.707s step_avg:8284.43ms
+step:7/12 train_time:51.707s step_avg:7386.75ms
+step:8/12 train_time:53.712s step_avg:6713.98ms
+step:9/12 train_time:55.728s step_avg:6192.02ms
+step:10/12 train_time:57.748s step_avg:5774.76ms
+step:11/12 train_time:59.757s step_avg:5432.47ms
+step:12/12 train_time:61.779s step_avg:5148.22ms
+step:12/12 val_loss:6.33350 train_time:61.779s step_avg:5148.23ms
+max_memory_allocated: 31.152 GB

@@ -1,0 +1,3 @@
+run94 rank placement: 512 on MLP 768-wide side, 32 elsewhere s1 8-GPU @ HEAD
+variant: variants/train_gpt_cosmos_r32_short512_seed1.py
+8 GPUs, 3250 steps, ckpt OFF (world_size assert)

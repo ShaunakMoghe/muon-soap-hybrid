@@ -10,4 +10,23 @@ sink1: bit-identical to r32 at 10 iters; at 1 iters max rel diff vs r32 4.87e-01
 specns6 64x64: spectral-start NS6 sv in [0.993, 1.005]; Frobenius-start NS6 sv in [0.585, 1.005]
 specns6 192x48: spectral-start NS6 sv in [0.993, 1.008]; Frobenius-start NS6 sv in [0.654, 1.005]
 specns6 48x192: spectral-start NS6 sv in [0.993, 1.006]; Frobenius-start NS6 sv in [0.651, 1.005]
+sources: 22 new scripts differ from their base only in the intended lines
+r0 nonormuon 192x48: differs from base by 8.64e-02; base recovered by external NorMuon step to 1.92e-03
+r0 nonormuon 48x192: differs from base by 8.25e-02; base recovered by external NorMuon step to 1.79e-03
+r0 nonormuon: switch on bit-identical to base; off leaves square case, momentum and subspace state unchanged
+r0 nonormuon vs muon_update 64x64: cosine >= 0.999999, step scale 1.000-1.007x Muon
+r0 nonormuon vs muon_update 192x48: cosine >= 1.000000, step scale 1.000-1.000x Muon
+r0 nonormuon vs muon_update 48x192: cosine >= 1.000000, step scale 1.000-1.000x Muon
+r32 nonormuon 192x48: differs from base by 1.62e-01; base recovered by external NorMuon step to 2.36e-03
+r32 nonormuon 48x192: differs from base by 1.61e-01; base recovered by external NorMuon step to 2.36e-03
+r32 nonormuon: switch on bit-identical to base; off leaves square case, momentum and subspace state unchanged
+r512-code@40 nonormuon 192x48: differs from base by 1.94e-01; base recovered by external NorMuon step to 2.36e-03
+r512-code@40 nonormuon 48x192: differs from base by 2.01e-01; base recovered by external NorMuon step to 2.37e-03
+r512-code@40 nonormuon: switch on bit-identical to base; off leaves square case, momentum and subspace state unchanged
+sinksoap nonormuon 192x48: differs from base by 8.49e-02; base recovered by external NorMuon step to 4.86e-08
+sinksoap nonormuon 48x192: differs from base by 8.65e-02; base recovered by external NorMuon step to 8.86e-08
+sinksoap nonormuon: same function as base; apply_normuon=False leaves square case and Gram state unchanged
+sq512: all-32 bit-identical to r32; sides get (square, short, long) ranks as set; unequal ranks run finite
+short512: all-32 bit-identical to r32; sides get (square, short, long) ranks as set; unequal ranks run finite
+long512: all-32 bit-identical to r32; sides get (square, short, long) ranks as set; unequal ranks run finite
 VARIANT_MATH_OK

@@ -1,0 +1,3 @@
+run72 COSMOS-r512 vs rank-0 control s2 8-GPU @ HEAD
+variant: variants/train_gpt_cosmos_r512_seed2.py
+8 GPUs, 3250 steps, ckpt OFF (world_size assert)

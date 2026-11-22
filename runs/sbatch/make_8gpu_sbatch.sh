@@ -1,23 +1,23 @@
 #!/bin/bash
 # Write runs/sbatch/run<N>_8gpu.sbatch (8-GPU full-node run with GPU
 # preflight guard) and make sure the run dir exists.
-# Usage: make_8gpu_sbatch.sh <N> <run_dir_name> <variant_file> <steps> "<description>"
+# Usage: make_8gpu_sbatch.sh <N> <run_dir_name> <variant_file> <steps> "<description>" [time_limit, default 1:00:00]
 set -eu
-N=$1; RUNDIR=$2; VARIANT=$3; STEPS=$4; DESC=$5
+N=$1; RUNDIR=$2; VARIANT=$3; STEPS=$4; DESC=$5; TIME=${6:-1:00:00}
 PROJ=/storage/project/ps-moereasoning-0/smoghe6
 [ -f "$PROJ/variants/$VARIANT" ] || { echo "missing variant $VARIANT"; exit 1; }
 grep -q "train_steps = $STEPS\b" "$PROJ/variants/$VARIANT" || { echo "$VARIANT is not a $STEPS-step script"; exit 1; }
 mkdir -p "$PROJ/runs/$RUNDIR"
 [ -e "$PROJ/runs/$RUNDIR/data" ] || ln -s ../../modded-nanogpt-public/data "$PROJ/runs/$RUNDIR/data"
 [ -f "$PROJ/runs/$RUNDIR/meta.txt" ] || printf 'run%s %s 8-GPU @ HEAD\nvariant: variants/%s\n8 GPUs, %s steps, ckpt OFF (world_size assert)\n' "$N" "$DESC" "$VARIANT" "$STEPS" > "$PROJ/runs/$RUNDIR/meta.txt"
-sed -e "s|@N@|$N|g" -e "s|@RUNDIR@|$RUNDIR|g" -e "s|@VARIANT@|$VARIANT|g" -e "s|@STEPS@|$STEPS|g" -e "s|@DESC@|$DESC|g" > "$PROJ/runs/sbatch/run${N}_8gpu.sbatch" <<'TEMPLATE'
+sed -e "s|@N@|$N|g" -e "s|@RUNDIR@|$RUNDIR|g" -e "s|@VARIANT@|$VARIANT|g" -e "s|@STEPS@|$STEPS|g" -e "s|@DESC@|$DESC|g" -e "s|@TIME@|$TIME|g" > "$PROJ/runs/sbatch/run${N}_8gpu.sbatch" <<'TEMPLATE'
 #!/bin/bash
 #SBATCH -J run@N@_8gpu
 #SBATCH -p gpu-rtxpro-blackwell
 #SBATCH --gres=gpu:rtx_pro_6000_blackwell:8
 #SBATCH -c 16
 #SBATCH --mem=400G
-#SBATCH -t 1:00:00
+#SBATCH -t @TIME@
 #SBATCH -q inferno
 #SBATCH -o runs/sbatch/run@N@_8gpu_%j.out
 #SBATCH --exclude=atl1-1-03-020-6-0

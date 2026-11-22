@@ -1,0 +1,3 @@
+run74 SinkSOAP (full rank) vs rank-0 control s1 8-GPU @ HEAD
+variant: variants/train_gpt_sinksoap_seed1.py
+8 GPUs, 3250 steps, ckpt OFF (world_size assert)

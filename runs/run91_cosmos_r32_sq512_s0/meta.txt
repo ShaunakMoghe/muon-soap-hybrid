@@ -1,0 +1,3 @@
+run91 rank placement: 512 on attention matrices, 32 elsewhere s0 8-GPU @ HEAD
+variant: variants/train_gpt_cosmos_r32_sq512_seed0.py
+8 GPUs, 3250 steps, ckpt OFF (world_size assert)

@@ -1,0 +1,3 @@
+run81 COSMOS-r32 with NorMuon off s2 8-GPU @ HEAD
+variant: variants/train_gpt_cosmos_r32_nonormuon_seed2.py
+8 GPUs, 3250 steps, ckpt OFF (world_size assert)

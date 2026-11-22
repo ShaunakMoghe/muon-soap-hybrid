@@ -6,8 +6,8 @@
 #SBATCH -t 0:20:00
 #SBATCH -q inferno
 #SBATCH -o runs/sbatch/variant_math_cpu_%j.out
-# CPU-only: (1) optimizer-math checks for the r0 / qrk / sink / specns6
-# variants, (2) the GPU preflight block from a generated 8-GPU sbatch, run
+# CPU-only: (1) optimizer-math checks for the r0 / qrk / sink / specns6 /
+# nonormuon / rank-placement variants, (2) the GPU preflight block from a generated 8-GPU sbatch, run
 # verbatim on this GPU-less node: it must report failure with exit code 42.
 PROJ=/storage/project/ps-moereasoning-0/smoghe6
 SIF=/usr/local/pace-apps/manual/packages/ngc-images/pytorch-25.10.sif

@@ -15,16 +15,21 @@ Headline findings (runs 1–96; caveats in `runs/analysis.md`):
 - That edge comes from the variant's NorMuon update, not from the
   tracked subspace. With the subspace removed (rank 0: no QR, no
   Sinkhorn) the final loss is the same within noise (+0.0003, 95% CI
-  −0.0006 to +0.0012, 5 seeds) at Muon's step time. The subspace does
-  give an early lead (0.10 in loss at step 125) that is gone by step
-  2500. This holds at rank 32 only (next point).
+  −0.0006 to +0.0012, 5 seeds) at Muon's step time. Rank 32 does lead
+  the control early (0.10 in loss at step 125, gone by step 2500), but
+  that is the rank-0 code path starting slow: Muon at the same lr/wd
+  is level with rank 32 at step 125. The null holds at rank 32 only
+  (next point).
 - Higher ranks do add to NorMuon. Against the rank-0 control (3 paired
   seeds, 8 GPUs), final loss is lower by 0.0021 at rank 256, 0.0052 at
   rank 512 and 0.0078 at full rank (SinkSOAP), all p < 0.01. At this
   scale each costs more step time than it saves: +5.5%, +10.9% and
   +64% per step, and none reaches 3.28 sooner in wall-clock than Muon
-  or the control (same node). The subspace and NorMuon substitute:
-  NorMuon's gain falls from 0.0051 at rank 32 to 0.0011 at full rank.
+  or the control (same node). NorMuon overlaps with the full-rank
+  method: it adds 0.0011 on top of SinkSOAP against 0.0038 at rank 512
+  and 0.0051 at rank 32. Below full rank the overlap is not
+  established; it shows only against a rank-0 cell that failed its
+  check against Muon (see Status).
   Raising only the 768-wide side of the MLP matrices to rank 512
   recovers 37% of the rank-512 gain at +3.6% step time (2 seeds).
 - Subspace upkeep can be made cheaper with little or no visible harm
@@ -84,8 +89,10 @@ recovers), SOAP recipes, Newton-Muon port (no-cross footnote), 150-step
 Muon warmup and square-matrix NorMuon (no effect), hyperparameter swap,
 QR-cadence and Sinkhorn-iteration sweeps.
 Queued: nothing.
-Open: why rank 0 with NorMuon off trails Muon at the same lr/wd (the
-fixed-norm rescale is the suspect); per-cell lr tuning for the
+Open: the rank-0 code path starts slower than Muon and, with NorMuon
+off, finishes 0.004 behind it at the same lr/wd. The fixed-norm rescale
+is the only code difference and the gap opens in the first 12 steps; a
+control without the rescale is the next check. Per-cell lr tuning for the
 NorMuon-off cells; unequal ranks on the two sides of the MLP matrices;
 the rank-0 control at 6 Newton-Schulz iterations; a larger model (on
 hold until the 124M picture is settled).

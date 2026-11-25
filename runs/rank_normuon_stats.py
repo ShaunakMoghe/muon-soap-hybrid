@@ -3,6 +3,10 @@
 Reads logs via parse_results.py; prints only. Decision rules R1-R3 were
 written into runs/predictions.md ("Rank / NorMuon factorial") before the
 runs were submitted. All factorial cells use lr 0.04 / wd 0.025.
+
+The R2 gate failed, so R2 is printed twice: by the pre-set rule (against
+the rank-0 cell with NorMuon off) and with Muon at the same lr/wd (runs
+39/40) in that cell's place. The second reading was added after the runs.
 """
 import itertools, math, os, sys
 
@@ -98,6 +102,29 @@ for r, on, off in (("32", "r32", "r32_off"), ("512", "r512", "r512_off"), ("full
     if r == "32" and abs(sum(s_off) / 3) < 0.001:
         v += " (rank 32 INERT)"
     print(f"{'':<30} -> {v}")
+
+print("\n== R2 with Muon as the rank-0 / NorMuon-off cell (runs 39/40, seeds 0/1) ==")
+# The gate compares r0(OFF) with these runs and fails, so every S_off and I
+# above carries the failed cell. Same quantities with Muon in its place:
+mch = [R[n]["final"] for n in MUON_CH]
+print("N(0) = Muon - r0(ON):          " + " ".join(f"{x:+.5f}" for x in diff(mch, fin("r0")[:2])))
+for r, on, off in (("32", "r32", "r32_off"), ("512", "r512", "r512_off"), ("full", "sink", "sink_off")):
+    s_off = diff(mch, fin(off)[:2])
+    inter = diff(s_off, diff(fin("r0")[:2], fin(on)[:2]))
+    print(f"S_off({r:<4}) = Muon - {off:<9} " + " ".join(f"{x:+.5f}" for x in s_off) + f"  mean {sum(s_off)/2:+.5f}"
+          + f"   I({r}) " + " ".join(f"{x:+.5f}" for x in inter) + f"  mean {sum(inter)/2:+.5f}")
+
+print("\n== NorMuon's gain compared between ranks (no rank-0 cell involved) ==")
+N = {r: diff(fin(off), fin(on)) for r, on, off in (("32", "r32", "r32_off"), ("512", "r512", "r512_off"), ("full", "sink", "sink_off"))}
+for a, b in (("32", "512"), ("512", "full"), ("32", "full")):
+    show(f"N({a}) - N({b})", diff(N[a], N[b]))
+
+print("\n== where the gate gap opens: val loss minus Muon at the same lr/wd, mean of seeds 0/1 ==")
+CPS = (125, 250, 500, 1000, 2000, 2500, 3250)
+print(f"{'step':<10}" + " ".join(f"{s:>8}" for s in CPS))
+for k in ("r0_off", "r0", "r32_off", "r32", "r512_off", "r512", "sink_off", "sink"):
+    print(f"{k:<10}" + " ".join(
+        f"{sum(R[a]['vals'][s] - R[b]['vals'][s] for a, b in zip(ARMS[k][:2], MUON_CH)) / 2:+8.4f}" for s in CPS))
 
 print("\n== R3: placement, seeds 0/1 (rank 32 everywhere, 512 on one group) ==")
 gap = [R[a]["final"] - R[b]["final"] for a, b in zip(ARMS["r32"][:2], ARMS["r512"][:2])]

@@ -34,7 +34,7 @@ Columns: run_id,date,variant,script,git_hash,steps,val@328_step,val_final,wallcl
 | NorMuon-only control | 57–60, 64–66 | COSMOS with the subspace removed: does the subspace add anything? (no detectable effect on final loss at rank 32: r0 − r32 = +0.0003, 95% CI −0.0006 to +0.0012, 5 seeds) |
 | extra seeds | 61–63, 67–69 | Muon and COSMOS-r32 seeds 2–4 at 8 GPUs (Muon − r32 = +0.0026 final, 25–50 steps, 5/5 seeds) |
 | rank against the control | 70–78 | COSMOS-r512, SinkSOAP and COSMOS-r256 at 8 GPUs, seeds 0–2: does a higher rank beat the rank-0 control, and at what step cost? (all three beat it: −0.0021 / −0.0052 / −0.0078 final for r256 / r512 / SinkSOAP, at +5.5% / +10.9% / +64% step time) |
-| NorMuon off | 79–90 | rank 0 / 32 / 512 / SinkSOAP with the NorMuon step switched off, seeds 0–2: what the subspace and NorMuon each contribute, and whether the gains add (substitutes: NorMuon's gain falls from 0.0051 at r32 to 0.0011 at full rank; rank-0-off sanity gate failed, 0.004 worse than Muon at the same lr/wd) |
+| NorMuon off | 79–90 | rank 0 / 32 / 512 / SinkSOAP with the NorMuon step switched off, seeds 0–2: what the subspace and NorMuon each contribute, and whether the gains add (NorMuon's gain is 0.0051 at r32, 0.0038 at r512 and 0.0011 at full rank, so it overlaps with SinkSOAP; below full rank the overlap is not established, because the rank-0-off sanity gate failed: 0.004 worse than Muon at the same lr/wd, a gap that opens in the first 12 steps) |
 | rank placement | 91–96 | rank 32 with rank 512 on one group of sides — attention matrices, MLP 768-wide side, MLP 3072-wide side — seeds 0–1: where the rank is needed (no group carries it alone; the 768-wide side recovers 37% of the r512 gain at +3.6% step time) |
 
 ## Incidents
